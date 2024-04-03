@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsAspireHost>true</IsAspireHost>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Aspire.Hosting" Version="8.0.0-preview.4.24156.9" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\DAPM.ClientApi\DAPM.ClientApi.csproj" />
+    <ProjectReference Include="..\DAPM.RepositoryMS.Api\DAPM.RepositoryMS.Api.csproj" />
+    <ProjectReference Include="..\DAPM.ResourceRegistryMS.Api\DAPM.ResourceRegistryMS.Api.csproj" />
+  </ItemGroup>
+
+</Project>
