@@ -1,5 +1,5 @@
-using DAPM.ResourceRegistryMS.Api.Resources;
-using DAPM.ResourceRegistryMS.Api.Resources.Interfaces;
+using DAPM.ResourceRegistryMS.Api.Repositories;
+using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Services;
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Http.Features;
@@ -28,10 +28,13 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add Scoped Service
-builder.Services.AddScoped<IResourceRegistryService, ResourceRegistryService>();
+builder.Services.AddScoped<IResourceService, ResourceService>();
 
 // Add Scoped ResourceRegistry
-builder.Services.AddScoped<IResourceRegistry, ResourceRegistry>();
+builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
+builder.Services.AddScoped<IRepositoryRepository, RepositoryRepository>();
+builder.Services.AddScoped<IResourceTypeRepository, ResourceTypeRepository>();
+
 
 builder.Services.AddDbContext<ResourceRegistryDbContext>(options =>
 { options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")); }

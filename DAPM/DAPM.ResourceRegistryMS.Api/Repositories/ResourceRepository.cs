@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using DAPM.ResourceRegistryMS.Api.Models;
-using DAPM.ResourceRegistryMS.Api.Resources.Interfaces;
+using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
 
-namespace DAPM.ResourceRegistryMS.Api.Resources
+namespace DAPM.ResourceRegistryMS.Api.Repositories
 {
-    public class ResourceRegistry : IResourceRegistry
+    public class ResourceRepository : IResourceRepository
     {
         private readonly ResourceRegistryDbContext _context;
 
-        public ResourceRegistry(ResourceRegistryDbContext context)
+        public ResourceRepository(ResourceRegistryDbContext context)
         {
             _context = context;
         }
@@ -28,6 +28,13 @@ namespace DAPM.ResourceRegistryMS.Api.Resources
         public async Task<IEnumerable<Resource>> GetResource()
         {
             return await _context.Resources.ToListAsync();
+        }
+
+        public async Task<bool> AddResource(Resource resource)
+        {
+            await _context.Resources.AddAsync(resource);
+            _context.SaveChanges();
+            return true;
         }
 
         public async Task<bool> DeleteResource(string resourceName)
