@@ -1,10 +1,11 @@
 ﻿namespace DAPM.ResourceRegistryMS.Api.Models.DTOs
 {
-    public class ResourceDto
+    public class RepositoryDto
     {
         public string Id { get; set; }
+
         public string Name { get; set; }
-        public string RepositoryId { get; set; }
-        public int TypeId { get; set; }
+
+        public string PeerId { get; set; }
     }
 }

@@ -60,11 +60,8 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
 
             modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Resource", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
 
                     b.Property<string>("Name")
                         .IsRequired()

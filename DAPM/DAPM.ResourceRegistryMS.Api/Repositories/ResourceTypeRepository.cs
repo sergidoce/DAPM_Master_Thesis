@@ -12,7 +12,19 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             _context = context;
         }
 
-        public async Task<ResourceType> GetResourceType(string id)
+        public async Task<bool> AddResourceType(ResourceType resourceType)
+        {
+            await _context.ResourceTypes.AddAsync(resourceType);
+            _context.SaveChanges();
+            return true;
+        }
+
+        public Task<bool> DeleteResourceType(int resourceTypeId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<ResourceType> GetResourceType(int id)
         {
             var resourceType = await _context.ResourceTypes.FindAsync(id);
 
@@ -22,6 +34,11 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             }
 
             return resourceType;
+        }
+
+        public Task<IEnumerable<ResourceType>> GetResourceType()
+        {
+            throw new NotImplementedException();
         }
     }
 }

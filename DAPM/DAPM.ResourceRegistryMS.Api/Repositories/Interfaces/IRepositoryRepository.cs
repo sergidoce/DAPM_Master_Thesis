@@ -5,5 +5,6 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories.Interfaces
     public interface IRepositoryRepository
     {
         public Task<Repository> GetRepository(string id);
+        public Task<bool> AddRepository(Repository repository);
     }
 }

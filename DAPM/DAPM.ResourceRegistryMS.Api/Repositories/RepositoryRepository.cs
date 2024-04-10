@@ -13,9 +13,16 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             _context = context;
         }
 
+        public async Task<bool> AddRepository(Repository repository)
+        {
+            await _context.Repositories.AddAsync(repository);
+            _context.SaveChanges();
+            return true;
+        }
+
         public async Task<Repository> GetRepository(string id)
         {
-            var repository = await _context.Repositories.FindAsync(id);
+            var repository = _context.Repositories.Include(r => r.Peer).Single(r => r.Id == id);
 
             if (repository == null)
             {

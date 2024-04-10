@@ -10,12 +10,14 @@ namespace DAPM.ResourceRegistryMS.Api.Services
         private IResourceRepository _resourceRepository;
         private IRepositoryRepository _repositoryRepository;
         private IResourceTypeRepository _resourceTypeRepository;
+        private readonly ILogger<IResourceService> _logger;
 
-        public ResourceService(IResourceRepository resourceRepository, IRepositoryRepository repositoryRepository, IResourceTypeRepository resourceTypeRepository) 
+        public ResourceService(ILogger<IResourceService> logger, IResourceRepository resourceRepository, IRepositoryRepository repositoryRepository, IResourceTypeRepository resourceTypeRepository) 
         {
             _resourceRepository = resourceRepository;
             _repositoryRepository = repositoryRepository;
             _resourceTypeRepository = resourceTypeRepository;
+            _logger = logger;
         }
 
         public async Task<Resource> GetResource(string resourceId)

@@ -13,9 +13,9 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             _context = context;
         }
 
-        public async Task<Resource> GetResource(string resourceName) 
+        public async Task<Resource> GetResource(string resourceId) 
         {
-            var resource = await _context.Resources.FindAsync(resourceName);
+            var resource = await _context.Resources.FindAsync(resourceId);
 
             if (resource == null)
             {

@@ -29,11 +29,15 @@ builder.Services.AddSwaggerGen();
 
 // Add Scoped Service
 builder.Services.AddScoped<IResourceService, ResourceService>();
+builder.Services.AddScoped<IPeerService, PeerService>();
+builder.Services.AddScoped<IRepositoryService, RepositoryService>();
+builder.Services.AddScoped<IResourceTypeService, ResourceTypeService>();
 
 // Add Scoped ResourceRegistry
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 builder.Services.AddScoped<IRepositoryRepository, RepositoryRepository>();
 builder.Services.AddScoped<IResourceTypeRepository, ResourceTypeRepository>();
+builder.Services.AddScoped<IPeerRepository, PeerRepository>();
 
 
 builder.Services.AddDbContext<ResourceRegistryDbContext>(options =>

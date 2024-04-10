@@ -11,9 +11,9 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
     {
         private IResourceService _resourceService;
 
-        public ResourceController(IResourceService resourceRegistryService) 
+        public ResourceController(IResourceService resourceService) 
         { 
-            _resourceService = resourceRegistryService;
+            _resourceService = resourceService;
         }
 
         [HttpGet("{resourceId}")]
