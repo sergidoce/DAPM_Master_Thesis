@@ -1,8 +1,29 @@
+using DAPM.ClientApi.Services;
+using DAPM.ClientApi.Services.Interfaces;
+using Microsoft.AspNetCore.Http.Features;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
 
+builder.WebHost.UseKestrel(o => o.Limits.MaxRequestBodySize = null);
+
+builder.Services.Configure<FormOptions>(x =>
+{
+    x.ValueLengthLimit = int.MaxValue;
+    x.MultipartBodyLengthLimit = int.MaxValue;
+    x.MultipartBoundaryLengthLimit = int.MaxValue;
+    x.MultipartHeadersCountLimit = int.MaxValue;
+    x.MultipartHeadersLengthLimit = int.MaxValue;
+});
+
 // Add services to the container.
+
+
+builder.Services.AddScoped<IResourceService, ResourceService>();
+builder.Services.AddScoped<IOrganizationService, OrganizationService>();
+builder.Services.AddScoped<IRepositoryService, RepositoryService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
