@@ -2,5 +2,6 @@
 {
     public interface IOrganizationService
     {
+        public Guid GetOrganizations();
     }
 }

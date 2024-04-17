@@ -3,9 +3,12 @@ using DAPM.ResourceRegistryMS.Api.Models;
 
 public class ResourceRegistryDbContext : DbContext
 {
-    public ResourceRegistryDbContext(DbContextOptions<ResourceRegistryDbContext> options) 
+    ILogger<ResourceRegistryDbContext> _logger;
+    public ResourceRegistryDbContext(DbContextOptions<ResourceRegistryDbContext> options, ILogger<ResourceRegistryDbContext> logger) 
         : base(options)
     {
+        _logger = logger;
+        Database.Migrate();
     }
 
     public DbSet<Resource> Resources { get; set; }

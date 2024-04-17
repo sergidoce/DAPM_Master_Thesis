@@ -1,6 +1,11 @@
 using DAPM.ClientApi.Services;
 using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Http.Features;
+using RabbitMQ.Client;
+using RabbitMQLibrary.Implementation;
+using RabbitMQLibrary.Extensions;
+using RabbitMQLibrary.Messages;
+using DAPM.ClientApi.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +22,20 @@ builder.Services.Configure<FormOptions>(x =>
     x.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
+
+// RabbitMQ
+builder.Services.AddQueueing(new QueueingConfigurationSettings
+{
+    RabbitMqConsumerConcurrency = 5,
+    RabbitMqHostname = "rabbitmq",
+    RabbitMqPort = 5672,
+    RabbitMqPassword = "guest",
+    RabbitMqUsername = "guest"
+});
+
+builder.Services.AddQueueMessageConsumer<GetOrganisationsResultMessageConsumer, GetOrganisationsResultMessage>();
+
+
 // Add services to the container.
 
 
@@ -24,6 +43,7 @@ builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddSingleton<ITicketService, TicketService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -34,12 +54,10 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 

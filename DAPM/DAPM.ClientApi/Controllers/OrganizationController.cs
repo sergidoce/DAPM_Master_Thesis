@@ -1,4 +1,5 @@
-﻿using DAPM.ClientApi.Services.Interfaces;
+﻿using DAPM.ClientApi.Models;
+using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DAPM.ClientApi.Controllers
@@ -15,6 +16,13 @@ namespace DAPM.ClientApi.Controllers
         {
             _logger = logger;
             _organizationService = organizationService;
+        }
+
+        [HttpGet(Name = "organizations")]
+        public async Task<ActionResult<Guid>> Get()
+        {
+            Guid id = _organizationService.GetOrganizations();
+            return Ok(id);
         }
 
     }

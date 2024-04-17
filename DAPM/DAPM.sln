@@ -2,7 +2,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.34707.107
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAPM.AppHost", "DAPM.AppHost\DAPM.AppHost.csproj", "{4175ADCE-0C8A-4DBF-9E94-D58C20228912}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAPM.AppHost", "DAPM.AppHost\DAPM.AppHost.csproj", "{4175ADCE-0C8A-4DBF-9E94-D58C20228912}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAPM.ServiceDefaults", "DAPM.ServiceDefaults\DAPM.ServiceDefaults.csproj", "{615FD58C-8145-41F1-B073-AB1DBE1A3234}"
 EndProject
@@ -11,6 +11,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAPM.RepositoryMS.Api", "DAPM.RepositoryMS.Api\DAPM.RepositoryMS.Api.csproj", "{67A3801E-7109-4387-97A9-C48EF4C58805}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAPM.ResourceRegistryMS.Api", "DAPM.ResourceRegistryMS.Api\DAPM.ResourceRegistryMS.Api.csproj", "{75C86948-7E2D-4E11-9C3F-B72959A2A6CA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RabbitMQLibrary", "RabbitMQLibrary\RabbitMQLibrary.csproj", "{E57529C4-6C20-41D0-BABD-26640046AB25}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{D454CDF3-10F5-4CC2-8D90-F2F7FF242D63}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -38,6 +42,14 @@ Global
 		{75C86948-7E2D-4E11-9C3F-B72959A2A6CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{75C86948-7E2D-4E11-9C3F-B72959A2A6CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{75C86948-7E2D-4E11-9C3F-B72959A2A6CA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E57529C4-6C20-41D0-BABD-26640046AB25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E57529C4-6C20-41D0-BABD-26640046AB25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E57529C4-6C20-41D0-BABD-26640046AB25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E57529C4-6C20-41D0-BABD-26640046AB25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D454CDF3-10F5-4CC2-8D90-F2F7FF242D63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D454CDF3-10F5-4CC2-8D90-F2F7FF242D63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D454CDF3-10F5-4CC2-8D90-F2F7FF242D63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D454CDF3-10F5-4CC2-8D90-F2F7FF242D63}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
