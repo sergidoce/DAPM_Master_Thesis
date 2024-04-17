@@ -10,7 +10,7 @@ services:
       rabbitmq:
         condition: service_healthy
     ports:
-        - "5001:8081"        
+        - "5000:8080"        
 
 
   dapm.repositoryms.api:
@@ -24,7 +24,7 @@ services:
       rabbitmq:
           condition: service_healthy
     ports:
-      - "6001:8081"
+      - "6000:8080"
 
 
   dapm.resourceregistryms.api:
@@ -38,7 +38,7 @@ services:
       rabbitmq:
           condition: service_healthy
     ports:
-      - "7001:8081"
+      - "7000:8080"
 
   rabbitmq: # login guest:guest
     image: rabbitmq:3-management
