@@ -20,25 +20,118 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
+            modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Peer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("ApiUrl")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Peers");
+                });
+
+            modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Repository", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PeerId")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("PeerId");
+
+                    b.ToTable("Repositories");
+                });
+
             modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Resource", b =>
                 {
+                    b.Property<string>("Id")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
-                        .HasColumnType("text");
-
-                    b.Property<string>("Repository_id")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Repository_url")
+                    b.Property<string>("RepositoryId")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("Resource_id")
+                    b.Property<int>("TypeId")
                         .HasColumnType("integer");
 
-                    b.HasKey("Name");
+                    b.HasKey("Id");
+
+                    b.HasIndex("RepositoryId");
+
+                    b.HasIndex("TypeId");
 
                     b.ToTable("Resources");
+                });
+
+            modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.ResourceType", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("FileExtension")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("ResourceTypes");
+                });
+
+            modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Repository", b =>
+                {
+                    b.HasOne("DAPM.ResourceRegistryMS.Api.Models.Peer", "Peer")
+                        .WithMany()
+                        .HasForeignKey("PeerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Peer");
+                });
+
+            modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Resource", b =>
+                {
+                    b.HasOne("DAPM.ResourceRegistryMS.Api.Models.Repository", "Repository")
+                        .WithMany()
+                        .HasForeignKey("RepositoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAPM.ResourceRegistryMS.Api.Models.ResourceType", "Type")
+                        .WithMany()
+                        .HasForeignKey("TypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Repository");
+
+                    b.Navigation("Type");
                 });
 #pragma warning restore 612, 618
         }

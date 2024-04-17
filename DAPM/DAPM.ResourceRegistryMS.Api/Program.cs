@@ -1,9 +1,16 @@
-using DAPM.ResourceRegistryMS.Api.Resources;
-using DAPM.ResourceRegistryMS.Api.Resources.Interfaces;
+using DAPM.ResourceRegistryMS.Api.Repositories;
+using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Services;
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Events;
+using RabbitMQLibrary.Implementation;
+using RabbitMQLibrary.Extensions;
+using System.Text;
+using DAPM.ResourceRegistryMS.Api.Consumers;
+using RabbitMQLibrary.Messages;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +27,19 @@ builder.Services.Configure<FormOptions>(x =>
     x.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
+//RabbitMQ
+
+builder.Services.AddQueueing(new QueueingConfigurationSettings
+{
+    RabbitMqConsumerConcurrency = 5,
+    RabbitMqHostname = "rabbitmq",
+    RabbitMqPort = 5672,
+    RabbitMqPassword = "guest",
+    RabbitMqUsername = "guest"
+});
+
+builder.Services.AddQueueMessageConsumer<GetOrganisationsMessageConsumer, GetOrganisationsMessage>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -28,25 +48,34 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Add Scoped Service
-builder.Services.AddScoped<IResourceRegistryService, ResourceRegistryService>();
+builder.Services.AddScoped<IResourceService, ResourceService>();
+builder.Services.AddScoped<IPeerService, PeerService>();
+builder.Services.AddScoped<IRepositoryService, RepositoryService>();
+builder.Services.AddScoped<IResourceTypeService, ResourceTypeService>();
 
 // Add Scoped ResourceRegistry
-builder.Services.AddScoped<IResourceRegistry, ResourceRegistry>();
+builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
+builder.Services.AddScoped<IRepositoryRepository, RepositoryRepository>();
+builder.Services.AddScoped<IResourceTypeRepository, ResourceTypeRepository>();
+builder.Services.AddScoped<IPeerRepository, PeerRepository>();
+
+
 
 builder.Services.AddDbContext<ResourceRegistryDbContext>(options =>
-{ options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")); }
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")); }
 );
+
+
 
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
+
 
 app.UseHttpsRedirection();
 
