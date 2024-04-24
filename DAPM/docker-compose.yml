@@ -10,7 +10,18 @@ services:
       rabbitmq:
         condition: service_healthy
     ports:
-        - "5000:8080"        
+        - "5000:8080"
+
+  dapm.operatorms.api:
+    image: ${DOCKER_REGISTRY-}dapmoperatormsapi
+    build:
+        context: .
+        dockerfile: DAPM.OperatorMS.Api\Dockerfile
+    depends_on:
+        rabbitmq:
+            condition: service_healthy
+    ports:
+      - "8000:8080"
 
 
   dapm.repositoryms.api:
