@@ -5,11 +5,11 @@ using RabbitMQLibrary.Models;
 
 namespace DAPM.ResourceRegistryMS.Api.Consumers
 {
-    public class GetOrganisationsMessageConsumer : IQueueConsumer<GetOrganizationsMessage>
+    public class GetOrganizationsConsumer : IQueueConsumer<GetOrganizationsMessage>
     {
-        private ILogger<GetOrganisationsMessageConsumer> _logger;
+        private ILogger<GetOrganizationsConsumer> _logger;
         private IQueueProducer<GetOrganizationsResultMessage> _getOrganisationsResultQueueProducer;
-        public GetOrganisationsMessageConsumer(ILogger<GetOrganisationsMessageConsumer> logger, IQueueProducer<GetOrganizationsResultMessage> getOrganisationsResultQueueProducer)
+        public GetOrganizationsConsumer(ILogger<GetOrganizationsConsumer> logger, IQueueProducer<GetOrganizationsResultMessage> getOrganisationsResultQueueProducer)
         {
             _logger = logger;
             _getOrganisationsResultQueueProducer = getOrganisationsResultQueueProducer;
@@ -21,14 +21,14 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
 
             var organisation1 = new OrganizationDTO
             {
-                Id = "0",
+                Id = 0,
                 Name = "DTU",
                 ApiUrl = "http.dtu"
             };
 
             var organisation2 = new OrganizationDTO
             {
-                Id = "1",
+                Id = 1,
                 Name = "KU",
                 ApiUrl = "http.ku"
             };
@@ -37,7 +37,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = message.TicketId,
-                Organisations = [organisation1, organisation2]
+                Organizations = [organisation1, organisation2]
             };
 
             _getOrganisationsResultQueueProducer.PublishMessage(new_message);

@@ -38,7 +38,7 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
     RabbitMqUsername = "guest"
 });
 
-builder.Services.AddQueueMessageConsumer<GetOrganisationsMessageConsumer, GetOrganizationsMessage>();
+builder.Services.AddQueueMessageConsumer<GetOrganizationsConsumer, GetOrganizationsMessage>();
 
 // Add services to the container.
 

@@ -21,7 +21,7 @@ namespace DAPM.ClientApi.Consumers
         {
             _logger.LogInformation("Message received");
 
-            OrganizationDTO[] organisations = message.Organisations;
+            OrganizationDTO[] organisations = message.Organizations;
             JToken result = new JObject();
             JToken organisationsJSON = JToken.FromObject(organisations);
             result["organisations"] = organisationsJSON;
