@@ -7,11 +7,11 @@ using RabbitMQLibrary.Models;
 
 namespace DAPM.ClientApi.Consumers
 {
-    public class GetOrganisationsResultMessageConsumer : IQueueConsumer<GetOrganizationsResultMessage>
+    public class GetOrganisationsResultConsumer : IQueueConsumer<GetOrganizationsResultMessage>
     {
-        private ILogger<GetOrganisationsResultMessageConsumer> _logger;
+        private ILogger<GetOrganisationsResultConsumer> _logger;
         private readonly ITicketService _ticketService;
-        public GetOrganisationsResultMessageConsumer(ILogger<GetOrganisationsResultMessageConsumer> logger, ITicketService ticketService)
+        public GetOrganisationsResultConsumer(ILogger<GetOrganisationsResultConsumer> logger, ITicketService ticketService)
         {
             _logger = logger;
             _ticketService = ticketService;
