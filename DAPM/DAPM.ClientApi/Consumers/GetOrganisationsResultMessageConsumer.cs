@@ -2,12 +2,12 @@
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages;
+using RabbitMQLibrary.Messages.ClientApi;
 using RabbitMQLibrary.Models;
 
 namespace DAPM.ClientApi.Consumers
 {
-    public class GetOrganisationsResultMessageConsumer : IQueueConsumer<GetOrganisationsResultMessage>
+    public class GetOrganisationsResultMessageConsumer : IQueueConsumer<GetOrganizationsResultMessage>
     {
         private ILogger<GetOrganisationsResultMessageConsumer> _logger;
         private readonly ITicketService _ticketService;
@@ -17,13 +17,16 @@ namespace DAPM.ClientApi.Consumers
             _ticketService = ticketService;
         }
 
-        public Task ConsumeAsync(GetOrganisationsResultMessage message)
+        public Task ConsumeAsync(GetOrganizationsResultMessage message)
         {
             _logger.LogInformation("Message received");
 
-
-            Organisation[] organisations = message.Organisations;
-
+            OrganizationDTO[] organisations = message.Organisations;
+            JToken result = new JObject();
+            JToken organisationsJSON = JToken.FromObject(organisations);
+            result["organisations"] = organisationsJSON;
+            _ticketService.UpdateTicketResolution(message.TicketId, result);
+            
             _logger.LogInformation("It just works");
 
             return Task.CompletedTask;

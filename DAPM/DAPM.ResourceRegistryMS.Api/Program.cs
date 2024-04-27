@@ -10,7 +10,7 @@ using RabbitMQLibrary.Implementation;
 using RabbitMQLibrary.Extensions;
 using System.Text;
 using DAPM.ResourceRegistryMS.Api.Consumers;
-using RabbitMQLibrary.Messages;
+using RabbitMQLibrary.Messages.ResourceRegistry;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,7 +38,7 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
     RabbitMqUsername = "guest"
 });
 
-builder.Services.AddQueueMessageConsumer<GetOrganisationsMessageConsumer, GetOrganisationsMessage>();
+builder.Services.AddQueueMessageConsumer<GetOrganisationsMessageConsumer, GetOrganizationsMessage>();
 
 // Add services to the container.
 
