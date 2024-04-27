@@ -4,8 +4,8 @@ using Microsoft.AspNetCore.Http.Features;
 using RabbitMQ.Client;
 using RabbitMQLibrary.Implementation;
 using RabbitMQLibrary.Extensions;
-using RabbitMQLibrary.Messages;
 using DAPM.ClientApi.Consumers;
+using RabbitMQLibrary.Messages.ClientApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,7 +33,11 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
     RabbitMqUsername = "guest"
 });
 
-builder.Services.AddQueueMessageConsumer<GetOrganisationsResultMessageConsumer, GetOrganisationsResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetOrganizationsResultConsumer, GetOrganizationsResultMessage>();
+builder.Services.AddQueueMessageConsumer<CreateNewItemResultConsumer, CreateNewItemResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetRepositoriesResultConsumer, GetRepositoriesResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetResourcesResultConsumer, GetResourcesResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetUsersResultConsumer, GetUsersResultMessage>();
 
 
 // Add services to the container.

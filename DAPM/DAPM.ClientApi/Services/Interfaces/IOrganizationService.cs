@@ -3,5 +3,7 @@
     public interface IOrganizationService
     {
         public Guid GetOrganizations();
+        public Guid GetOrganizationById(int organizationId);
+        public Guid GetUsersOfOrganization(int organizationId); 
     }
 }

@@ -3,40 +3,108 @@ using Newtonsoft.Json.Linq;
 
 namespace DAPM.ClientApi.Services
 {
+
+    public enum TicketStatus
+    {
+        NotCompleted = 0,
+        Completed = 1,
+        Failed = 2,
+        NotFound = 3,
+    }
+
+
     public class TicketService : ITicketService
     {
         private readonly ILogger<ITicketService> _logger;
-        private Dictionary<Guid, JObject> _ticketResolutions;
-        private Dictionary<Guid, int> _ticketStatus;
+        private Dictionary<Guid, JToken> _ticketResolutions;
+        private Dictionary<Guid, TicketStatus> _ticketStatus;
 
         public TicketService(ILogger<ITicketService> logger) 
         {
             _logger = logger;
-            _ticketStatus = new Dictionary<Guid, int>();
-            _ticketResolutions = new Dictionary<Guid, JObject>();
+            _ticketStatus = new Dictionary<Guid, TicketStatus>();
+            _ticketResolutions = new Dictionary<Guid, JToken>();
         }
-        public JObject GetTicketResolution(Guid ticketId)
+        public JToken GetTicketResolution(Guid ticketId)
         {
-            return _ticketResolutions[ticketId];
+            JToken resolution = new JObject();
+            resolution["ticketId"] = ticketId;
+
+            if (_ticketStatus.ContainsKey(ticketId))
+            {
+                resolution["status"] = (int)_ticketStatus[ticketId];
+
+                switch (_ticketStatus[ticketId])
+                {
+                    case TicketStatus.NotCompleted:
+                        resolution["message"] = "The ticket hasn't been completed";
+                        resolution["result"] = null;
+                        break;
+
+                    case TicketStatus.Completed:
+                        resolution["message"] = "The ticket has been completed";
+                        resolution["result"] = _ticketResolutions[ticketId];
+                        break;
+
+                    case TicketStatus.Failed:
+                        resolution["message"] = "The ticket resolution failed";
+                        resolution["result"] = null;
+                        break;
+                }
+            }
+            else
+            {
+                resolution["status"] = (int)TicketStatus.NotFound;
+                resolution["message"] = "The ticket does not exist";
+                resolution["result"] = null;
+            }
+
+            return resolution;
         }
 
-        public int GetTicketStatus(Guid ticketId)
+        public void UpdateTicketStatus(Guid ticketId, TicketStatus ticketStatus)
         {
-            return _ticketStatus[ticketId];
+            if(_ticketStatus.ContainsKey(ticketId))
+            {
+                _ticketStatus[ticketId] = ticketStatus;
+            }
+            else
+            {
+                _logger.LogInformation($"A ticket status was updated for ticket {ticketId} but it didn't exist");
+                return;
+            }
+        }
+
+        public TicketStatus GetTicketStatus(Guid ticketId)
+        {
+            if (_ticketResolutions.ContainsKey(ticketId))
+            {
+                return _ticketStatus[ticketId];
+            }
+            else
+                return TicketStatus.NotFound;
         }
 
         public Guid CreateNewTicket()
         {
             Guid guid = Guid.NewGuid();
-            _ticketStatus[guid] = 0;
+            _ticketStatus[guid] = TicketStatus.NotCompleted;
             _logger.LogInformation($"A new ticket has been created");
             return guid;
         }
 
-        public void UpdateTicketResolution(Guid ticketId, JObject resolution)
+        public void UpdateTicketResolution(Guid ticketId, JToken requestResult)
         {
-            _ticketResolutions[ticketId] = resolution;
-            _ticketStatus[ticketId] = 1;
+            if(_ticketStatus.ContainsKey(ticketId))
+            {
+                UpdateTicketStatus(ticketId, TicketStatus.Completed);
+                _ticketResolutions[ticketId] = requestResult;
+            }
+            else
+            {
+                _logger.LogInformation($"A ticket resolution was updated for ticket {ticketId} but it didn't exist");
+                return;
+            }
             _logger.LogInformation($"Ticket resolution of ticket {ticketId} has been updated");
         }
     }
