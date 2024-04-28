@@ -6,7 +6,7 @@ using Newtonsoft.Json.Linq;
 namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("status")]
     public class StatusController : ControllerBase
     {
         private readonly ILogger<StatusController> _logger;
@@ -18,22 +18,13 @@ namespace DAPM.ClientApi.Controllers
             _ticketService = ticketService;
         }
 
-        [HttpGet("status")]
-        public async Task<ActionResult<int>> Get(Guid id)
+        [HttpGet(("{ticketId}"))]
+        public async Task<ActionResult<int>> Get(Guid ticketId)
         {
-            int response = _ticketService.GetTicketStatus(id);
+            JToken responseJSON = _ticketService.GetTicketResolution(ticketId);
+            var response = responseJSON.ToString();
+
             return Ok(response);
-        }
-
-        [HttpGet("resolution")]
-        public async Task<ActionResult<ApiResponse>> GetResolution(Guid id)
-        {
-            JObject response = _ticketService.GetTicketResolution(id);
-            var response_string = response.ToString();
-
-            var responsee = new ApiResponse { response = response_string };
-
-            return Ok(responsee);
         }
     }
 }
