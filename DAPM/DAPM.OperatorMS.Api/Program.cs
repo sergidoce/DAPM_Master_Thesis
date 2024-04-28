@@ -1,6 +1,10 @@
 using DAPM.OperatorMS.Api.Services.Interfaces;
 using DAPM.OperatorMS.Api.Services;
 using Microsoft.AspNetCore.Http.Features;
+using RabbitMQLibrary.Implementation;
+using RabbitMQLibrary.Extensions;
+using RabbitMQLibrary.Messages;
+using DAPM.OperatorMS.Api.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +21,18 @@ builder.Services.Configure<FormOptions>(x =>
     x.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
+// RabbitMQ
+builder.Services.AddQueueing(new QueueingConfigurationSettings
+{
+    RabbitMqConsumerConcurrency = 5,
+    RabbitMqHostname = "rabbitmq",
+    RabbitMqPort = 5672,
+    RabbitMqPassword = "guest",
+    RabbitMqUsername = "guest"
+});
+
+builder.Services.AddQueueMessageConsumer<GetExecutionMessageConsumer, GetExecutionMessage>();
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -30,12 +46,8 @@ var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 

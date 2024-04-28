@@ -38,13 +38,14 @@ builder.Services.AddQueueMessageConsumer<CreateNewItemResultConsumer, CreateNewI
 builder.Services.AddQueueMessageConsumer<GetRepositoriesResultConsumer, GetRepositoriesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourcesResultConsumer, GetResourcesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetUsersResultConsumer, GetUsersResultMessage>();
-
+builder.Services.AddQueueMessageConsumer<GetExecutionResultMessageConsumer, GetExecutionResultMessage>();
 
 // Add services to the container.
 
 
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
+builder.Services.AddScoped<IOperatorService, OperatorService>();
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddSingleton<ITicketService, TicketService>();
