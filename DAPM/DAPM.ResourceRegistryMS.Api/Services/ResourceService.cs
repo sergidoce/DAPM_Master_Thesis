@@ -22,12 +22,12 @@ namespace DAPM.ResourceRegistryMS.Api.Services
 
         public async Task<Resource> GetResource(int resourceId)
         {
-            return await _resourceRepository.GetResource(resourceId);
+            return await _resourceRepository.GetResourceById(resourceId);
         }
 
         public async Task<IEnumerable<Resource>> GetResource()
         {
-            return await _resourceRepository.GetResource();
+            return await _resourceRepository.GetAllResources();
         }
 
         public async Task<bool> AddResource(ResourceDto resourceDto)
@@ -35,8 +35,8 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             var repositoryId = resourceDto.RepositoryId;
             var resourceTypeId = resourceDto.TypeId;
 
-            var repository = await _repositoryRepository.GetRepository(repositoryId);
-            var resourceType = await _resourceTypeRepository.GetResourceType(resourceTypeId);
+            var repository = await _repositoryRepository.GetRepositoryById(repositoryId);
+            var resourceType = await _resourceTypeRepository.GetResourceTypeById(resourceTypeId);
 
             var resource = new Resource
             {

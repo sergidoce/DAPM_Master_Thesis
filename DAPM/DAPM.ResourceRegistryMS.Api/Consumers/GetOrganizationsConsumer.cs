@@ -38,7 +38,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
                     ApiUrl = peer.ApiUrl,
                 };
 
-                organizations.Append(org);
+                organizations = organizations.Append(org);
             }
 
             var resultMessage = new GetOrganizationsResultMessage

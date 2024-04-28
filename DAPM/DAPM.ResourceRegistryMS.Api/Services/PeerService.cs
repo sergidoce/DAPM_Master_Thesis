@@ -35,7 +35,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
 
         public async Task<Peer> GetPeer(int id)
         {
-            return await _peerRepository.GetPeer(id);
+            return await _peerRepository.GetPeerById(id);
         }
 
         public async Task<IEnumerable<Peer>> GetAllPeers()

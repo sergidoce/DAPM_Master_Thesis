@@ -1,5 +1,6 @@
 ﻿using DAPM.ResourceRegistryMS.Api.Models;
 using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 
 namespace DAPM.ResourceRegistryMS.Api.Repositories
 {
@@ -23,10 +24,10 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
 
         public async Task<IEnumerable<Peer>> GetAllPeers()
         {
-            return _context.Peers.ToList();
+            return await _context.Peers.ToListAsync();
         }
 
-        public async Task<Peer> GetPeer(int id)
+        public async Task<Peer> GetPeerById(int id)
         {
             return await _context.Peers.FindAsync(id);
         }

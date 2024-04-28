@@ -20,7 +20,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
 
         public async Task<bool> AddRepository(RepositoryDto repositoryDto)
         {
-            var peer = await _peerRepository.GetPeer(repositoryDto.Id);
+            var peer = await _peerRepository.GetPeerById(repositoryDto.Id);
 
             var repository = new Repository
             {
@@ -39,7 +39,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
 
         public Task<Repository> GetRepository(int id)
         {
-            return _repositoryRepository.GetRepository(id);
+            return _repositoryRepository.GetRepositoryById(id);
         }
 
         public Task<IEnumerable<Repository>> GetRepository()

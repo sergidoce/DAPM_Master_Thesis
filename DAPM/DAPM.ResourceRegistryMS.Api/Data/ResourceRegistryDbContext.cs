@@ -8,11 +8,24 @@ public class ResourceRegistryDbContext : DbContext
         : base(options)
     {
         _logger = logger;
-        Database.Migrate();
+        InitializeDatabase();
     }
 
     public DbSet<Resource> Resources { get; set; }
     public DbSet<Repository> Repositories { get; set; }
     public DbSet<Peer> Peers { get; set; }
     public DbSet<ResourceType> ResourceTypes { get; set; }
+
+
+
+    public void InitializeDatabase()
+    {
+        Database.EnsureDeleted();
+        Database.Migrate();
+
+        Peers.Add( new Peer { Name = "DTU", ApiUrl ="http.dtu.dk"});
+        SaveChanges();
+    }
+
+
 }
