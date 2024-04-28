@@ -1,4 +1,5 @@
-﻿using RabbitMQLibrary.Interfaces;
+﻿using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
+using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
@@ -9,40 +10,47 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
     {
         private ILogger<GetOrganizationsConsumer> _logger;
         private IQueueProducer<GetOrganizationsResultMessage> _getOrganisationsResultQueueProducer;
-        public GetOrganizationsConsumer(ILogger<GetOrganizationsConsumer> logger, IQueueProducer<GetOrganizationsResultMessage> getOrganisationsResultQueueProducer)
+        private IPeerService _peerService;
+
+        public GetOrganizationsConsumer(
+            ILogger<GetOrganizationsConsumer> logger, 
+            IQueueProducer<GetOrganizationsResultMessage> getOrganisationsResultQueueProducer,
+            IPeerService peerService)
         {
             _logger = logger;
             _getOrganisationsResultQueueProducer = getOrganisationsResultQueueProducer;
+            _peerService = peerService;
         }
 
-        public Task ConsumeAsync(GetOrganizationsMessage message)
+        public async Task ConsumeAsync(GetOrganizationsMessage message)
         {
             _logger.LogInformation("Get OrganisationsMessage received");
 
-            var organisation1 = new OrganizationDTO
-            {
-                Id = 0,
-                Name = "DTU",
-                ApiUrl = "http.dtu"
-            };
+            var peers = await _peerService.GetAllPeers();
+            IEnumerable<OrganizationDTO> organizations = Enumerable.Empty<OrganizationDTO>();
 
-            var organisation2 = new OrganizationDTO
+            foreach (var peer in peers)
             {
-                Id = 1,
-                Name = "KU",
-                ApiUrl = "http.ku"
-            };
+                var org = new OrganizationDTO
+                {
+                    Id = peer.Id,
+                    Name = peer.Name,
+                    ApiUrl = peer.ApiUrl,
+                };
 
-            var new_message = new GetOrganizationsResultMessage
+                organizations.Append(org);
+            }
+
+            var resultMessage = new GetOrganizationsResultMessage
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = message.TicketId,
-                Organizations = [organisation1, organisation2]
+                Organizations = organizations
             };
 
-            _getOrganisationsResultQueueProducer.PublishMessage(new_message);
+            _getOrganisationsResultQueueProducer.PublishMessage(resultMessage);
 
-            return Task.CompletedTask;
+            return;
         }
 
     }

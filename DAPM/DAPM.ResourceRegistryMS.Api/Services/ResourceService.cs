@@ -20,7 +20,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             _logger = logger;
         }
 
-        public async Task<Resource> GetResource(string resourceId)
+        public async Task<Resource> GetResource(int resourceId)
         {
             return await _resourceRepository.GetResource(resourceId);
         }
@@ -51,7 +51,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return true;
         }
 
-        public async Task<bool> DeleteResource(string resourceId)
+        public async Task<bool> DeleteResource(int resourceId)
         {
             return await _resourceRepository.DeleteResource(resourceId);
         }

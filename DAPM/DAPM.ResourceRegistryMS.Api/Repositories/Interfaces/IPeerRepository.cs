@@ -4,7 +4,8 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories.Interfaces
 {
     public interface IPeerRepository
     {
-        public Task<Peer> GetPeer(string id);
+        public Task<Peer> GetPeer(int id);
         public Task<bool> AddPeer(Peer peer);
+        public Task<IEnumerable<Peer>> GetAllPeers();
     }
 }

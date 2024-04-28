@@ -17,7 +17,7 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
         }
 
         [HttpGet("{resourceId}")]
-        public async Task<Resource> Get(string resourceId)
+        public async Task<Resource> Get(int resourceId)
         {
             return await _resourceService.GetResource(resourceId);
         }
@@ -41,7 +41,7 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
         }
 
         [HttpDelete("{resourceId}")]
-        public async Task<bool> Delete(string resourceId) 
+        public async Task<bool> Delete(int resourceId) 
         {
             return await _resourceService.DeleteResource(resourceId);
         }

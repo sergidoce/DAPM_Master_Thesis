@@ -21,7 +21,12 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return true;
         }
 
-        public async Task<Peer> GetPeer(string id)
+        public async Task<IEnumerable<Peer>> GetAllPeers()
+        {
+            return _context.Peers.ToList();
+        }
+
+        public async Task<Peer> GetPeer(int id)
         {
             return await _context.Peers.FindAsync(id);
         }

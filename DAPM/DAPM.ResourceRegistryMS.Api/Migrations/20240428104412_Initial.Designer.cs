@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAPM.ResourceRegistryMS.Api.Migrations
 {
     [DbContext(typeof(ResourceRegistryDbContext))]
-    [Migration("20240410093649_Initial")]
+    [Migration("20240428104412_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -25,8 +25,11 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
 
             modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Peer", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("ApiUrl")
                         .IsRequired()
@@ -43,16 +46,18 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
 
             modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Repository", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("PeerId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("PeerId")
+                        .HasColumnType("integer");
 
                     b.HasKey("Id");
 
@@ -63,16 +68,18 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
 
             modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Resource", b =>
                 {
-                    b.Property<string>("Id")
-                        .HasColumnType("text");
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("RepositoryId")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<int>("RepositoryId")
+                        .HasColumnType("integer");
 
                     b.Property<int>("TypeId")
                         .HasColumnType("integer");

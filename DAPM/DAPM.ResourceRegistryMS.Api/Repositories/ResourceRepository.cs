@@ -13,7 +13,7 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             _context = context;
         }
 
-        public async Task<Resource> GetResource(string resourceId) 
+        public async Task<Resource> GetResource(int resourceId) 
         {
             var resource = await _context.Resources.FindAsync(resourceId);
 
@@ -37,9 +37,9 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteResource(string resourceName)
+        public async Task<bool> DeleteResource(int resourceId)
         {
-            var resource = await _context.Resources.FindAsync(resourceName);
+            var resource = await _context.Resources.FindAsync(resourceId);
 
             if (resource == null)
             {

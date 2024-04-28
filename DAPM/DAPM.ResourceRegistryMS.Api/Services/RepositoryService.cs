@@ -32,12 +32,12 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return await _repositoryRepository.AddRepository(repository);
         }
 
-        public Task<bool> DeleteRepository(string id)
+        public Task<bool> DeleteRepository(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Repository> GetRepository(string id)
+        public Task<Repository> GetRepository(int id)
         {
             return _repositoryRepository.GetRepository(id);
         }

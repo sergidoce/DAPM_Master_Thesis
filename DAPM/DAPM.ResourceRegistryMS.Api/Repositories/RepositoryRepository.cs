@@ -20,7 +20,7 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return true;
         }
 
-        public async Task<Repository> GetRepository(string id)
+        public async Task<Repository> GetRepository(int id)
         {
             var repository = _context.Repositories.Include(r => r.Peer).Single(r => r.Id == id);
 
