@@ -35,7 +35,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
 
         public async Task<ResourceType> GetResourceType(int id)
         {
-            return await _resourceTypeRepository.GetResourceType(id);
+            return await _resourceTypeRepository.GetResourceTypeById(id);
         }
 
         public Task<IEnumerable<ResourceType>> GetResourceType()
