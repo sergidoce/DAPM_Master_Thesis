@@ -10,7 +10,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace DAPM.ResourceRegistryMS.Api.Migrations
 {
     [DbContext(typeof(ResourceRegistryDbContext))]
-    [Migration("20240428104412_Initial")]
+    [Migration("20240429091252_Initial")]
     partial class Initial
     {
         /// <inheritdoc />
@@ -46,6 +46,9 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
 
             modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Repository", b =>
                 {
+                    b.Property<int>("PeerId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
@@ -56,18 +59,19 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("PeerId")
-                        .HasColumnType("integer");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("PeerId");
+                    b.HasKey("PeerId", "Id");
 
                     b.ToTable("Repositories");
                 });
 
             modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Resource", b =>
                 {
+                    b.Property<int>("PeerId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("RepositoryId")
+                        .HasColumnType("integer");
+
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("integer");
@@ -78,17 +82,12 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("RepositoryId")
+                    b.Property<int>("ResourceTypeId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("integer");
+                    b.HasKey("PeerId", "RepositoryId", "Id");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("RepositoryId");
-
-                    b.HasIndex("TypeId");
+                    b.HasIndex("ResourceTypeId");
 
                     b.ToTable("Resources");
                 });
@@ -127,21 +126,29 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
 
             modelBuilder.Entity("DAPM.ResourceRegistryMS.Api.Models.Resource", b =>
                 {
-                    b.HasOne("DAPM.ResourceRegistryMS.Api.Models.Repository", "Repository")
+                    b.HasOne("DAPM.ResourceRegistryMS.Api.Models.Peer", "Peer")
                         .WithMany()
-                        .HasForeignKey("RepositoryId")
+                        .HasForeignKey("PeerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAPM.ResourceRegistryMS.Api.Models.ResourceType", "Type")
+                    b.HasOne("DAPM.ResourceRegistryMS.Api.Models.ResourceType", "ResourceType")
                         .WithMany()
-                        .HasForeignKey("TypeId")
+                        .HasForeignKey("ResourceTypeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("DAPM.ResourceRegistryMS.Api.Models.Repository", "Repository")
+                        .WithMany()
+                        .HasForeignKey("PeerId", "RepositoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Peer");
 
                     b.Navigation("Repository");
 
-                    b.Navigation("Type");
+                    b.Navigation("ResourceType");
                 });
 #pragma warning restore 612, 618
         }

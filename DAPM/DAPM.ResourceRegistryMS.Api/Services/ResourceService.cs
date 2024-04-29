@@ -43,7 +43,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
                 Id = resourceDto.Id,
                 Name = resourceDto.Name,
                 Repository = repository,
-                Type = resourceType
+                ResourceType = resourceType
             };
 
             await _resourceRepository.AddResource(resource);
