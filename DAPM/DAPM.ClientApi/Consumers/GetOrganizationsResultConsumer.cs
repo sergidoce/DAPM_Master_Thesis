@@ -1,6 +1,7 @@
 ﻿using DAPM.ClientApi.Services.Interfaces;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using Newtonsoft.Json.Serialization;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
 using RabbitMQLibrary.Models;
@@ -23,7 +24,7 @@ namespace DAPM.ClientApi.Consumers
 
             IEnumerable<OrganizationDTO> organisations = message.Organizations;
             JToken result = new JObject();
-            JToken organisationsJSON = JToken.FromObject(organisations);
+            JToken organisationsJSON = JToken.FromObject(organisations, JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
             result["organisations"] = organisationsJSON;
             _ticketService.UpdateTicketResolution(message.TicketId, result);
             
