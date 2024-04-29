@@ -22,7 +22,7 @@ namespace DAPM.ClientApi.Controllers
         public async Task<ActionResult<Guid>> Get()
         {
             Guid id = _organizationService.GetOrganizations();
-            return Ok(id);
+            return Ok(new ApiResponse { RequestName = "GetAllOrganizations", TicketId = id});
         }
 
         [HttpGet("{organizationId}")]

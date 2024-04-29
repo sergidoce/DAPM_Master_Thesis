@@ -28,19 +28,19 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return await _peerRepository.AddPeer(peer);
         }
 
-        public Task<bool> DeletePeer(string id)
+        public Task<bool> DeletePeer(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Peer> GetPeer(string id)
+        public async Task<Peer> GetPeer(int id)
         {
-            return await _peerRepository.GetPeer(id);
+            return await _peerRepository.GetPeerById(id);
         }
 
-        public Task<IEnumerable<Peer>> GetPeer()
+        public async Task<IEnumerable<Peer>> GetAllPeers()
         {
-            throw new NotImplementedException();
+            return await _peerRepository.GetAllPeers();
         }
     }
 }

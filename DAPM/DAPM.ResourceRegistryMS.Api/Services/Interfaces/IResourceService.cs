@@ -5,11 +5,11 @@ namespace DAPM.ResourceRegistryMS.Api.Services.Interfaces
 {
     public interface IResourceService
     {
-        Task<Resource> GetResource(string name);
+        Task<Resource> GetResource(int id);
 
         Task<IEnumerable<Resource>> GetResource();
         Task<bool> AddResource(ResourceDto resource);  
 
-        Task<bool> DeleteResource(string name);
+        Task<bool> DeleteResource(int id);
     }
 }

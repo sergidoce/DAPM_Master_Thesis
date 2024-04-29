@@ -19,7 +19,7 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
         }
 
         [HttpGet("{repositoryId}")]
-        public async Task<Repository> Get(string repositoryId)
+        public async Task<Repository> Get(int repositoryId)
         {
             return await _repositoryService.GetRepository(repositoryId);
         }
