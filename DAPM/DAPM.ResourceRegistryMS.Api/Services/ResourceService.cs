@@ -20,14 +20,14 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             _logger = logger;
         }
 
-        public async Task<Resource> GetResource(string resourceId)
+        public async Task<Resource> GetResource(int resourceId)
         {
-            return await _resourceRepository.GetResource(resourceId);
+            return await _resourceRepository.GetResourceById(resourceId);
         }
 
         public async Task<IEnumerable<Resource>> GetResource()
         {
-            return await _resourceRepository.GetResource();
+            return await _resourceRepository.GetAllResources();
         }
 
         public async Task<bool> AddResource(ResourceDto resourceDto)
@@ -35,15 +35,15 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             var repositoryId = resourceDto.RepositoryId;
             var resourceTypeId = resourceDto.TypeId;
 
-            var repository = await _repositoryRepository.GetRepository(repositoryId);
-            var resourceType = await _resourceTypeRepository.GetResourceType(resourceTypeId);
+            var repository = await _repositoryRepository.GetRepositoryById(repositoryId);
+            var resourceType = await _resourceTypeRepository.GetResourceTypeById(resourceTypeId);
 
             var resource = new Resource
             {
                 Id = resourceDto.Id,
                 Name = resourceDto.Name,
                 Repository = repository,
-                Type = resourceType
+                ResourceType = resourceType
             };
 
             await _resourceRepository.AddResource(resource);
@@ -51,7 +51,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return true;
         }
 
-        public async Task<bool> DeleteResource(string resourceId)
+        public async Task<bool> DeleteResource(int resourceId)
         {
             return await _resourceRepository.DeleteResource(resourceId);
         }

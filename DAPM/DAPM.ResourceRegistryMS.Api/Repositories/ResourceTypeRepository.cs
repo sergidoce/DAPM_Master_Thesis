@@ -24,7 +24,7 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<ResourceType> GetResourceType(int id)
+        public async Task<ResourceType> GetResourceTypeById(int id)
         {
             var resourceType = await _context.ResourceTypes.FindAsync(id);
 
@@ -36,7 +36,7 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return resourceType;
         }
 
-        public Task<IEnumerable<ResourceType>> GetResourceType()
+        public Task<IEnumerable<ResourceType>> GetAllResourceTypes()
         {
             throw new NotImplementedException();
         }

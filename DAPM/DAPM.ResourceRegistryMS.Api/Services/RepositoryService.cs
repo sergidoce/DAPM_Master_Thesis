@@ -20,7 +20,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
 
         public async Task<bool> AddRepository(RepositoryDto repositoryDto)
         {
-            var peer = await _peerRepository.GetPeer(repositoryDto.Id);
+            var peer = await _peerRepository.GetPeerById(repositoryDto.Id);
 
             var repository = new Repository
             {
@@ -32,14 +32,14 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return await _repositoryRepository.AddRepository(repository);
         }
 
-        public Task<bool> DeleteRepository(string id)
+        public Task<bool> DeleteRepository(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Repository> GetRepository(string id)
+        public Task<Repository> GetRepository(int id)
         {
-            return _repositoryRepository.GetRepository(id);
+            return _repositoryRepository.GetRepositoryById(id);
         }
 
         public Task<IEnumerable<Repository>> GetRepository()
