@@ -20,16 +20,24 @@ namespace DAPM.ClientApi.Consumers
 
         public Task ConsumeAsync(GetOrganizationsResultMessage message)
         {
-            _logger.LogInformation("Message received");
+            _logger.LogInformation("GetOrganizationsResultMessage received");
 
-            IEnumerable<OrganizationDTO> organisations = message.Organizations;
+
+            IEnumerable<OrganizationDTO> organizationsDTOs = message.Organizations;
+
+            // Objects used for serialization
             JToken result = new JObject();
-            JToken organisationsJSON = JToken.FromObject(organisations, JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() }));
-            result["organisations"] = organisationsJSON;
+            JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+
+
+            //Serialization
+            JToken organizationsJSON = JToken.FromObject(organizationsDTOs, serializer);
+            result["organizations"] = organizationsJSON;
+
+
+            // Update resolution
             _ticketService.UpdateTicketResolution(message.TicketId, result);
             
-            _logger.LogInformation("It just works");
-
             return Task.CompletedTask;
         }
 
