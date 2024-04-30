@@ -35,7 +35,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
                 {
                     Id = repository.Id,
                     Name = repository.Name,
-                    PeerId = repository.PeerId,
+                    OrganizationId = repository.PeerId,
                 };
 
                 repositoriesDTOs = repositoriesDTOs.Append(repo);

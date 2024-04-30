@@ -12,6 +12,6 @@ namespace RabbitMQLibrary.Models
 
         public string Name { get; set; }
 
-        public int PeerId { get; set; }
+        public int OrganizationId { get; set; }
     }
 }

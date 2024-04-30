@@ -42,7 +42,8 @@ namespace DAPM.ClientApi.Controllers
         [HttpGet("{organizationId}/repositories")]
         public async Task<ActionResult<Guid>> GetRepositoriesOfOrganization(int organizationId)
         {
-
+            Guid id = _organizationService.GetRepositoriesOfOrganization(organizationId);
+            return Ok(new ApiResponse {RequestName = "GetRepositoriesOfOrganization", TicketId = id });
         }
 
     }
