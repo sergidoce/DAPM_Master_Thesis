@@ -8,11 +8,13 @@ namespace DAPM.ResourceRegistryMS.Api.Services
     public class PeerService : IPeerService
     {
         private IPeerRepository _peerRepository;
+        private IRepositoryRepository _repositoryRepository;
         private readonly ILogger<IPeerService> _logger;
 
-        public PeerService(ILogger<IPeerService> logger, IPeerRepository peerRepository)
+        public PeerService(ILogger<IPeerService> logger, IPeerRepository peerRepository, IRepositoryRepository repositoryRepository)
         {
             _peerRepository = peerRepository;
+            _repositoryRepository = repositoryRepository;
             _logger = logger;
         }
 
@@ -41,6 +43,11 @@ namespace DAPM.ResourceRegistryMS.Api.Services
         public async Task<IEnumerable<Peer>> GetAllPeers()
         {
             return await _peerRepository.GetAllPeers();
+        }
+
+        public async Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(int organizationId)
+        {
+            return await _repositoryRepository.GetRepositoriesOfOrganization(organizationId); 
         }
     }
 }

@@ -11,5 +11,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services.Interfaces
         Task<bool> AddPeer(PeerDto peerDto);
 
         Task<bool> DeletePeer(int id);
+
+        Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(int organizationId);  
     }
 }
