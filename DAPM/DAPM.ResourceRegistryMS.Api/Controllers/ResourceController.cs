@@ -17,14 +17,14 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
         }
 
         [HttpGet("{resourceId}")]
-        public async Task<Resource> Get(int resourceId)
+        public async Task<Resource> Get(int organizationId, int repositoryId, int resourceId)
         {
-            return await _resourceService.GetResource(resourceId);
+            return await _resourceService.GetResourceById(organizationId, repositoryId, resourceId);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Resource>> GetResource() {
-            return await _resourceService.GetResource();
+        public async Task<IEnumerable<Resource>> GetAllResources() {
+            return await _resourceService.GetAllResources();
         }
 
         [HttpPost]

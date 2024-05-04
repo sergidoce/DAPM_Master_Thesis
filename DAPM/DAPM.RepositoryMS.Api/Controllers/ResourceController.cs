@@ -22,32 +22,5 @@ namespace DAPM.RepositoryMS.Api.Controllers
             _resourceService = resourceService;
         }
 
-        [HttpGet(Name = "resource")]
-        public async Task<FileStreamResult> Get([FromQuery] string name)
-        {
-            var result = await _resourceService.RetrieveResource(name);
-            result.File.Position = 0;
-            return new FileStreamResult(result.File, "application/octet-stream")
-            {
-                FileDownloadName = "resource.csv"
-            };
-        }
-
-        [HttpPost(Name = "resource")]
-        public async Task<ActionResult> Post(ResourceForm resourceForm)
-        {
-
-            var filePath = Path.GetTempFileName();
-            var fileStream = new FileStream(filePath, FileMode.Create);
-
-            await resourceForm.ResourceFile.CopyToAsync(fileStream);
-
-            var result = await _resourceService.PublishResource(new Resource(resourceForm.Name, fileStream));
-            if (result)
-            {
-                return Ok();
-            }
-            else return BadRequest();
-        }
     }
 }

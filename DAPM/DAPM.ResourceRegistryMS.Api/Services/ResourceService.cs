@@ -20,9 +20,9 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             _logger = logger;
         }
 
-        public async Task<Resource> GetResource(int resourceId)
+        public async Task<Resource> GetResourceById(int organizationId, int repositoryId, int resourceId)
         {
-            return await _resourceRepository.GetResourceById(resourceId);
+            return await _resourceRepository.GetResourceById(organizationId, repositoryId, resourceId);
         }
 
         public async Task<IEnumerable<Resource>> GetResource()
@@ -32,21 +32,21 @@ namespace DAPM.ResourceRegistryMS.Api.Services
 
         public async Task<bool> AddResource(ResourceDto resourceDto)
         {
-            var repositoryId = resourceDto.RepositoryId;
-            var resourceTypeId = resourceDto.TypeId;
+            //var repositoryId = resourceDto.RepositoryId;
+            //var resourceTypeId = resourceDto.TypeId;
 
-            var repository = await _repositoryRepository.GetRepositoryById(repositoryId);
-            var resourceType = await _resourceTypeRepository.GetResourceTypeById(resourceTypeId);
+            //var repository = await _repositoryRepository.GetRepositoryById(repositoryId);
+            //var resourceType = await _resourceTypeRepository.GetResourceTypeById(resourceTypeId);
 
-            var resource = new Resource
-            {
-                Id = resourceDto.Id,
-                Name = resourceDto.Name,
-                Repository = repository,
-                ResourceType = resourceType
-            };
+            //var resource = new Resource
+            //{
+            //    Id = resourceDto.Id,
+            //    Name = resourceDto.Name,
+            //    Repository = repository,
+            //    ResourceType = resourceType
+            //};
 
-            await _resourceRepository.AddResource(resource);
+            //await _resourceRepository.AddResource(resource);
 
             return true;
         }
@@ -54,6 +54,11 @@ namespace DAPM.ResourceRegistryMS.Api.Services
         public async Task<bool> DeleteResource(int resourceId)
         {
             return await _resourceRepository.DeleteResource(resourceId);
+        }
+
+        public async Task<IEnumerable<Resource>> GetAllResources()
+        {
+            return await _resourceRepository.GetAllResources();
         }
     }
 }

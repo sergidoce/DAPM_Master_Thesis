@@ -13,18 +13,6 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             _context = context;
         }
 
-        public async Task<Resource> GetResourceById(int id) 
-        {
-            var resource = await _context.Resources.FindAsync(id);
-
-            if (resource == null)
-            {
-                return new Resource { Name = "Resource Not Found" };
-            }
-
-            return resource;
-        }
-
         public async Task<IEnumerable<Resource>> GetAllResources()
         {
             return await _context.Resources.ToListAsync();
@@ -50,6 +38,16 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             await _context.SaveChangesAsync();
 
             return true;
+        }
+
+        public async Task<Resource> GetResourceById(int organizationId, int repositoryId, int resourceId)
+        {
+            return (Resource)_context.Resources.Where(r => r.PeerId == organizationId && r.RepositoryId == repositoryId && r.Id == resourceId);
+        }
+
+        public IEnumerable<Resource> GetResourcesOfRepository(int organizationId, int repositoryId)
+        {
+            return _context.Resources.Where(r => r.PeerId == organizationId && r.RepositoryId == repositoryId);
         }
     }
 }

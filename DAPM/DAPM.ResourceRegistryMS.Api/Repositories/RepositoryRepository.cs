@@ -20,14 +20,19 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return true;
         }
 
+        public async Task<IEnumerable<Repository>> GetAllRepositories()
+        {
+            return await _context.Repositories.ToListAsync();
+        }
+
         public async Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(int organizationId)
         {
             return _context.Repositories.Where(r => r.PeerId == organizationId);   
         }
 
-        public async Task<Repository> GetRepositoryById(int id)
+        public async Task<Repository> GetRepositoryById(int organizationId, int repositoryId)
         {
-            var repository = _context.Repositories.Include(r => r.Peer).Single(r => r.Id == id);
+            var repository = _context.Repositories.Include(r => r.Peer).Single(r => r.Id == repositoryId && r.PeerId == organizationId);
 
             if (repository == null)
             {
