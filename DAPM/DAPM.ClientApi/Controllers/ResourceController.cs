@@ -18,18 +18,6 @@ namespace DAPM.ClientApi.Controllers
             _logger = logger;
             _resourceService = resourceService;
         }
-
-        [HttpGet(Name = "resource")]
-        public async Task<FileStreamResult> Get([FromQuery] string name)
-        {
-            throw new NotImplementedException();     
-        }
-
-        [HttpPost(Name = "resource")]
-        public async Task<ActionResult> Post(ResourceForm resourceForm)
-        {
-            throw new NotImplementedException();
-        }
     }
     
 }

@@ -8,13 +8,18 @@ namespace DAPM.ResourceRegistryMS.Api.Services
     public class RepositoryService : IRepositoryService
     {
         private readonly ILogger<IRepositoryService> _logger;
+        private IResourceRepository _resourceRepository;
         private IRepositoryRepository _repositoryRepository;
         private IPeerRepository _peerRepository;
 
-        public RepositoryService(ILogger<IRepositoryService> logger, IRepositoryRepository repositoryRepository, IPeerRepository peerRepository)
+        public RepositoryService(ILogger<IRepositoryService> logger, 
+            IRepositoryRepository repositoryRepository, 
+            IPeerRepository peerRepository,
+            IResourceRepository resourceRepository)
         {
             _repositoryRepository = repositoryRepository;
             _peerRepository = peerRepository;
+            _resourceRepository = resourceRepository;
             _logger = logger;
         }
 
@@ -32,19 +37,24 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return await _repositoryRepository.AddRepository(repository);
         }
 
-        public Task<bool> DeleteRepository(int id)
+        public Task<bool> DeleteRepository(int organizationId, int repositoryId)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Repository> GetRepository(int id)
+        public async Task<IEnumerable<Repository>> GetAllRepositories()
         {
-            return _repositoryRepository.GetRepositoryById(id);
+            return await _repositoryRepository.GetAllRepositories();
+        }
+ 
+        public async Task<Repository> GetRepositoryById(int organizationId, int repositoryId)
+        {
+            return await _repositoryRepository.GetRepositoryById(organizationId, repositoryId);
         }
 
-        public Task<IEnumerable<Repository>> GetRepository()
+        public async Task<IEnumerable<Resource>> GetResourcesOfRepository(int organizationId, int repositoryId)
         {
-            throw new NotImplementedException();
+            return _resourceRepository.GetResourcesOfRepository(organizationId, repositoryId);
         }
     }
 }

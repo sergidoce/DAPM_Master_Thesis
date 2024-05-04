@@ -26,17 +26,17 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpGet("{organizationId}")]
-        public async Task<ActionResult<Guid>> Get(int organizationId)
+        public async Task<ActionResult<Guid>> GetById(int organizationId)
         {
             Guid id = _organizationService.GetOrganizationById(organizationId);
-            return Ok(id);
+            return Ok(new ApiResponse { RequestName = "GetOrganizationById", TicketId = id });
         }
 
-        [HttpGet("{organizationId}/users")]
-        public async Task<ActionResult<Guid>>GetUsersOfOrganization(int organizationId)
+        [HttpGet("{organizationId}/repositories")]
+        public async Task<ActionResult<Guid>> GetRepositoriesOfOrganization(int organizationId)
         {
-            Guid id = _organizationService.GetUsersOfOrganization(organizationId);
-            return Ok(id);
+            Guid id = _organizationService.GetRepositoriesOfOrganization(organizationId);
+            return Ok(new ApiResponse {RequestName = "GetRepositoriesOfOrganization", TicketId = id });
         }
 
     }
