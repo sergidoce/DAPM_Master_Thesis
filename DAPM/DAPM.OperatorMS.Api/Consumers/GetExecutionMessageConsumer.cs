@@ -1,8 +1,8 @@
 ﻿using DAPM.OperatorMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages;
+using RabbitMQLibrary.Messages.ClientApi;
 
-namespace DAPM.OperatorMS.Api.Consumers 
+namespace DAPM.OperatorMS.Api.Consumers
 {
     public class GetExecutionMessageConsumer : IQueueConsumer<GetExecutionMessage>
     {

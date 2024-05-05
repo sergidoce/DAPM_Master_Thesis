@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages
+namespace RabbitMQLibrary.Messages.ClientApi
 {
     public class GetExecutionResultMessage : IQueueMessage
     {

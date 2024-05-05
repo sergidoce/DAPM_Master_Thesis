@@ -3,8 +3,8 @@ using DAPM.OperatorMS.Api.Services;
 using Microsoft.AspNetCore.Http.Features;
 using RabbitMQLibrary.Implementation;
 using RabbitMQLibrary.Extensions;
-using RabbitMQLibrary.Messages;
 using DAPM.OperatorMS.Api.Consumers;
+using RabbitMQLibrary.Messages.ClientApi;
 
 var builder = WebApplication.CreateBuilder(args);
 

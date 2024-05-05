@@ -1,6 +1,6 @@
 ﻿using DAPM.ClientApi.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages;
+using RabbitMQLibrary.Messages.ClientApi;
 
 namespace DAPM.ClientApi.Services
 {

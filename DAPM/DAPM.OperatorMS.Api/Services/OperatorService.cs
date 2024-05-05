@@ -11,38 +11,44 @@ namespace DAPM.OperatorMS.Api.Services
     public class OperatorService : IOperatorService
     {
         private readonly HttpClient _httpClient;
+        private readonly IHttpClientFactory _httpClientFactory;
         private readonly ILogger<OperatorService> _logger;
 
-        public OperatorService(ILogger<OperatorService> logger, HttpClient httpClient)
+        public OperatorService(ILogger<OperatorService> logger, HttpClient httpClient, IHttpClientFactory httpClientFactory)
         {
             _logger = logger;
             _httpClient = httpClient;
+            _httpClientFactory = httpClientFactory;
         }
 
         public async Task<byte[]> ExecuteMiner(string operatorName, string resourceName)
         {
             try
             {
-                HttpResponseMessage csvResponse = await _httpClient.GetAsync($"http://localhost:5043/Resource?name={resourceName}");
-                csvResponse.EnsureSuccessStatusCode();
+                _logger.LogInformation("ExecuteMiner started!!!!!!!");
+                var httpClient = _httpClientFactory.CreateClient();
 
-                using (var csvStream = await csvResponse.Content.ReadAsStreamAsync())
-                { 
-                    using (var csvContent = new StreamContent(csvStream))
-                    {
-                        var formData = new MultipartFormDataContent
-                        {
-                            { csvContent, "event_log", "data.csv" }
-                        };
+                //HttpResponseMessage csvResponse = await _httpClient.GetAsync($"http://localhost:6000/Resource?name={resourceName}");
+                HttpResponseMessage csvResponse = await httpClient.GetAsync($"http://localhost:6000/Resource?name={resourceName}");
+                //csvResponse.EnsureSuccessStatusCode();
 
-                        HttpResponseMessage postResponse = await _httpClient.PostAsync("http://localhost:5000/execute", formData);
+                _logger.LogInformation("HTTP Called!!!!!!!!!");
 
-                        System.Diagnostics.Debug.WriteLine(postResponse.StatusCode);
-                        System.Diagnostics.Debug.WriteLine(postResponse.ToString());
+                using var csvStream = await csvResponse.Content.ReadAsStreamAsync();
+                using var csvContent = new StreamContent(csvStream);
+                
+                var formData = new MultipartFormDataContent
+                {
+                    { csvContent, "event_log", "data.csv" }
+                };
 
-                        return await postResponse.Content.ReadAsByteArrayAsync();
-                    }
-                }
+                //HttpResponseMessage postResponse = await _httpClient.PostAsync("http://localhost:8003/execute", formData);
+                HttpResponseMessage postResponse = await httpClient.PostAsync("http://localhost:8003/execute", formData);
+
+                System.Diagnostics.Debug.WriteLine(postResponse.StatusCode);
+                System.Diagnostics.Debug.WriteLine(postResponse.ToString());
+
+                return await postResponse.Content.ReadAsByteArrayAsync();
             }
             catch (HttpRequestException ex)
             {

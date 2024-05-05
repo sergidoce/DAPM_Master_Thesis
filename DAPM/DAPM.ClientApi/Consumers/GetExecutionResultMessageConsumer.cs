@@ -1,6 +1,7 @@
 ﻿using DAPM.ClientApi.Services.Interfaces;
+using Newtonsoft.Json.Linq;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages;
+using RabbitMQLibrary.Messages.ClientApi;
 
 namespace DAPM.ClientApi.Consumers
 {
@@ -18,6 +19,11 @@ namespace DAPM.ClientApi.Consumers
             _logger.LogInformation("Message received");
 
             byte[]? executionResult = message.ExecutionResult;
+            string base64Image = Convert.ToBase64String(executionResult);
+
+            JToken result = JToken.FromObject(new { Image = base64Image });
+
+            _ticketService.UpdateTicketResolution(message.TicketId, result);
 
             return Task.FromResult(executionResult);
         }

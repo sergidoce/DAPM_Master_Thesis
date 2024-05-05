@@ -38,6 +38,7 @@ namespace DAPM.RepositoryMS.Api.Repositories
 
         public async Task<Resource> RetrieveResource(string resourceName)
         {
+            _logger.LogWarning("Hello from the repository : Receiving Resource");
             var filePath = Path.GetRandomFileName();
             var fileStream = new FileStream(filePath, FileMode.Create);
             await _resourceBucket.DownloadToStreamByNameAsync(resourceName, fileStream);

@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
-    [Route("controller")]
+    [Route("operator")]
     public class OperatorController : ControllerBase
     {
         private readonly ILogger<OperatorController> _logger;

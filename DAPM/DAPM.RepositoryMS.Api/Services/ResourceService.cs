@@ -17,12 +17,13 @@ namespace DAPM.RepositoryMS.Api.Services
 
         public async Task<bool> PublishResource(Resource resource)
         {
-            _logger.LogWarning("Hello from the service");
+            _logger.LogWarning("Publishing Resource");
             return await _resourceRepository.AddResource(resource);
         }
 
         public async Task<Resource> RetrieveResource(string resourceName)
         {
+            _logger.LogWarning("Receiving Resource");
             return await _resourceRepository.RetrieveResource(resourceName);
         }
     }
