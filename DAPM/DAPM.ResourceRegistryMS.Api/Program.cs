@@ -70,12 +70,10 @@ builder.Services.AddScoped<IResourceTypeRepository, ResourceTypeRepository>();
 builder.Services.AddScoped<IPeerRepository, PeerRepository>();
 
 
-
 builder.Services.AddDbContext<ResourceRegistryDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")); }
 );
-
 
 
 var app = builder.Build();
@@ -86,7 +84,6 @@ app.MapDefaultEndpoints();
 app.UseSwagger();
 app.UseSwaggerUI();
 
-
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -94,3 +91,5 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+

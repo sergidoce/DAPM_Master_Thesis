@@ -2,6 +2,7 @@
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Models;
 using DAPM.ResourceRegistryMS.Api.Models.DTOs;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.ResourceRegistryMS.Api.Controllers
 {
@@ -28,15 +29,9 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostResource(ResourceDto resourceDto)
+        public async Task<IActionResult> PostResource(ResourceDTO resourceDto)
         {
-            var result = await _resourceService.AddResource(resourceDto);
-
-            if (result != null && result == true)
-            {
-                return Ok();
-            }
-            else return BadRequest();
+            return Ok();
                 
         }
 

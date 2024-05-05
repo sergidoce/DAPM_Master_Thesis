@@ -35,8 +35,8 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
                     Name = resource.Name,
                     OrganizationId = resource.PeerId,
                     RepositoryId = resource.RepositoryId,
-                    Type = resource.ResourceType.Name,
-                    Extension = resource.ResourceType.FileExtension
+                    Type = "EventLog",
+                    Extension = ".csv"
                 };
 
                 resourcesDTOs = resourcesDTOs.Append(r);

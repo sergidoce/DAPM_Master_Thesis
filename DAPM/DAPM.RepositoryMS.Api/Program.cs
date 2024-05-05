@@ -4,6 +4,13 @@ using DAPM.RepositoryMS.Api.Repositories;
 using DAPM.RepositoryMS.Api.Services;
 using Microsoft.AspNetCore.Http.Features;
 using DAPM.RepositoryMS.Api.Services.Interfaces;
+using RabbitMQLibrary.Extensions;
+using RabbitMQLibrary.Implementation;
+using RabbitMQLibrary.Messages.ResourceRegistry;
+using DAPM.RepositoryMS.Api.Consumers;
+using RabbitMQLibrary.Messages.Repository;
+using Microsoft.EntityFrameworkCore;
+using DAPM.RepositoryMS.Api.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +27,29 @@ builder.Services.Configure<FormOptions>(x =>
     x.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
+
+//RabbitMQ
+
+builder.Services.AddQueueing(new QueueingConfigurationSettings
+{
+    RabbitMqConsumerConcurrency = 5,
+    RabbitMqHostname = "rabbitmq",
+    RabbitMqPort = 5672,
+    RabbitMqPassword = "guest",
+    RabbitMqUsername = "guest"
+});
+
+builder.Services.AddQueueMessageConsumer<CreateNewResourceConsumer, CreateNewResourceMessage>();
+
+
+
+builder.Services.AddDbContext<RepositoryDbContext>(options =>
+{
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"));
+}
+);
+
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -30,13 +60,16 @@ builder.Services.AddSwaggerGen();
 
 //Services
 builder.Services.AddScoped<IResourceService, ResourceService>();
+builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 
 
 //Repositories
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
+builder.Services.AddScoped<IRepositoryRepository, RepositoryRepository>();
+builder.Services.AddScoped<IFileRepository, FileRepository>();
 
-builder.Services.Configure<ResourceDatabaseSettings>(
-    builder.Configuration.GetSection("ResourceDatabase"));
+builder.Services.Configure<FileStorageDatabaseSettings>(
+    builder.Configuration.GetSection("FileStorageDatabase"));
 
 var app = builder.Build();
 
