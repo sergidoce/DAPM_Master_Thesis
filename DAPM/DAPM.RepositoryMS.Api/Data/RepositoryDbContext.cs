@@ -21,19 +21,21 @@ namespace DAPM.RepositoryMS.Api.Data
 
         public void InitializeDatabase()
         {
-            Database.EnsureDeleted();
-            Database.Migrate();
-
-            Repository repository = new Repository()
+            if (Database.GetPendingMigrations().Any())
             {
-                Id = 1,
-                Name = "DTU Repository"
-            };
+                Database.EnsureDeleted();
+                Database.Migrate();
 
-            Repositories.Add(repository);
+                Repository repository = new Repository()
+                {
+                    Id = 1,
+                    Name = "DTU Repository"
+                };
 
-            SaveChanges();
+                Repositories.Add(repository);
 
+                SaveChanges();
+            }
         }
     }
 }
