@@ -2,6 +2,7 @@
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Models.DTOs;
 using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.ResourceRegistryMS.Api.Services
 {
@@ -30,25 +31,22 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return await _resourceRepository.GetAllResources();
         }
 
-        public async Task<bool> AddResource(ResourceDto resourceDto)
+        public async Task<Resource> AddResource(ResourceDTO resourceDto)
         {
-            //var repositoryId = resourceDto.RepositoryId;
-            //var resourceTypeId = resourceDto.TypeId;
+            var repositoryId = resourceDto.RepositoryId;
 
-            //var repository = await _repositoryRepository.GetRepositoryById(repositoryId);
-            //var resourceType = await _resourceTypeRepository.GetResourceTypeById(resourceTypeId);
+            var resource = new Resource
+            {
+                Id = resourceDto.Id,
+                Name = resourceDto.Name,
+                RepositoryId = repositoryId,
+                PeerId = resourceDto.OrganizationId,
+                ResourceTypeId = 1,
+            };
 
-            //var resource = new Resource
-            //{
-            //    Id = resourceDto.Id,
-            //    Name = resourceDto.Name,
-            //    Repository = repository,
-            //    ResourceType = resourceType
-            //};
+            await _resourceRepository.AddResource(resource);
 
-            //await _resourceRepository.AddResource(resource);
-
-            return true;
+            return resource;
         }
 
         public async Task<bool> DeleteResource(int resourceId)

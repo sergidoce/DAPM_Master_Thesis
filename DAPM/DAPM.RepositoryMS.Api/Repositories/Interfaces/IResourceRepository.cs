@@ -1,10 +1,10 @@
-﻿using DAPM.RepositoryMS.Api.Models;
+﻿using DAPM.RepositoryMS.Api.Models.PostgreSQL;
 
 namespace DAPM.RepositoryMS.Api.Repositories.Interfaces
 {
     public interface IResourceRepository
     {
-        Task<bool> AddResource(Resource resource);
-        Task<Resource> RetrieveResource(string resourceName);
+        Task<int> AddResource(Resource resource);
+        Task<Resource> GetResourceById(int repositoryId, int resourceId);
     }
 }
