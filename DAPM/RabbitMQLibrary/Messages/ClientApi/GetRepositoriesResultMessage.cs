@@ -13,6 +13,6 @@ namespace RabbitMQLibrary.Messages.ClientApi
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public RepositoryDTO[] Repositories { get; set; } 
+        public IEnumerable<RepositoryDTO> Repositories { get; set; } 
     }
 }

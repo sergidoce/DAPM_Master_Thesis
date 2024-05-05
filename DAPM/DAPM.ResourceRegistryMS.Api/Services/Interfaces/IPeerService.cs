@@ -5,11 +5,13 @@ namespace DAPM.ResourceRegistryMS.Api.Services.Interfaces
 {
     public interface IPeerService
     {
-        Task<Peer> GetPeer(string id);
+        Task<Peer> GetPeer(int id);
 
-        Task<IEnumerable<Peer>> GetPeer();
+        Task<IEnumerable<Peer>> GetAllPeers();
         Task<bool> AddPeer(PeerDto peerDto);
 
-        Task<bool> DeletePeer(string id);
+        Task<bool> DeletePeer(int id);
+
+        Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(int organizationId);  
     }
 }

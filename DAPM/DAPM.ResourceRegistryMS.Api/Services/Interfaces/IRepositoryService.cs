@@ -5,11 +5,12 @@ namespace DAPM.ResourceRegistryMS.Api.Services.Interfaces
 {
     public interface IRepositoryService
     {
-        Task<Repository> GetRepository(string id);
+        Task<Repository> GetRepositoryById(int organizationId, int repositoryId);
 
-        Task<IEnumerable<Repository>> GetRepository();
+        Task<IEnumerable<Repository>> GetAllRepositories();
+        Task<IEnumerable<Resource>> GetResourcesOfRepository(int organizationId, int repositoryId);
         Task<bool> AddRepository(RepositoryDto resource);
 
-        Task<bool> DeleteRepository(string id);
+        Task<bool> DeleteRepository(int organizationId, int repositoryId);
     }
 }

@@ -19,15 +19,15 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
         }
 
         [HttpGet("{repositoryId}")]
-        public async Task<Repository> Get(string repositoryId)
+        public async Task<Repository> Get(int organizationId, int repositoryId)
         {
-            return await _repositoryService.GetRepository(repositoryId);
+            return await _repositoryService.GetRepositoryById(organizationId, repositoryId);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Repository>> GetRepository()
+        public async Task<IEnumerable<Repository>> GetAllRepositories()
         {
-            return await _repositoryService.GetRepository();
+            return await _repositoryService.GetAllRepositories();
         }
 
         [HttpPost]
