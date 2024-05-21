@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Docker.DotNet.Models;
+using Microsoft.Extensions.FileProviders;
 
 namespace DAPM.OperatorMS.Api.Services
 {
@@ -27,13 +28,19 @@ namespace DAPM.OperatorMS.Api.Services
         public async Task<string> ExecuteMiner(IFormFile eventlog, IFormFile sourceCode, IFormFile dockerFile)
         {
             string imageName = await CreateDockerImage(sourceCode, dockerFile);
-            
+
+            bool containerCreated = await CreateDockerContainerByImageName(imageName);
+
+            if (containerCreated) 
+            {
+                return "Container " + imageName + " created and started!";
+            }
+
             return imageName;
         }
 
         public async Task<string> CreateDockerImage(IFormFile sourceCode, IFormFile dockerFile)
         {
-            bool imageCreated = false;
             string directory = Directory.GetCurrentDirectory();
             string registryPath = Path.Combine(directory, "registry");
 
@@ -49,10 +56,10 @@ namespace DAPM.OperatorMS.Api.Services
                 await dockerFile.CopyToAsync(DockerReader);
             }
 
-            string sourceCodePath = Path.Combine(registryPath, dockerFile.FileName);
+            string sourceCodePath = Path.Combine(registryPath, sourceCode.FileName);
             using (var sourceCodeReader = new FileStream(sourceCodePath, FileMode.Create))
             {
-                await dockerFile.CopyToAsync(sourceCodeReader);
+                await sourceCode.CopyToAsync(sourceCodeReader);
             }
 
             string tarFilePath = Path.ChangeExtension(dockerfilePath, "tar");
@@ -98,11 +105,56 @@ namespace DAPM.OperatorMS.Api.Services
 
             using (var tarFileStream = File.OpenRead(tarFilePath)) 
             {
-                Stream buildResponse = await _dockerClient.Images.BuildImageFromDockerfileAsync(tarFileStream, imageBuildParams);
+                try
+                {
+                    var buildResponse = await _dockerClient.Images.BuildImageFromDockerfileAsync(tarFileStream, imageBuildParams);
+                    using (var streamReader = new StreamReader(buildResponse))
+                    {
+                        string line;
+                        while ((line = await streamReader.ReadLineAsync()) != null)
+                        {
+                            _logger.LogInformation(line);
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogInformation("Exception: " + ex.Message);
+                }
             }
 
 
             return imageName;
+        }
+
+        public async Task<bool> CreateDockerContainerByImageName(string imageName) 
+        {
+            bool containerCreated = false;
+
+            var containerParameters = new CreateContainerParameters
+            {
+                Image = imageName,
+                Name = imageName
+            };
+
+            var containerResponse = await _dockerClient.Containers.CreateContainerAsync(containerParameters);
+            bool containerStarted = await _dockerClient.Containers.StartContainerAsync(containerResponse.ID, new ContainerStartParameters());
+
+            await Task.Delay(5000);
+
+            var containers = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters { Filters = new Dictionary<string, IDictionary<string, bool>> { { "status", new Dictionary<string, bool> { { "running", true }, { "created", true } } } } });
+
+            foreach (var container in containers)
+            {
+                _logger.LogInformation(container.ID);
+                if (container.ID == imageName) 
+                {
+                    containerCreated = true;
+                    break;
+                }
+            }
+
+            return containerCreated;
         }
     }
 }
