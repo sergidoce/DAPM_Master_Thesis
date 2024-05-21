@@ -4,6 +4,6 @@ namespace DAPM.OperatorMS.Api.Services.Interfaces
 {
     public interface IOperatorService
     {
-        Task<byte[]> ExecuteMiner(string operatorName, string parameter);
+        Task<string> ExecuteMiner(IFormFile eventlog, IFormFile sourceCode, IFormFile dockerFile);
     }
 }

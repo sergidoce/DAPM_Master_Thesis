@@ -12,6 +12,16 @@ services:
     ports:
         - "5000:8080"        
 
+  dapm.operatorMS.api:
+    image: ${DOCKER_REGISTRY-}dapmoperatormsapi
+    build:
+       context: .
+       dockerfile: DAPM.OperatorMS.API/Dockerfile
+    ports:
+       - "5300:8080"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    user: root
 
   dapm.repositoryms.api:
     image: ${DOCKER_REGISTRY-}dapmrepositorymsapi

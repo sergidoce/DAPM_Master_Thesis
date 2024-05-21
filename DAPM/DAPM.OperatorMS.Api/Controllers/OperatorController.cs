@@ -4,7 +4,7 @@ using DAPM.OperatorMS.Api.Services.Interfaces;
 namespace DAPM.OperatorMS.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("Operator")]
     public class OperatorController : ControllerBase
     {
         private readonly ILogger<OperatorController> _logger;
@@ -15,11 +15,16 @@ namespace DAPM.OperatorMS.Api.Controllers
             _operatorService = operatorService;
         }
 
-        [HttpGet(Name = "operator")]
-        public async Task<IActionResult> Get([FromQuery] string operatorName, [FromQuery] string parameter) {
-            byte[] pngImageBytes = await _operatorService.ExecuteMiner(operatorName, parameter);
+        [HttpPost(Name = "operator")]
+        public async Task<IActionResult> Get(IFormFile event_log, IFormFile sourceCode, IFormFile dockerFile) {
 
-            return File(pngImageBytes, "image/png");
+            string imageName = await _operatorService.ExecuteMiner(event_log, sourceCode, dockerFile);
+
+            return Ok(imageName);
+            
+            //byte[] pngImageBytes = await _operatorService.ExecuteMiner(operatorName, parameter);
+
+            //return File(pngImageBytes, "image/png");
         }
     }
 }
