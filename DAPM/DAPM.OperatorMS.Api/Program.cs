@@ -2,6 +2,11 @@ using DAPM.OperatorMS.Api.Services.Interfaces;
 using DAPM.OperatorMS.Api.Services;
 using Microsoft.AspNetCore.Http.Features;
 using Docker.DotNet;
+using RabbitMQ.Client;
+using RabbitMQLibrary.Implementation;
+using RabbitMQLibrary.Extensions;
+using DAPM.OperatorMS.Api.Consumers;
+using RabbitMQLibrary.Messages.Operator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +23,16 @@ builder.Services.Configure<FormOptions>(x =>
     x.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
+// RabbitMQ
+builder.Services.AddQueueing(new QueueingConfigurationSettings
+{
+    RabbitMqConsumerConcurrency = 5,
+    RabbitMqHostname = "rabbitmq",
+    RabbitMqPort = 5672,
+    RabbitMqPassword = "guest",
+    RabbitMqUsername = "guest"
+});
+
 //Docker Daemon
 builder.Services.AddSingleton<DockerClient>(_ =>
 {
@@ -26,6 +41,8 @@ builder.Services.AddSingleton<DockerClient>(_ =>
      .CreateClient();
     return client;
 });
+
+builder.Services.AddQueueMessageConsumer<OperatorMessageConsumer, OperatorMessage>();
 
 // Add services to the container.
 builder.Services.AddScoped<IOperatorService, OperatorService>();

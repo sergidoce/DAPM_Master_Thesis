@@ -6,6 +6,7 @@ using RabbitMQLibrary.Implementation;
 using RabbitMQLibrary.Extensions;
 using DAPM.ClientApi.Consumers;
 using RabbitMQLibrary.Messages.ClientApi;
+using RabbitMQLibrary.Messages.Operator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -38,6 +39,7 @@ builder.Services.AddQueueMessageConsumer<CreateNewItemResultConsumer, CreateNewI
 builder.Services.AddQueueMessageConsumer<GetRepositoriesResultConsumer, GetRepositoriesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourcesResultConsumer, GetResourcesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetUsersResultConsumer, GetUsersResultMessage>();
+builder.Services.AddQueueMessageConsumer<OperatorResultMessageConsumer, OperatorResultMessage>();
 
 
 // Add services to the container.
