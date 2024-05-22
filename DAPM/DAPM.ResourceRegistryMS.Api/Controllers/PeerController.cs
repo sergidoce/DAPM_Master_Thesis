@@ -20,15 +20,15 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
         }
 
         [HttpGet("{peerId}")]
-        public async Task<Peer> Get(string peerId)
+        public async Task<Peer> Get(int peerId)
         {
             return await _peerService.GetPeer(peerId);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Peer>> GetPeer()
+        public async Task<IEnumerable<Peer>> GetAllPeers()
         {
-            return await _peerService.GetPeer();
+            return await _peerService.GetAllPeers();
         }
 
         [HttpPost]

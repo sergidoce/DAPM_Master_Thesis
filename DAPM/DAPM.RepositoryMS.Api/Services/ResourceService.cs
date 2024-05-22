@@ -1,9 +1,10 @@
-﻿using DAPM.RepositoryMS.Api.Models;
+﻿using DAPM.RepositoryMS.Api.Models.PostgreSQL;
 using DAPM.RepositoryMS.Api.Repositories.Interfaces;
+using DAPM.RepositoryMS.Api.Services.Interfaces;
 
 namespace DAPM.RepositoryMS.Api.Services
 {
-    public class ResourceService : Interfaces.IResourceService
+    public class ResourceService : IResourceService
     {
         private IResourceRepository _resourceRepository;
         private ILogger<ResourceService> _logger;
@@ -15,15 +16,14 @@ namespace DAPM.RepositoryMS.Api.Services
 
         }
 
-        public async Task<bool> PublishResource(Resource resource)
+        public async Task<int> AddResource(Resource resource)
         {
-            _logger.LogWarning("Hello from the service");
             return await _resourceRepository.AddResource(resource);
         }
 
         public async Task<Resource> RetrieveResource(string resourceName)
         {
-            return await _resourceRepository.RetrieveResource(resourceName);
+            throw new NotImplementedException();
         }
     }
 }

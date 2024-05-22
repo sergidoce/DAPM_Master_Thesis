@@ -3,6 +3,8 @@ using Microsoft.Extensions.Options;
 using MongoDB.Driver.GridFS;
 using MongoDB.Driver;
 using DAPM.RepositoryMS.Api.Models;
+using DAPM.RepositoryMS.Api.Models.PostgreSQL;
+using DAPM.RepositoryMS.Api.Data;
 
 namespace DAPM.RepositoryMS.Api.Repositories
 {
@@ -10,39 +12,26 @@ namespace DAPM.RepositoryMS.Api.Repositories
     {
 
         private ILogger<ResourceRepository> _logger;
-        private readonly IMongoCollection<Resource> _resourceCollection;
-        private readonly IGridFSBucket _resourceBucket;
+        private readonly RepositoryDbContext _repositoryDbContext;
+      
 
-        public ResourceRepository(ILogger<ResourceRepository> logger, IOptions<ResourceDatabaseSettings> resourceDatabaseSettings)
+        public ResourceRepository(ILogger<ResourceRepository> logger, RepositoryDbContext repositoryDbContext)
         {
             _logger = logger;
-
-            var mongoClient = new MongoClient(resourceDatabaseSettings.Value.ConnectionString);
-            var mongoDatabase = mongoClient.GetDatabase(resourceDatabaseSettings.Value.DatabaseName);
-
-            _resourceCollection = mongoDatabase.GetCollection<Resource>(resourceDatabaseSettings.Value.ResourcesCollectionName);
-            _resourceBucket = new GridFSBucket(mongoDatabase);
+            _repositoryDbContext = repositoryDbContext;
         }
 
-        public async Task<bool> AddResource(Resource resource)
+        public async Task<int> AddResource(Resource resource)
         {
-            resource.File.Position = 0;
-            GridFSUploadOptions uploadOptions = new GridFSUploadOptions()
-            {
-                Metadata = new MongoDB.Bson.BsonDocument { { "type", "csv" }, { "owner", "me" } }
-            };
-            var id = await _resourceBucket.UploadFromStreamAsync(resource.Name, resource.File, uploadOptions);
-            _logger.LogWarning("Hello from the repository");
-            return true;
+            await _repositoryDbContext.Resources.AddAsync(resource);
+            _repositoryDbContext.SaveChanges();
+            return resource.Id;
         }
 
-        public async Task<Resource> RetrieveResource(string resourceName)
+  
+        public Task<Resource> GetResourceById(int repositoryId, int resourceId)
         {
-            var filePath = Path.GetRandomFileName();
-            var fileStream = new FileStream(filePath, FileMode.Create);
-            await _resourceBucket.DownloadToStreamByNameAsync(resourceName, fileStream);
-
-            return new Resource(resourceName, fileStream);
+            throw new NotImplementedException();
         }
     }
 }

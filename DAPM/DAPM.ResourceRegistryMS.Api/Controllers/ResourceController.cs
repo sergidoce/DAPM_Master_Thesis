@@ -2,6 +2,7 @@
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Models;
 using DAPM.ResourceRegistryMS.Api.Models.DTOs;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.ResourceRegistryMS.Api.Controllers
 {
@@ -17,31 +18,25 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
         }
 
         [HttpGet("{resourceId}")]
-        public async Task<Resource> Get(string resourceId)
+        public async Task<Resource> Get(int organizationId, int repositoryId, int resourceId)
         {
-            return await _resourceService.GetResource(resourceId);
+            return await _resourceService.GetResourceById(organizationId, repositoryId, resourceId);
         }
 
         [HttpGet]
-        public async Task<IEnumerable<Resource>> GetResource() {
-            return await _resourceService.GetResource();
+        public async Task<IEnumerable<Resource>> GetAllResources() {
+            return await _resourceService.GetAllResources();
         }
 
         [HttpPost]
-        public async Task<IActionResult> PostResource(ResourceDto resourceDto)
+        public async Task<IActionResult> PostResource(ResourceDTO resourceDto)
         {
-            var result = await _resourceService.AddResource(resourceDto);
-
-            if (result != null && result == true)
-            {
-                return Ok();
-            }
-            else return BadRequest();
+            return Ok();
                 
         }
 
         [HttpDelete("{resourceId}")]
-        public async Task<bool> Delete(string resourceId) 
+        public async Task<bool> Delete(int resourceId) 
         {
             return await _resourceService.DeleteResource(resourceId);
         }

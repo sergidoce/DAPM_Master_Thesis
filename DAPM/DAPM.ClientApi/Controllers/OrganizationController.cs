@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("organizations")]
     public class OrganizationController : ControllerBase
     {
 
@@ -18,11 +18,25 @@ namespace DAPM.ClientApi.Controllers
             _organizationService = organizationService;
         }
 
-        [HttpGet(Name = "organizations")]
+        [HttpGet]
         public async Task<ActionResult<Guid>> Get()
         {
             Guid id = _organizationService.GetOrganizations();
-            return Ok(id);
+            return Ok(new ApiResponse { RequestName = "GetAllOrganizations", TicketId = id});
+        }
+
+        [HttpGet("{organizationId}")]
+        public async Task<ActionResult<Guid>> GetById(int organizationId)
+        {
+            Guid id = _organizationService.GetOrganizationById(organizationId);
+            return Ok(new ApiResponse { RequestName = "GetOrganizationById", TicketId = id });
+        }
+
+        [HttpGet("{organizationId}/repositories")]
+        public async Task<ActionResult<Guid>> GetRepositoriesOfOrganization(int organizationId)
+        {
+            Guid id = _organizationService.GetRepositoriesOfOrganization(organizationId);
+            return Ok(new ApiResponse {RequestName = "GetRepositoriesOfOrganization", TicketId = id });
         }
 
     }

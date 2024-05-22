@@ -2,6 +2,7 @@
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Models.DTOs;
 using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.ResourceRegistryMS.Api.Services
 {
@@ -20,40 +21,42 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             _logger = logger;
         }
 
-        public async Task<Resource> GetResource(string resourceId)
+        public async Task<Resource> GetResourceById(int organizationId, int repositoryId, int resourceId)
         {
-            return await _resourceRepository.GetResource(resourceId);
+            return await _resourceRepository.GetResourceById(organizationId, repositoryId, resourceId);
         }
 
         public async Task<IEnumerable<Resource>> GetResource()
         {
-            return await _resourceRepository.GetResource();
+            return await _resourceRepository.GetAllResources();
         }
 
-        public async Task<bool> AddResource(ResourceDto resourceDto)
+        public async Task<Resource> AddResource(ResourceDTO resourceDto)
         {
             var repositoryId = resourceDto.RepositoryId;
-            var resourceTypeId = resourceDto.TypeId;
-
-            var repository = await _repositoryRepository.GetRepository(repositoryId);
-            var resourceType = await _resourceTypeRepository.GetResourceType(resourceTypeId);
 
             var resource = new Resource
             {
                 Id = resourceDto.Id,
                 Name = resourceDto.Name,
-                Repository = repository,
-                Type = resourceType
+                RepositoryId = repositoryId,
+                PeerId = resourceDto.OrganizationId,
+                ResourceTypeId = 1,
             };
 
             await _resourceRepository.AddResource(resource);
 
-            return true;
+            return resource;
         }
 
-        public async Task<bool> DeleteResource(string resourceId)
+        public async Task<bool> DeleteResource(int resourceId)
         {
             return await _resourceRepository.DeleteResource(resourceId);
+        }
+
+        public async Task<IEnumerable<Resource>> GetAllResources()
+        {
+            return await _resourceRepository.GetAllResources();
         }
     }
 }
