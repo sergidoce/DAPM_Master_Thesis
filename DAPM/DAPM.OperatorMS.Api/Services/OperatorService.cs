@@ -9,6 +9,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Docker.DotNet.Models;
 using Microsoft.Extensions.FileProviders;
+using RabbitMQLibrary.Interfaces;
+using RabbitMQLibrary.Messages.Operator;
 
 namespace DAPM.OperatorMS.Api.Services
 {
@@ -17,12 +19,14 @@ namespace DAPM.OperatorMS.Api.Services
         private readonly HttpClient _httpClient;
         private readonly ILogger<OperatorService> _logger;
         private readonly DockerClient _dockerClient;
+        private IQueueProducer<RunAlgorithmMessage> _runAlgorithmMessageProducer;
 
-        public OperatorService(ILogger<OperatorService> logger, HttpClient httpClient, DockerClient dockerClient)
+        public OperatorService(ILogger<OperatorService> logger, HttpClient httpClient, DockerClient dockerClient, IQueueProducer<RunAlgorithmMessage> runAlgorithmMessageProducer)
         {
             _logger = logger;
             _httpClient = httpClient;
             _dockerClient = dockerClient;
+            _runAlgorithmMessageProducer = runAlgorithmMessageProducer;
         }
 
         public async Task<string> ExecuteMiner(IFormFile eventlog, IFormFile sourceCode, IFormFile dockerFile)
@@ -36,7 +40,20 @@ namespace DAPM.OperatorMS.Api.Services
                 return "Container " + imageName + " created and started!";
             }
 
-            return imageName;
+            using (var memoryStream = new MemoryStream())
+            {
+                eventlog.CopyTo(memoryStream);
+                byte[] data = memoryStream.ToArray();
+
+                var message = new RunAlgorithmMessage
+                {
+                    Eventlog = data,
+                };
+
+                _runAlgorithmMessageProducer.PublishMessage(message);
+            }
+
+                return imageName;
         }
 
         public async Task<string> CreateDockerImage(IFormFile sourceCode, IFormFile dockerFile)
@@ -134,7 +151,32 @@ namespace DAPM.OperatorMS.Api.Services
             var containerParameters = new CreateContainerParameters
             {
                 Image = imageName,
-                Name = imageName
+                Name = imageName,
+                ExposedPorts = new Dictionary<string, EmptyStruct> { { "8080/tcp", default } },
+                HostConfig = new HostConfig
+                {
+                    PortBindings = new Dictionary<string, IList<PortBinding>>
+                    {
+                        {
+                            "8080/tcp",
+                            new List<PortBinding>
+                            {
+                                new PortBinding
+                                {
+                                    HostPort = "5200",
+                                }
+                            }
+                        }
+                    },
+                    ExtraHosts = new List<string> { $"rabbitmq:172.17.0.1" }
+                },
+                NetworkingConfig = new NetworkingConfig
+                {
+                    EndpointsConfig = new Dictionary<string, EndpointSettings>
+                        {
+                            { "dapm_DAPM", new EndpointSettings { } }
+                        }
+                }
             };
 
             var containerResponse = await _dockerClient.Containers.CreateContainerAsync(containerParameters);
@@ -147,7 +189,7 @@ namespace DAPM.OperatorMS.Api.Services
             foreach (var container in containers)
             {
                 _logger.LogInformation(container.ID);
-                if (container.ID == imageName) 
+                if (container.Image == imageName) 
                 {
                     containerCreated = true;
                     break;
@@ -155,6 +197,19 @@ namespace DAPM.OperatorMS.Api.Services
             }
 
             return containerCreated;
+        }
+
+        private string GetDockerHostIp()
+        {
+            var process = new System.Diagnostics.Process();
+            process.StartInfo.FileName = "bash";
+            process.StartInfo.Arguments = "-c \"ip addr show docker0 | grep -oP '(?<=inet \\d{1,3}\\.\\d{1,3}\\.\\d{1,3\\.)\\d{1,3}'\"\"";
+            process.StartInfo.RedirectStandardOutput = true;
+            process.StartInfo.UseShellExecute = false;
+            process.Start();
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit();
+            return output.Trim();
         }
     }
 }

@@ -43,6 +43,7 @@ builder.Services.AddSingleton<DockerClient>(_ =>
 });
 
 builder.Services.AddQueueMessageConsumer<OperatorMessageConsumer, OperatorMessage>();
+builder.Services.AddQueueMessageConsumer<RunAlgorithmResultMessageConsumer, RunAlgorithmResultMessage>();
 
 // Add services to the container.
 builder.Services.AddScoped<IOperatorService, OperatorService>();

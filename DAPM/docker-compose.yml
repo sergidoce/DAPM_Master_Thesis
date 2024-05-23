@@ -1,5 +1,8 @@
 version: '3.4'
 
+networks:
+  DAPM:
+
 services:
   dapm.clientapi:
     image: ${DOCKER_REGISTRY-}dapmclientapi
@@ -10,7 +13,9 @@ services:
       rabbitmq:
         condition: service_healthy
     ports:
-        - "5000:8080"        
+        - "5000:8080" 
+    networks:
+    - DAPM 
 
   dapm.operatorMS.api:
     image: ${DOCKER_REGISTRY-}dapmoperatormsapi
@@ -18,13 +23,15 @@ services:
        context: .
        dockerfile: DAPM.OperatorMS.API/Dockerfile
     ports:
-       - "5300:8080"
+       - "5100:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     user: root
     depends_on:
       rabbitmq:
         condition: service_healthy
+    networks:
+    - DAPM
 
   dapm.repositoryms.api:
     image: ${DOCKER_REGISTRY-}dapmrepositorymsapi
@@ -40,6 +47,8 @@ services:
           condition: service_healthy
     ports:
       - "6000:8080"
+    networks:
+    - DAPM
 
 
   dapm.resourceregistryms.api:
@@ -54,6 +63,8 @@ services:
           condition: service_healthy
     ports:
       - "7000:8080"
+    networks:
+    - DAPM
 
   rabbitmq: # login guest:guest
     image: rabbitmq:3-management
@@ -68,6 +79,8 @@ services:
       interval: 10s
       timeout: 30s
       retries: 3
+    networks:
+    - DAPM
 
   mongo:
     image: mongo
@@ -83,6 +96,8 @@ services:
       timeout: 10s
       retries: 5
       start_period: 20s
+    networks:
+    - DAPM
 
   mongo-express:
     image: mongo-express
@@ -94,6 +109,8 @@ services:
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
       ME_CONFIG_MONGODB_URL: mongodb://root:example@mongo:27017/
       ME_CONFIG_BASICAUTH: false
+    networks:
+    - DAPM
 
   postgres:
     image: postgres
@@ -122,6 +139,8 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+    - DAPM
 
   postgres-repository:
     image: postgres
@@ -150,12 +169,16 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+    - DAPM
 
   adminer:
     image: adminer
     restart: always
     ports:
       - 8082:8082
+    networks:
+    - DAPM
    
 
 
