@@ -3,6 +3,7 @@ using DAPM.ClientApi.Models.DTOs;
 using DAPM.ClientApi.Services;
 using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.ClientApi.Controllers
 {
@@ -41,6 +42,13 @@ namespace DAPM.ClientApi.Controllers
 
             Guid id = _repositoryService.PostResourceToRepository(organizationId, repositoryId, resourceForm.Name, resourceForm.ResourceFile);
             return Ok(new ApiResponse { RequestName = "PostResourceToRepository", TicketId = id });
+        }
+
+        [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines")]
+        public async Task<ActionResult<Guid>> PostPipelineToRepository(int organizationId, int repositoryId, [FromBody]PipelineApiDto pipelineApiDto)
+        {
+            Guid id = _repositoryService.PostPipelineToRepository(organizationId, repositoryId, pipelineApiDto);
+            return Ok(new ApiResponse { RequestName = "PostPipelineToRepository", TicketId = id });
         }
 
     }

@@ -2,7 +2,6 @@
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Models.DTOs;
 using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
-using RabbitMQLibrary.Models;
 
 namespace DAPM.ResourceRegistryMS.Api.Services
 {
@@ -31,7 +30,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return await _resourceRepository.GetAllResources();
         }
 
-        public async Task<Resource> AddResource(ResourceDTO resourceDto)
+        public async Task<Resource> AddResource(RabbitMQLibrary.Models.ResourceDTO resourceDto)
         {
             var repositoryId = resourceDto.RepositoryId;
 

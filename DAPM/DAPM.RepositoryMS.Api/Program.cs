@@ -40,7 +40,7 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
 });
 
 builder.Services.AddQueueMessageConsumer<CreateNewResourceConsumer, CreateNewResourceMessage>();
-
+builder.Services.AddQueueMessageConsumer<CreateNewPipelineConsumer, CreateNewPipelineMessage>();
 
 
 builder.Services.AddDbContext<RepositoryDbContext>(options =>
@@ -67,6 +67,7 @@ builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 builder.Services.AddScoped<IRepositoryRepository, RepositoryRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
+builder.Services.AddScoped<IPipelineRepository, PipelineRepository>();
 
 builder.Services.Configure<FileStorageDatabaseSettings>(
     builder.Configuration.GetSection("FileStorageDatabase"));
