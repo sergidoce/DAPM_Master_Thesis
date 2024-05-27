@@ -11,6 +11,7 @@ using Docker.DotNet.Models;
 using Microsoft.Extensions.FileProviders;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Operator;
+using System.ComponentModel;
 
 namespace DAPM.OperatorMS.Api.Services
 {
@@ -20,6 +21,7 @@ namespace DAPM.OperatorMS.Api.Services
         private readonly ILogger<OperatorService> _logger;
         private readonly DockerClient _dockerClient;
         private IQueueProducer<RunAlgorithmMessage> _runAlgorithmMessageProducer;
+        private string containerId;
 
         public OperatorService(ILogger<OperatorService> logger, HttpClient httpClient, DockerClient dockerClient, IQueueProducer<RunAlgorithmMessage> runAlgorithmMessageProducer)
         {
@@ -29,31 +31,31 @@ namespace DAPM.OperatorMS.Api.Services
             _runAlgorithmMessageProducer = runAlgorithmMessageProducer;
         }
 
-        public async Task<string> ExecuteMiner(IFormFile eventlog, IFormFile sourceCode, IFormFile dockerFile)
+        public async Task<byte[]> ExecuteMiner(IFormFile eventlog, IFormFile dockerFile, IFormFile sourceCode)
         {
+            copyFileIntoVolume(eventlog);
+
             string imageName = await CreateDockerImage(sourceCode, dockerFile);
 
-            bool containerCreated = await CreateDockerContainerByImageName(imageName);
+            bool containerStarted = await CreateDockerContainerByImageName(imageName);
 
-            if (containerCreated) 
+            if (containerStarted)
             {
-                return "Container " + imageName + " created and started!";
-            }
+                string containerStatus = await getContainerStatus(containerId);
 
-            using (var memoryStream = new MemoryStream())
-            {
-                eventlog.CopyTo(memoryStream);
-                byte[] data = memoryStream.ToArray();
-
-                var message = new RunAlgorithmMessage
+                while (containerStatus == "running")
                 {
-                    Eventlog = data,
-                };
+                    containerStatus = await getContainerStatus(containerId);
+                }
 
-                _runAlgorithmMessageProducer.PublishMessage(message);
+                byte[] outputFileBytes = RetrieveOutputFile();
+
+                await _dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters { });
+                await _dockerClient.Images.DeleteImageAsync(imageName, new ImageDeleteParameters { });
+
+                return outputFileBytes;
             }
-
-                return imageName;
+            else { throw new Exception("Container not created"); }
         }
 
         public async Task<string> CreateDockerImage(IFormFile sourceCode, IFormFile dockerFile)
@@ -120,19 +122,15 @@ namespace DAPM.OperatorMS.Api.Services
                 Dockerfile = "Dockerfile"
             };
 
-            using (var tarFileStream = File.OpenRead(tarFilePath)) 
+            IEnumerable<AuthConfig> authConfigs = Enumerable.Empty<AuthConfig>();
+            IDictionary<string, string> headers = new Dictionary<string, string>();
+            IProgress<JSONMessage> progress = new Progress<JSONMessage>(_ => { });
+
+            using (var tarFileStream = File.OpenRead(tarFilePath))
             {
                 try
                 {
-                    var buildResponse = await _dockerClient.Images.BuildImageFromDockerfileAsync(tarFileStream, imageBuildParams);
-                    using (var streamReader = new StreamReader(buildResponse))
-                    {
-                        string line;
-                        while ((line = await streamReader.ReadLineAsync()) != null)
-                        {
-                            _logger.LogInformation(line);
-                        }
-                    }
+                    await _dockerClient.Images.BuildImageFromDockerfileAsync(imageBuildParams, tarFileStream, authConfigs, headers, progress);
                 }
                 catch (Exception ex)
                 {
@@ -144,10 +142,8 @@ namespace DAPM.OperatorMS.Api.Services
             return imageName;
         }
 
-        public async Task<bool> CreateDockerContainerByImageName(string imageName) 
+        public async Task<bool> CreateDockerContainerByImageName(string imageName)
         {
-            bool containerCreated = false;
-
             var containerParameters = new CreateContainerParameters
             {
                 Image = imageName,
@@ -168,13 +164,13 @@ namespace DAPM.OperatorMS.Api.Services
                             }
                         }
                     },
-                    ExtraHosts = new List<string> { $"rabbitmq:172.17.0.1" }
+                    Binds = new[] { $"operator-data:/app/shared" }
                 },
                 NetworkingConfig = new NetworkingConfig
                 {
                     EndpointsConfig = new Dictionary<string, EndpointSettings>
                         {
-                            { "dapm_DAPM", new EndpointSettings { } }
+                            { "DAPM", new EndpointSettings { } }
                         }
                 }
             };
@@ -182,34 +178,45 @@ namespace DAPM.OperatorMS.Api.Services
             var containerResponse = await _dockerClient.Containers.CreateContainerAsync(containerParameters);
             bool containerStarted = await _dockerClient.Containers.StartContainerAsync(containerResponse.ID, new ContainerStartParameters());
 
-            await Task.Delay(5000);
+            containerId = containerResponse.ID;
 
-            var containers = await _dockerClient.Containers.ListContainersAsync(new ContainersListParameters { Filters = new Dictionary<string, IDictionary<string, bool>> { { "status", new Dictionary<string, bool> { { "running", true }, { "created", true } } } } });
+            var inspectResponse = await _dockerClient.Containers.InspectContainerAsync(containerId);
 
-            foreach (var container in containers)
+            while (inspectResponse.State.Status != "running")
             {
-                _logger.LogInformation(container.ID);
-                if (container.Image == imageName) 
-                {
-                    containerCreated = true;
-                    break;
-                }
+                inspectResponse = await _dockerClient.Containers.InspectContainerAsync(containerId);
             }
 
-            return containerCreated;
+            return true;
         }
 
-        private string GetDockerHostIp()
+        public async void copyFileIntoVolume(IFormFile file)
         {
-            var process = new System.Diagnostics.Process();
-            process.StartInfo.FileName = "bash";
-            process.StartInfo.Arguments = "-c \"ip addr show docker0 | grep -oP '(?<=inet \\d{1,3}\\.\\d{1,3}\\.\\d{1,3\\.)\\d{1,3}'\"\"";
-            process.StartInfo.RedirectStandardOutput = true;
-            process.StartInfo.UseShellExecute = false;
-            process.Start();
-            string output = process.StandardOutput.ReadToEnd();
-            process.WaitForExit();
-            return output.Trim();
+            var fileExtension = Path.GetExtension(file.FileName);
+
+            var sharedPath = "/app/shared";
+
+            var newFileName = $"input{fileExtension}";
+
+            var filePath = Path.Combine(sharedPath, newFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                await file.CopyToAsync(fileStream);
+            }
+        }
+
+        public async Task<string> getContainerStatus(string imageName)
+        {
+            var inspectResponse = await _dockerClient.Containers.InspectContainerAsync(containerId);
+
+            return inspectResponse.State.Status;
+        }
+
+        public byte[] RetrieveOutputFile()
+        {
+            byte[] fileBytes = System.IO.File.ReadAllBytes("/app/shared/output.html");
+            return fileBytes;
         }
     }
 }

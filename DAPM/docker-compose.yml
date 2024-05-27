@@ -1,8 +1,5 @@
 version: '3.4'
 
-networks:
-  DAPM:
-
 services:
   dapm.clientapi:
     image: ${DOCKER_REGISTRY-}dapmclientapi
@@ -26,6 +23,7 @@ services:
        - "5100:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+      - operator-data:/app/shared 
     user: root
     depends_on:
       rabbitmq:
@@ -179,6 +177,15 @@ services:
       - 8082:8082
     networks:
     - DAPM
+
+networks:
+  DAPM:
+    name: DAPM
+    driver: bridge
+
+volumes:
+  operator-data:
+    name: operator-data
    
 
 

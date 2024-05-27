@@ -16,15 +16,12 @@ namespace DAPM.OperatorMS.Api.Controllers
         }
 
         [HttpPost(Name = "operator")]
-        public async Task<IActionResult> Get(IFormFile event_log, IFormFile sourceCode, IFormFile dockerFile) {
+        public async Task<IActionResult> Post(IFormFile event_log, IFormFile dockerFile, IFormFile sourceCodeFile)
+        {
+            byte[] fileBytes = await _operatorService.ExecuteMiner(event_log, dockerFile, sourceCodeFile);
+            string fileName = "output.html";
 
-            string imageName = await _operatorService.ExecuteMiner(event_log, sourceCode, dockerFile);
-
-            return Ok(imageName);
-            
-            //byte[] pngImageBytes = await _operatorService.ExecuteMiner(operatorName, parameter);
-
-            //return File(pngImageBytes, "image/png");
+            return File(fileBytes, System.Net.Mime.MediaTypeNames.Application.Octet, fileName);
         }
     }
 }
