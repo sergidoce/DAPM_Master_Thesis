@@ -6,7 +6,8 @@
       "serviceActions": {
         "dapm.clientapi": "StartDebugging",
         "dapm.repositoryms.api": "StartDebugging",
-        "dapm.resourceregistryms.api": "StartDebugging"
+        "dapm.resourceregistryms.api": "StartDebugging",
+        "dapm.pipelineorchestratorms.api": "StartDebugging"
       }
     }
   }

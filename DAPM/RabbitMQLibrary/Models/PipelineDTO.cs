@@ -10,7 +10,7 @@ namespace RabbitMQLibrary.Models
     {
         public int OrganizationId { get; set; }
         public int RepositoryId { get; set; }
-        public int? ResourceId { get; set; }
+        public int ResourceId { get; set; }
         public string? Name { get; set; }
     }
     public class HandleData

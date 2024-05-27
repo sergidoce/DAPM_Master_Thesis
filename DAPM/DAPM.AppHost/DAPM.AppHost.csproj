@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DAPM.ClientApi\DAPM.ClientApi.csproj" />
+    <ProjectReference Include="..\DAPM.PipelineOrchestratorMS.Api\DAPM.PipelineOrchestratorMS.Api.csproj" />
     <ProjectReference Include="..\DAPM.RepositoryMS.Api\DAPM.RepositoryMS.Api.csproj" />
     <ProjectReference Include="..\DAPM.ResourceRegistryMS.Api\DAPM.ResourceRegistryMS.Api.csproj" />
   </ItemGroup>
