@@ -1,5 +1,6 @@
 ﻿using DAPM.ClientApi.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
+using RabbitMQLibrary.Messages.Orchestrator.ProcessRequests;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 
 namespace DAPM.ClientApi.Services
@@ -7,39 +8,35 @@ namespace DAPM.ClientApi.Services
     public class OrganizationService : IOrganizationService
     {
         private readonly ILogger<OrganizationService> _logger;
-        private readonly IQueueProducer<GetOrganizationsMessage> _getOrgsProducer;
-        private readonly IQueueProducer<GetOrganizationByIdMessage> _getOrgByIdProducer;
-        private readonly IQueueProducer<GetUsersOfOrganizationMessage> _getUsersOfOrgProducer;
-        private readonly IQueueProducer<GetRepositoriesOfOrgMessage> _getRepositoriesOfOrgProducer;
+        private readonly IQueueProducer<GetRepositoriesRequest> _getRepositoriesRequestProducer;
+        private readonly IQueueProducer<GetOrganizationsRequest> _getOrganizationsRequestProducer;
         private readonly ITicketService _ticketService;
 
         public OrganizationService(ILogger<OrganizationService> logger, 
             IQueueProducer<GetOrganizationsMessage> getOrgsProducer, 
-            IQueueProducer<GetOrganizationByIdMessage> getOrgByIdProducer,
-            IQueueProducer<GetUsersOfOrganizationMessage>getUsersOfOrgProducer,
-            IQueueProducer<GetRepositoriesOfOrgMessage> getRepositoriesOfOrgProducer,
+            IQueueProducer<GetOrganizationsMessage> getOrgByIdProducer,
+            IQueueProducer<GetRepositoriesRequest> getRepositoriesRequestProducer,
+            IQueueProducer<GetOrganizationsRequest> getOrganizationsRequestProducer,
             ITicketService ticketService)
         {
             _logger = logger;
-            _getOrgsProducer = getOrgsProducer;
-            _getOrgByIdProducer = getOrgByIdProducer;
             _ticketService = ticketService;
-            _getUsersOfOrgProducer = getUsersOfOrgProducer;
-            _getRepositoriesOfOrgProducer = getRepositoriesOfOrgProducer;
+            _getRepositoriesRequestProducer = getRepositoriesRequestProducer;
+            _getOrganizationsRequestProducer = getOrganizationsRequestProducer;
         }
 
         public Guid GetOrganizationById(int organizationId)
         {
             var ticketId = _ticketService.CreateNewTicket();
 
-            var message = new GetOrganizationByIdMessage
+            var message = new GetOrganizationsRequest
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = ticketId,
                 OrganizationId = organizationId
             };
 
-            _getOrgByIdProducer.PublishMessage(message);
+            _getOrganizationsRequestProducer.PublishMessage(message);
 
             _logger.LogDebug("GetOrganizationByIdMessage Enqueued");
 
@@ -51,13 +48,14 @@ namespace DAPM.ClientApi.Services
        
             var ticketId = _ticketService.CreateNewTicket();
 
-            var message = new GetOrganizationsMessage
+            var message = new GetOrganizationsRequest
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = ticketId,
+                OrganizationId = null,
             };
 
-            _getOrgsProducer.PublishMessage(message);
+            _getOrganizationsRequestProducer.PublishMessage(message);
 
             _logger.LogDebug("GetOrganizationsMessage Enqueued");
 
@@ -69,36 +67,20 @@ namespace DAPM.ClientApi.Services
         {
             var ticketId = _ticketService.CreateNewTicket();
 
-            var message = new GetRepositoriesOfOrgMessage
+            var message = new GetRepositoriesRequest
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = ticketId,
-                OrganizationId = organizationId
+                OrganizationId = organizationId,
+                RepositoryId = null,
             };
 
-            _getRepositoriesOfOrgProducer.PublishMessage(message);
+            _getRepositoriesRequestProducer.PublishMessage(message);
 
-            _logger.LogDebug("GetRepositoriesOfOrganizationMessage Enqueued");
+            _logger.LogDebug("GetRepositoriesRequest Enqueued");
 
             return ticketId;
         }
 
-        public Guid GetUsersOfOrganization(int organizationId)
-        {
-            var ticketId = _ticketService.CreateNewTicket();
-
-            var message = new GetUsersOfOrganizationMessage
-            {
-                TimeToLive = TimeSpan.FromMinutes(1),
-                TicketId = ticketId,
-                OrganizationId = organizationId
-            };
-
-            _getUsersOfOrgProducer.PublishMessage(message);
-
-            _logger.LogDebug("GetUsersOfOrganizationMessage Enqueued");
-
-            return ticketId;
-        }
     }
 }

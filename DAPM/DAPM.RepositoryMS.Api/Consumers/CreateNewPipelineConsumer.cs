@@ -9,11 +9,11 @@ namespace DAPM.RepositoryMS.Api.Consumers
     {
         private ILogger<CreateNewPipelineConsumer> _logger;
         private IRepositoryService _repositoryService;
-        IQueueProducer<CreateNewItemResultMessage> _createNewItemResultProducer;
+        IQueueProducer<PostItemProcessResult> _createNewItemResultProducer;
 
         public CreateNewPipelineConsumer(ILogger<CreateNewPipelineConsumer> logger,
             IRepositoryService repositoryService,
-            IQueueProducer<CreateNewItemResultMessage> createNewItemResultProducer)
+            IQueueProducer<PostItemProcessResult> createNewItemResultProducer)
         {
             _logger = logger;
             _repositoryService = repositoryService;
@@ -28,7 +28,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
 
             if(pipelineId != -1)
             {
-                var resultMessage = new CreateNewItemResultMessage
+                var resultMessage = new PostItemProcessResult
                 {
                     TicketId = message.TicketId,
                     TimeToLive = TimeSpan.FromMinutes(1),

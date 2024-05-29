@@ -8,4 +8,6 @@ builder.AddProject<Projects.DAPM_ResourceRegistryMS_Api>("dapm-resourceregistrym
 
 builder.AddProject<Projects.DAPM_PipelineOrchestratorMS_Api>("dapm-pipelineorchestratorms-api");
 
+builder.AddProject<Projects.DAPM_Orchestrator>("dapm-orchestrator");
+
 builder.Build().Run();

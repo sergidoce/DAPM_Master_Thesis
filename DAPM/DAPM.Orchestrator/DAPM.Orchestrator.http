@@ -1,0 +1,6 @@
+@DAPM.Orchestrator_HostAddress = http://localhost:5011
+
+GET {{DAPM.Orchestrator_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

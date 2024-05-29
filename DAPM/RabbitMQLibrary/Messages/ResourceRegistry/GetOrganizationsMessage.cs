@@ -12,5 +12,6 @@ namespace RabbitMQLibrary.Messages.ResourceRegistry
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
+        public int? OrganizationId { get; set; }
     }
 }

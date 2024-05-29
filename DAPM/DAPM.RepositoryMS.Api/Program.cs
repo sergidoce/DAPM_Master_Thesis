@@ -39,7 +39,7 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
     RabbitMqUsername = "guest"
 });
 
-builder.Services.AddQueueMessageConsumer<CreateNewResourceConsumer, CreateNewResourceMessage>();
+builder.Services.AddQueueMessageConsumer<PostResourceToRepoConsumer, PostResourceToRepoMessage>();
 builder.Services.AddQueueMessageConsumer<CreateNewPipelineConsumer, CreateNewPipelineMessage>();
 
 

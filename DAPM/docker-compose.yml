@@ -54,6 +54,18 @@ services:
     ports:
       - "8000:8080"
 
+
+  dapm.orchestrator:
+    image: ${DOCKER_REGISTRY-}dapmorchestrator
+    build:
+      context: .
+      dockerfile: DAPM.Orchestrator/Dockerfile
+    depends_on:
+      rabbitmq:
+          condition: service_healthy
+    ports:
+      - "9000:8080"
+
   rabbitmq: # login guest:guest
     image: rabbitmq:3-management
     hostname: "rabbitmq"
@@ -156,6 +168,9 @@ services:
     ports:
       - 8082:8082
    
+
+
+
 
 
 
