@@ -39,5 +39,12 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse {RequestName = "GetRepositoriesOfOrganization", TicketId = id });
         }
 
+        [HttpPost("{organizationId}/repositories")]
+        public async Task<ActionResult<Guid>> PostRepositoryToOrganization(int organizationId, [FromBody] string name)
+        {
+            Guid id = _organizationService.PostRepositoryToOrganization(organizationId, name);
+            return Ok(new ApiResponse { RequestName = "PostRepositoryToOrganization", TicketId = id });
+        }
+
     }
 }

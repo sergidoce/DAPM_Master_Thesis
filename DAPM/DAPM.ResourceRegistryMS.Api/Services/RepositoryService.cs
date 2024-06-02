@@ -23,19 +23,6 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             _logger = logger;
         }
 
-        public async Task<bool> AddRepository(RepositoryDto repositoryDto)
-        {
-            var peer = await _peerRepository.GetPeerById(repositoryDto.Id);
-
-            var repository = new Repository
-            {
-                Id = repositoryDto.Id,
-                Name = repositoryDto.Name,
-                Peer = peer
-            };
-
-            return await _repositoryRepository.AddRepository(repository);
-        }
 
         public Task<bool> DeleteRepository(int organizationId, int repositoryId)
         {

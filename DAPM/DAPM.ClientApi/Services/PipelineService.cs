@@ -1,4 +1,6 @@
 ﻿using DAPM.ClientApi.Services.Interfaces;
+using RabbitMQLibrary.Interfaces;
+using RabbitMQLibrary.Messages.Orchestrator.ProcessRequests;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 
 namespace DAPM.ClientApi.Services
@@ -7,35 +9,36 @@ namespace DAPM.ClientApi.Services
     {
         private readonly ILogger<PipelineService> _logger;
         private readonly ITicketService _ticketService;
-
+        private readonly IQueueProducer<GetPipelinesRequest> _getPipelinesRequestProducer;
 
         public PipelineService(
             ILogger<PipelineService> logger,
-            ITicketService ticketService)
+            ITicketService ticketService,
+            IQueueProducer<GetPipelinesRequest> getPipelinesRequestProducer)
         {
             _logger = logger;
             _ticketService = ticketService;
+            _getPipelinesRequestProducer = getPipelinesRequestProducer;
         }
 
-        public Guid GetPipelineById(int repositoryId, int pipelineId)
+        public Guid GetPipelineById(int organizationId, int repositoryId, int pipelineId)
         {
-            //Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket();
 
-            //var message = new GetPipelineByIdMessage
-            //{
-            //    TimeToLive = TimeSpan.FromMinutes(1),
-            //    TicketId = ticketId,
-            //    OrganizationId = organizationId,
-            //    RepositoryId = repositoryId
-            //};
+            var message = new GetPipelinesRequest
+            {
+                TimeToLive = TimeSpan.FromMinutes(1),
+                TicketId = ticketId,
+                OrganizationId = organizationId,
+                RepositoryId = repositoryId,
+                PipelineId = pipelineId
+            };
 
-            //_getRepoByIdProducer.PublishMessage(message);
+            _getPipelinesRequestProducer.PublishMessage(message);
 
-            //_logger.LogDebug("GetRepositoryByIdMessage Enqueued");
+            _logger.LogDebug("GetPipelinesRequest Enqueued");
 
-            //return ticketId;
-
-            throw new NotImplementedException();
+            return ticketId;
         }
     }
 }

@@ -10,6 +10,7 @@ namespace DAPM.ClientApi.Services
         private readonly ILogger<OrganizationService> _logger;
         private readonly IQueueProducer<GetRepositoriesRequest> _getRepositoriesRequestProducer;
         private readonly IQueueProducer<GetOrganizationsRequest> _getOrganizationsRequestProducer;
+        private readonly IQueueProducer<PostRepositoryRequest> _postRepositoryRequestProducer;
         private readonly ITicketService _ticketService;
 
         public OrganizationService(ILogger<OrganizationService> logger, 
@@ -17,12 +18,14 @@ namespace DAPM.ClientApi.Services
             IQueueProducer<GetOrganizationsMessage> getOrgByIdProducer,
             IQueueProducer<GetRepositoriesRequest> getRepositoriesRequestProducer,
             IQueueProducer<GetOrganizationsRequest> getOrganizationsRequestProducer,
+            IQueueProducer<PostRepositoryRequest> postRepositoryRequestProducer,
             ITicketService ticketService)
         {
             _logger = logger;
             _ticketService = ticketService;
             _getRepositoriesRequestProducer = getRepositoriesRequestProducer;
             _getOrganizationsRequestProducer = getOrganizationsRequestProducer;
+            _postRepositoryRequestProducer = postRepositoryRequestProducer;
         }
 
         public Guid GetOrganizationById(int organizationId)
@@ -82,5 +85,23 @@ namespace DAPM.ClientApi.Services
             return ticketId;
         }
 
+        public Guid PostRepositoryToOrganization(int organizationId, string name)
+        {
+            var ticketId = _ticketService.CreateNewTicket();
+
+            var message = new PostRepositoryRequest
+            {
+                TimeToLive = TimeSpan.FromMinutes(1),
+                TicketId = ticketId,
+                OrganizationId = organizationId,
+                Name = name,
+            };
+
+            _postRepositoryRequestProducer.PublishMessage(message);
+
+            _logger.LogDebug("PostRepositoryRequest Enqueued");
+
+            return ticketId;
+        }
     }
 }

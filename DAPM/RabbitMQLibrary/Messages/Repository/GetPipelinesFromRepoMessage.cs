@@ -1,18 +1,19 @@
 ﻿using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
+namespace RabbitMQLibrary.Messages.Repository
 {
-    public class CreateRepositoryRequest : IQueueMessage
+    public class GetPipelinesFromRepoMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public RepositoryDTO Repository { get; set; }
+
+        public int RepositoryId { get; set; }
+        public int? PipelineId { get; set; }
     }
 }

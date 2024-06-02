@@ -16,6 +16,6 @@ namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
         public int OrganizationId { get; set; }
         public int RepositoryId { get; set; }
         public string Name { get; set; }
-        public PipelineDTO Pipeline { get; set; }
+        public Pipeline Pipeline { get; set; }
     }
 }

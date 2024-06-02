@@ -30,17 +30,6 @@ namespace DAPM.ResourceRegistryMS.Api.Controllers
             return await _repositoryService.GetAllRepositories();
         }
 
-        [HttpPost]
-        public async Task<IActionResult> PostResource(RepositoryDto repositoryDto)
-        {
-            var result = await _repositoryService.AddRepository(repositoryDto);
-
-            if (result != null && result == true)
-            {
-                return Ok();
-            }
-            else return BadRequest();
-
-        }
+        
     }
 }

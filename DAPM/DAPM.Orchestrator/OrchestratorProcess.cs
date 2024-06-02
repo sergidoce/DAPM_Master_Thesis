@@ -25,7 +25,7 @@ namespace DAPM.Orchestrator
         }
 
 
-        public virtual void OnAddRepositoryToRegistryResult()
+        public virtual void OnPostRepoToRegistryResult(PostRepoToRegistryResultMessage message)
         {
             return;
         }
@@ -55,12 +55,12 @@ namespace DAPM.Orchestrator
             return;
         }
 
-        public virtual void OnPostPipelineInRepoResult()
+        public virtual void OnPostPipelineToRepoResult(PostPipelineToRepoResultMessage message)
         {
             return;
         }
 
-        public virtual void OnCreateRepoInRepoResult()
+        public virtual void OnCreateRepoInRepoResult(PostRepoToRepoResultMessage message)
         {
             return;
         }
@@ -71,6 +71,11 @@ namespace DAPM.Orchestrator
         }
 
         public virtual void OnPostResourceToRegistryResult(PostResourceToRegistryResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnGetPipelinesFromRepoResult(GetPipelinesFromRepoResultMessage message)
         {
             return;
         }

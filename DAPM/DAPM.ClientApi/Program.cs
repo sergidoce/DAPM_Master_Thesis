@@ -38,6 +38,7 @@ builder.Services.AddQueueMessageConsumer<GetOrganizationsProcessResultConsumer, 
 builder.Services.AddQueueMessageConsumer<PostItemResultConsumer, PostItemProcessResult>();
 builder.Services.AddQueueMessageConsumer<GetRepositoriesProcessResultConsumer, GetRepositoriesProcessResult>();
 builder.Services.AddQueueMessageConsumer<GetResourcesProcessResultConsumer, GetResourcesProcessResult>();
+builder.Services.AddQueueMessageConsumer<GetPipelinesProcessResultConsumer, GetPipelinesProcessResult>();
 
 
 

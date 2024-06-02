@@ -2,6 +2,7 @@
 using DAPM.ResourceRegistryMS.Api.Models.DTOs;
 using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.ResourceRegistryMS.Api.Services
 {
@@ -48,6 +49,18 @@ namespace DAPM.ResourceRegistryMS.Api.Services
         public async Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(int organizationId)
         {
             return await _repositoryRepository.GetRepositoriesOfOrganization(organizationId); 
+        }
+
+        public async Task<Repository> PostRepositoryToOrganization(int organizationId, RepositoryDTO repositoryDTO)
+        {
+            Repository repository = new Repository()
+            {
+                Id = repositoryDTO.Id,
+                Name = repositoryDTO.Name,
+                PeerId = organizationId,
+            };
+
+            return await _repositoryRepository.PostRepository(repository);
         }
     }
 }

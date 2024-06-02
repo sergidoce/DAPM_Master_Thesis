@@ -17,7 +17,7 @@ namespace DAPM.ClientApi.Services
         IQueueProducer<GetRepositoriesRequest> _getRepositoriesRequestProducer;
         IQueueProducer<GetResourcesRequest> _getResourcesRequestProducer;
         IQueueProducer<PostResourceRequest> _postResourceRequestProducer;
-        IQueueProducer<CreateNewPipelineMessage> _createNewPipelineProducer;
+        IQueueProducer<PostPipelineRequest> _postPipelineRequestProducer;
 
         public RepositoryService(
             ILogger<RepositoryService> logger,
@@ -25,14 +25,14 @@ namespace DAPM.ClientApi.Services
             IQueueProducer<GetRepositoriesRequest> getRepositoriesRequestProducer,
             IQueueProducer<GetResourcesRequest> getResourcesRequestProducer,
             IQueueProducer<PostResourceRequest> postResourceRequestProducer,
-            IQueueProducer<CreateNewPipelineMessage> createNewPipelineProducer) 
+            IQueueProducer<PostPipelineRequest> postPipelineRequestProducer) 
         {
             _ticketService = ticketService;
             _logger = logger;
             _getRepositoriesRequestProducer = getRepositoriesRequestProducer;
             _getResourcesRequestProducer = getResourcesRequestProducer;
             _postResourceRequestProducer = postResourceRequestProducer;
-            _createNewPipelineProducer = createNewPipelineProducer;
+            _postPipelineRequestProducer = postPipelineRequestProducer;
         }
 
         public Guid GetRepositoryById(int organizationId, int repositoryId)
@@ -77,7 +77,7 @@ namespace DAPM.ClientApi.Services
         {
             Guid ticketId = _ticketService.CreateNewTicket();
 
-            var message = new CreateNewPipelineMessage
+            var message = new PostPipelineRequest
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = ticketId,
@@ -88,9 +88,9 @@ namespace DAPM.ClientApi.Services
 
             };
 
-            _createNewPipelineProducer.PublishMessage(message);
+            _postPipelineRequestProducer.PublishMessage(message);
 
-            _logger.LogDebug("CreateNewPipelineMessage Enqueued");
+            _logger.LogDebug("PostPipelineToRepoMessage Enqueued");
 
 
             return ticketId;

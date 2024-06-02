@@ -45,9 +45,18 @@ namespace RabbitMQLibrary.Models
         public TemplateData TemplateData { get; set; }
         public InstantiationData InstantiationData { get; set; }
     }
-    public class PipelineDTO
+    public class Pipeline
     {
         public IEnumerable<Node> Nodes { get; set; }
         public IEnumerable<Edge> Edges { get; set; }
+    }
+
+    public class PipelineDTO
+    {
+        public int OrganizationId { get; set; }
+        public int RepositoryId { get; set; }
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public Pipeline Pipeline { get; set; }
     }
 }

@@ -16,11 +16,11 @@ namespace DAPM.RepositoryMS.Api.Repositories
             _repositoryDbContext = repositoryDbContext;
         }
 
-        public async Task<int> AddPipeline(Pipeline pipeline)
+        public async Task<Pipeline> AddPipeline(Pipeline pipeline)
         {
             await _repositoryDbContext.Pipelines.AddAsync(pipeline);
             _repositoryDbContext.SaveChanges();
-            return pipeline.Id;
+            return pipeline;
         }
 
         public async Task<Pipeline> GetPipelineById(int repositoryId, int pipelineId)

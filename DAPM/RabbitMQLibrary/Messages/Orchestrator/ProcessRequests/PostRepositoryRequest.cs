@@ -6,16 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages.Repository
+namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
 {
-    public class CreateNewPipelineMessage : IQueueMessage
+    public class PostRepositoryRequest : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public int OrganizationId { get; set; }
-        public int RepositoryId { get; set; }
         public string Name { get; set; }
-        public PipelineDTO Pipeline { get; set; }
+        public int OrganizationId { get; set; }
     }
 }

@@ -17,11 +17,11 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
             _serviceProvider = serviceProvider;
         }
 
-        public Guid CreateNewExecutionInstance(PipelineDTO pipelineDTO)
+        public Guid CreateNewExecutionInstance(Pipeline pipeline)
         {
             Guid guid = Guid.NewGuid();
 
-            var pipelineExecution = new PipelineExecution(pipelineDTO, _serviceProvider);
+            var pipelineExecution = new PipelineExecution(pipeline, _serviceProvider);
             
             _pipelineExecutions[guid] = pipelineExecution;
             _logger.LogInformation($"A new execution instance has been created");

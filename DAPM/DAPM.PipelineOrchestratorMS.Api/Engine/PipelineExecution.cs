@@ -8,7 +8,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
     {
         private ILogger<PipelineExecution> _logger;
         private IServiceProvider _serviceProvider;
-        private PipelineDTO _pipeline;
+        private Pipeline _pipeline;
         private Dictionary<Guid, EngineNode> _nodes;
         private Dictionary<Guid, List<Guid>> _successorDictionary;
         private Dictionary<Guid, List<Guid>> _predecessorDictionary;
@@ -18,7 +18,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
         private List<Step> _steps;
         private Dictionary<Guid, Step> _stepsDictionary;
 
-        public PipelineExecution(PipelineDTO pipelineDto, IServiceProvider serviceProvider) 
+        public PipelineExecution(Pipeline pipelineDto, IServiceProvider serviceProvider) 
         {
 
             _nodes = new Dictionary<Guid, EngineNode>();

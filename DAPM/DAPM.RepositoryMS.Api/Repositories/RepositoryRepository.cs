@@ -14,6 +14,14 @@ namespace DAPM.RepositoryMS.Api.Repositories
             _context = context;
         }
 
+        public async Task<Repository> CreateRepository(string name)
+        {
+            Repository repository = new Repository() { Name = name };
+            await _context.Repositories.AddAsync(repository);
+            _context.SaveChanges();
+            return repository;
+        }
+
         public async Task<Repository> GetRepositoryById(int repositoryId)
         {
             return await _context.Repositories.FirstOrDefaultAsync(r => r.Id == repositoryId);

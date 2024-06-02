@@ -22,21 +22,29 @@ namespace DAPM.ClientApi.Controllers
             _createInstanceProducer = createInstanceProducer;
         }
 
-        [HttpPost("/pipelineExecutionTest")]
-        public async Task<ActionResult<Guid>> PostPipelineToRepository([FromBody] PipelineApiDto pipelineApiDto)
+        [HttpGet("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}")]
+        public async Task<ActionResult<Guid>> GetPipelineById(int organizationId, int repositoryId, int pipelineId)
         {
-            Guid id = Guid.NewGuid();
-
-            var message = new CreateInstanceExecutionMessage()
-            {
-                TicketId = id,
-                TimeToLive = TimeSpan.FromMinutes(1),
-                Pipeline = pipelineApiDto.Pipeline,
-            };
-
-            _createInstanceProducer.PublishMessage(message);
-
-            return Ok(new ApiResponse { RequestName = "ExecutePipeline", TicketId = id });
+            Guid id = _pipelineService.GetPipelineById(organizationId, repositoryId, pipelineId);
+            return Ok(new ApiResponse { RequestName = "GetPipelineById", TicketId = id });
         }
+
+        //[HttpPost("/pipelineExecutionTest")]
+        //public async Task<ActionResult<Guid>> PostPipelineToRepository([FromBody] PipelineApiDto pipelineApiDto)
+        //{
+        //    Guid id = Guid.NewGuid();
+
+        //    var message = new CreateInstanceExecutionMessage()
+        //    {
+        //        TicketId = id,
+        //        TimeToLive = TimeSpan.FromMinutes(1),
+        //        Pipeline = pipelineApiDto.Pipeline,
+        //    };
+
+        //    _createInstanceProducer.PublishMessage(message);
+
+        //    return Ok(new ApiResponse { RequestName = "ExecutePipeline", TicketId = id });
+        //    throw new NotImplementedException();
+        //}
     }
 }
