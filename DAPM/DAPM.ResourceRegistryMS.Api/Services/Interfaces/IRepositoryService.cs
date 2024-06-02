@@ -9,7 +9,6 @@ namespace DAPM.ResourceRegistryMS.Api.Services.Interfaces
 
         Task<IEnumerable<Repository>> GetAllRepositories();
         Task<IEnumerable<Resource>> GetResourcesOfRepository(int organizationId, int repositoryId);
-        Task<bool> AddRepository(RepositoryDto resource);
 
         Task<bool> DeleteRepository(int organizationId, int repositoryId);
     }

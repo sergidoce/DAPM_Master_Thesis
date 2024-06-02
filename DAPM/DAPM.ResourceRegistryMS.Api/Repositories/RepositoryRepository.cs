@@ -13,11 +13,11 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             _context = context;
         }
 
-        public async Task<bool> AddRepository(Repository repository)
+        public async Task<Repository> PostRepository(Repository repository)
         {
             await _context.Repositories.AddAsync(repository);
             _context.SaveChanges();
-            return true;
+            return repository;
         }
 
         public async Task<IEnumerable<Repository>> GetAllRepositories()

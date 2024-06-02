@@ -1,0 +1,6 @@
+@DAPM.PipelineOrchestratorMS.Api_HostAddress = http://localhost:5121
+
+GET {{DAPM.PipelineOrchestratorMS.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

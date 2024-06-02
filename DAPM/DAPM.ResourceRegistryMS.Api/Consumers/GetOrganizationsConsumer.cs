@@ -1,8 +1,10 @@
-﻿using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
+﻿using DAPM.ResourceRegistryMS.Api.Models;
+using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages.ClientApi;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
+using System.Linq;
 
 namespace DAPM.ResourceRegistryMS.Api.Consumers
 {
@@ -24,9 +26,21 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
 
         public async Task ConsumeAsync(GetOrganizationsMessage message)
         {
-            _logger.LogInformation("Get OrganisationsMessage received");
+            _logger.LogInformation("Get OrganizationsMessage received");
 
-            var peers = await _peerService.GetAllPeers();
+            var peers = Enumerable.Empty<Peer>();
+
+            if(message.OrganizationId != null)
+            {
+                var peer = await _peerService.GetPeer((int)message.OrganizationId);
+                peers = peers.Append(peer);
+            }
+            else
+            {
+                peers = await _peerService.GetAllPeers();
+            }
+
+           
             IEnumerable<OrganizationDTO> organizations = Enumerable.Empty<OrganizationDTO>();
 
             foreach (var peer in peers)

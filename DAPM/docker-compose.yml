@@ -42,6 +42,30 @@ services:
     ports:
       - "7000:8080"
 
+
+  dapm.pipelineorchestratorms.api:
+    image: ${DOCKER_REGISTRY-}dapmpipelineorchestratormsapi
+    build:
+      context: .
+      dockerfile: DAPM.PipelineOrchestratorMS.Api/Dockerfile
+    depends_on:
+      rabbitmq:
+          condition: service_healthy
+    ports:
+      - "8000:8080"
+
+
+  dapm.orchestrator:
+    image: ${DOCKER_REGISTRY-}dapmorchestrator
+    build:
+      context: .
+      dockerfile: DAPM.Orchestrator/Dockerfile
+    depends_on:
+      rabbitmq:
+          condition: service_healthy
+    ports:
+      - "9000:8080"
+
   rabbitmq: # login guest:guest
     image: rabbitmq:3-management
     hostname: "rabbitmq"

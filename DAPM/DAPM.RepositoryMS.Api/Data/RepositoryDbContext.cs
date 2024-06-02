@@ -17,6 +17,7 @@ namespace DAPM.RepositoryMS.Api.Data
         public DbSet<Resource> Resources { get; set; }
         public DbSet<Repository> Repositories { get; set; }
         public DbSet<Models.PostgreSQL.File>  Files { get; set; }
+        public DbSet<Pipeline> Pipelines { get; set; }
 
 
         public void InitializeDatabase()

@@ -12,16 +12,36 @@ namespace DAPM.RepositoryMS.Api.Services
         private IResourceRepository _resourceRepository;
         private IFileRepository _fileRepository;
         private IRepositoryRepository _repositoryRepository;
+        private IPipelineRepository _pipelineRepository;
 
         public RepositoryService(ILogger<RepositoryService> logger,
             IResourceRepository resourceRepository,
             IFileRepository fileRepository,
-            IRepositoryRepository repositoryRepository)
+            IRepositoryRepository repositoryRepository,
+            IPipelineRepository pipelineRepository)
         {
             _logger = logger;
             _resourceRepository = resourceRepository;
             _fileRepository = fileRepository;
             _repositoryRepository = repositoryRepository;
+            _pipelineRepository = pipelineRepository;
+        }
+
+        public async Task<Pipeline> CreateNewPipeline(int repositoryId, string name, RabbitMQLibrary.Models.Pipeline pipeline)
+        {
+            var pipelineJsonString = Newtonsoft.Json.JsonConvert.SerializeObject(pipeline);
+
+            var pipelineObject = new Pipeline
+            {
+                Name = name,
+                RepositoryId = repositoryId,
+                PipelineJson = pipelineJsonString
+            };
+
+
+            var createdPipeline = await _pipelineRepository.AddPipeline(pipelineObject);
+
+            return createdPipeline;
         }
 
         public async Task<int> CreateNewResource(int repositoryId, string name, byte[] resourceFile)
@@ -56,6 +76,16 @@ namespace DAPM.RepositoryMS.Api.Services
             }
 
             return -1;
+        }
+
+        public async Task<Repository> CreateNewRepository(string name)
+        {
+            return await _repositoryRepository.CreateRepository(name);
+        }
+
+        public Task<IEnumerable<Pipeline>> GetPipelinesFromRepository(int repositoryId)
+        {
+            throw new NotImplementedException();
         }
     }
 }

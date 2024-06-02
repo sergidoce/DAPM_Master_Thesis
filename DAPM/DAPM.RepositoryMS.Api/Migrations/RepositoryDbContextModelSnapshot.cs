@@ -46,6 +46,32 @@ namespace DAPM.RepositoryMS.Api.Migrations
                     b.ToTable("Files");
                 });
 
+            modelBuilder.Entity("DAPM.RepositoryMS.Api.Models.PostgreSQL.Pipeline", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer");
+
+                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("PipelineJson")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("RepositoryId")
+                        .HasColumnType("integer");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("RepositoryId");
+
+                    b.ToTable("Pipelines");
+                });
+
             modelBuilder.Entity("DAPM.RepositoryMS.Api.Models.PostgreSQL.Repository", b =>
                 {
                     b.Property<int>("Id")
@@ -92,6 +118,17 @@ namespace DAPM.RepositoryMS.Api.Migrations
                     b.HasIndex("RepositoryId");
 
                     b.ToTable("Resources");
+                });
+
+            modelBuilder.Entity("DAPM.RepositoryMS.Api.Models.PostgreSQL.Pipeline", b =>
+                {
+                    b.HasOne("DAPM.RepositoryMS.Api.Models.PostgreSQL.Repository", "Repository")
+                        .WithMany()
+                        .HasForeignKey("RepositoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Repository");
                 });
 
             modelBuilder.Entity("DAPM.RepositoryMS.Api.Models.PostgreSQL.Resource", b =>

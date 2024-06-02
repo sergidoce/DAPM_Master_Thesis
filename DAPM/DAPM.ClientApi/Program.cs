@@ -6,6 +6,7 @@ using RabbitMQLibrary.Implementation;
 using RabbitMQLibrary.Extensions;
 using DAPM.ClientApi.Consumers;
 using RabbitMQLibrary.Messages.ClientApi;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -33,11 +34,12 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
     RabbitMqUsername = "guest"
 });
 
-builder.Services.AddQueueMessageConsumer<GetOrganizationsResultConsumer, GetOrganizationsResultMessage>();
-builder.Services.AddQueueMessageConsumer<CreateNewItemResultConsumer, CreateNewItemResultMessage>();
-builder.Services.AddQueueMessageConsumer<GetRepositoriesResultConsumer, GetRepositoriesResultMessage>();
-builder.Services.AddQueueMessageConsumer<GetResourcesResultConsumer, GetResourcesResultMessage>();
-builder.Services.AddQueueMessageConsumer<GetUsersResultConsumer, GetUsersResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetOrganizationsProcessResultConsumer, GetOrganizationsProcessResult>();
+builder.Services.AddQueueMessageConsumer<PostItemResultConsumer, PostItemProcessResult>();
+builder.Services.AddQueueMessageConsumer<GetRepositoriesProcessResultConsumer, GetRepositoriesProcessResult>();
+builder.Services.AddQueueMessageConsumer<GetResourcesProcessResultConsumer, GetResourcesProcessResult>();
+builder.Services.AddQueueMessageConsumer<GetPipelinesProcessResultConsumer, GetPipelinesProcessResult>();
+
 
 
 // Add services to the container.
@@ -47,6 +49,7 @@ builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IPipelineService, PipelineService>();
 builder.Services.AddSingleton<ITicketService, TicketService>();
 
 builder.Services.AddControllers();

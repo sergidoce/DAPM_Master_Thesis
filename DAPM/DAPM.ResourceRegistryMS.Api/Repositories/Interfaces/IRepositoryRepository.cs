@@ -6,7 +6,7 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories.Interfaces
     {
         public Task<IEnumerable<Repository>> GetAllRepositories();
         public Task<Repository> GetRepositoryById(int organizationId, int repositoryId);
-        public Task<bool> AddRepository(Repository repository);
+        public Task<Repository> PostRepository(Repository repository);
         public Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(int organizationId);
     }
 }

@@ -1,7 +1,12 @@
-﻿using DAPM.ClientApi.Services.Interfaces;
+﻿using DAPM.ClientApi.Models.DTOs;
+using DAPM.ClientApi.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
+using RabbitMQLibrary.Messages.Orchestrator.ProcessRequests;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
+using RabbitMQLibrary.Models;
+using System.IO;
+using System.Xml.Linq;
 
 namespace DAPM.ClientApi.Services
 {
@@ -9,29 +14,32 @@ namespace DAPM.ClientApi.Services
     {
         private readonly ILogger<RepositoryService> _logger;
         private readonly ITicketService _ticketService;
-        IQueueProducer<GetRepositoryByIdMessage> _getRepoByIdProducer;
-        IQueueProducer<GetResourcesOfRepositoryMessage> _getResourcesOfRepoProducer;
-        IQueueProducer<CreateNewResourceMessage> _createNewResourceProducer;
+        IQueueProducer<GetRepositoriesRequest> _getRepositoriesRequestProducer;
+        IQueueProducer<GetResourcesRequest> _getResourcesRequestProducer;
+        IQueueProducer<PostResourceRequest> _postResourceRequestProducer;
+        IQueueProducer<PostPipelineRequest> _postPipelineRequestProducer;
 
         public RepositoryService(
             ILogger<RepositoryService> logger,
             ITicketService ticketService,
-            IQueueProducer<GetRepositoryByIdMessage> getRepoByIdProducer,
-            IQueueProducer<GetResourcesOfRepositoryMessage> getResourcesOfRepoProducer,
-            IQueueProducer<CreateNewResourceMessage> createNewResourceProducer) 
+            IQueueProducer<GetRepositoriesRequest> getRepositoriesRequestProducer,
+            IQueueProducer<GetResourcesRequest> getResourcesRequestProducer,
+            IQueueProducer<PostResourceRequest> postResourceRequestProducer,
+            IQueueProducer<PostPipelineRequest> postPipelineRequestProducer) 
         {
             _ticketService = ticketService;
             _logger = logger;
-            _getRepoByIdProducer = getRepoByIdProducer;
-            _getResourcesOfRepoProducer = getResourcesOfRepoProducer;
-            _createNewResourceProducer = createNewResourceProducer;
+            _getRepositoriesRequestProducer = getRepositoriesRequestProducer;
+            _getResourcesRequestProducer = getResourcesRequestProducer;
+            _postResourceRequestProducer = postResourceRequestProducer;
+            _postPipelineRequestProducer = postPipelineRequestProducer;
         }
 
         public Guid GetRepositoryById(int organizationId, int repositoryId)
         {
             Guid ticketId = _ticketService.CreateNewTicket();
 
-            var message = new GetRepositoryByIdMessage
+            var message = new GetRepositoriesRequest
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = ticketId,
@@ -39,9 +47,9 @@ namespace DAPM.ClientApi.Services
                 RepositoryId = repositoryId
             };
 
-            _getRepoByIdProducer.PublishMessage(message);
+            _getRepositoriesRequestProducer.PublishMessage(message);
 
-            _logger.LogDebug("GetRepositoryByIdMessage Enqueued");
+            _logger.LogDebug("GetRepositoriesRequest Enqueued");
 
             return ticketId;
         }
@@ -50,7 +58,7 @@ namespace DAPM.ClientApi.Services
         {
             Guid ticketId = _ticketService.CreateNewTicket();
 
-            var message = new GetResourcesOfRepositoryMessage
+            var message = new GetResourcesRequest
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = ticketId,
@@ -58,9 +66,32 @@ namespace DAPM.ClientApi.Services
                 RepositoryId = repositoryId
             };
 
-            _getResourcesOfRepoProducer.PublishMessage(message);
+            _getResourcesRequestProducer.PublishMessage(message);
 
-            _logger.LogDebug("GetResourcesOfRepoMessage Enqueued");
+            _logger.LogDebug("GetResourcesRequest Enqueued");
+
+            return ticketId;
+        }
+
+        public Guid PostPipelineToRepository(int organizationId, int repositoryId, PipelineApiDto pipeline)
+        {
+            Guid ticketId = _ticketService.CreateNewTicket();
+
+            var message = new PostPipelineRequest
+            {
+                TimeToLive = TimeSpan.FromMinutes(1),
+                TicketId = ticketId,
+                OrganizationId = organizationId,
+                RepositoryId = repositoryId,
+                Name = pipeline.Name,
+                Pipeline = pipeline.Pipeline,
+
+            };
+
+            _postPipelineRequestProducer.PublishMessage(message);
+
+            _logger.LogDebug("PostPipelineToRepoMessage Enqueued");
+
 
             return ticketId;
         }
@@ -74,7 +105,7 @@ namespace DAPM.ClientApi.Services
             resourceFile.CopyTo(stream);
 
 
-            var message = new CreateNewResourceMessage
+            var message = new PostResourceRequest
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = ticketId,
@@ -85,9 +116,9 @@ namespace DAPM.ClientApi.Services
 
             };
 
-            _createNewResourceProducer.PublishMessage(message);
+            _postResourceRequestProducer.PublishMessage(message);
 
-            _logger.LogDebug("CreateNewResourceMessage Enqueued");
+            _logger.LogDebug("PostResourceRequest Enqueued");
 
             return ticketId;
         }
