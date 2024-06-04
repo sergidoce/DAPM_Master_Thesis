@@ -1,21 +1,9 @@
 using RabbitMQLibrary.Implementation;
 using RabbitMQLibrary.Extensions;
-using DAPM.PipelineOrchestratorMS.Api.Consumers;
-using RabbitMQLibrary.Messages.PipelineOrchestrator;
-using DAPM.PipelineOrchestratorMS.Api.Engine.Interfaces;
-using DAPM.PipelineOrchestratorMS.Api.Engine;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
-
-// Add services to the container.
-
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
 
 builder.Services.AddCors(options =>
 {
@@ -24,7 +12,6 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod()
                .AllowAnyHeader());
 });
-
 
 builder.Services.AddQueueing(new QueueingConfigurationSettings
 {
@@ -35,10 +22,12 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
     RabbitMqUsername = "guest"
 });
 
+// Add services to the container.
 
-builder.Services.AddQueueMessageConsumer<CreateInstanceExecutionConsumer, CreateInstanceExecutionMessage>();
-
-builder.Services.AddSingleton<IPipelineOrchestrationEngine, PipelineOrchestrationEngine>();
+builder.Services.AddControllers();
+// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 

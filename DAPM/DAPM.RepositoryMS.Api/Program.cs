@@ -28,6 +28,14 @@ builder.Services.Configure<FormOptions>(x =>
 });
 
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
+});
+
 //RabbitMQ
 
 builder.Services.AddQueueing(new QueueingConfigurationSettings

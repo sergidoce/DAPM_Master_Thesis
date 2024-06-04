@@ -22,6 +22,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAPM.PipelineOrchestratorMS
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAPM.Orchestrator", "DAPM.Orchestrator\DAPM.Orchestrator.csproj", "{D76E4566-4446-4253-A0A7-DF52D0F1620A}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAPM.PeerApi", "DAPM.PeerApi\DAPM.PeerApi.csproj", "{33DD6ED0-1FA6-48BF-87CB-84D9BBE7AEAA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -68,6 +70,10 @@ Global
 		{D76E4566-4446-4253-A0A7-DF52D0F1620A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D76E4566-4446-4253-A0A7-DF52D0F1620A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D76E4566-4446-4253-A0A7-DF52D0F1620A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{33DD6ED0-1FA6-48BF-87CB-84D9BBE7AEAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{33DD6ED0-1FA6-48BF-87CB-84D9BBE7AEAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{33DD6ED0-1FA6-48BF-87CB-84D9BBE7AEAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{33DD6ED0-1FA6-48BF-87CB-84D9BBE7AEAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
