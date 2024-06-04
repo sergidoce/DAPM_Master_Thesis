@@ -17,6 +17,14 @@ builder.Services.Configure<FormOptions>(x =>
     x.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAll", builder =>
+        builder.AllowAnyOrigin()
+               .AllowAnyMethod()
+               .AllowAnyHeader());
+});
+
 // Add services to the container.
 
 builder.Services.AddControllers();

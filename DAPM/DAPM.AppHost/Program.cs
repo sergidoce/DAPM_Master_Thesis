@@ -10,4 +10,6 @@ builder.AddProject<Projects.DAPM_PipelineOrchestratorMS_Api>("dapm-pipelineorche
 
 builder.AddProject<Projects.DAPM_Orchestrator>("dapm-orchestrator");
 
+builder.AddProject<Projects.DAPM_PeerApi>("dapm-peerapi");
+
 builder.Build().Run();

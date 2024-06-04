@@ -1,0 +1,6 @@
+@DAPM.PeerApi_HostAddress = http://localhost:5202
+
+GET {{DAPM.PeerApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

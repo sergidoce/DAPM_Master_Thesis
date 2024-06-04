@@ -8,7 +8,8 @@
         "dapm.repositoryms.api": "StartDebugging",
         "dapm.resourceregistryms.api": "StartDebugging",
         "dapm.pipelineorchestratorms.api": "StartDebugging",
-        "dapm.orchestrator": "StartDebugging"
+        "dapm.orchestrator": "StartDebugging",
+        "dapm.peerapi": "StartDebugging"
       }
     }
   }

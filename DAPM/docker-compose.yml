@@ -10,7 +10,20 @@ services:
       rabbitmq:
         condition: service_healthy
     ports:
-        - "5000:8080"        
+        - "5000:8080"
+
+
+  dapm.peerapi:
+    image: ${DOCKER_REGISTRY-}dapmpeerapi
+    build:
+      context: .
+      dockerfile: DAPM.PeerApi/Dockerfile
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    ports:
+        - "5001:8080"
+
 
 
   dapm.repositoryms.api:
@@ -168,12 +181,6 @@ services:
     ports:
       - 8082:8082
    
-
-
-
-
-
-
 
 
 
