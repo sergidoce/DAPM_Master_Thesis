@@ -8,11 +8,11 @@ namespace DAPM.Orchestrator.Processes
 {
     public class GetResourcesProcess : OrchestratorProcess
     {
-        private int _organizationId;
-        private int _repositoryId;
-        private int? _resourceId;
-        public GetResourcesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, int organizationId,
-            int repositoryId, int? resourceId) 
+        private Guid _organizationId;
+        private Guid _repositoryId;
+        private Guid? _resourceId;
+        public GetResourcesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid organizationId,
+            Guid repositoryId, Guid? resourceId) 
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;

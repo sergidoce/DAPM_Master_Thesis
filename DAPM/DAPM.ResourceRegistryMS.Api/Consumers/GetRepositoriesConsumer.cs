@@ -33,16 +33,16 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
 
             var repositories = Enumerable.Empty<Repository>();
 
-            if(message.RepositoryId != null)
+            if (message.RepositoryId != null)
             {
-                var repository = await _repositoryService.GetRepositoryById(message.OrganizationId, (int)message.RepositoryId);
+                var repository = await _repositoryService.GetRepositoryById(message.OrganizationId, (Guid)message.RepositoryId);
                 repositories = repositories.Append(repository);
             }
             else
             {
                 repositories = await _peerService.GetRepositoriesOfOrganization(message.OrganizationId);
             }
-            
+
             IEnumerable<RepositoryDTO> repositoriesDTOs = Enumerable.Empty<RepositoryDTO>();
 
             foreach (var repository in repositories)

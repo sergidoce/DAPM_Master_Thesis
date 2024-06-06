@@ -5,16 +5,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
+namespace RabbitMQLibrary.Messages.PeerApi
 {
-    public class GetResourcesRequest : IQueueMessage
+    public class SendRegisterRequestMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-
-        public Guid OrganizationId { get; set; }
-        public Guid RepositoryId { get; set; }
-        public Guid? ResourceId { get; set; }
+        public string IntroductionPeerAddress {  get; set; }
+        public string LocalPeerAddress { get; set; }
     }
 }

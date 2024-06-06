@@ -23,7 +23,7 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpGet("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}")]
-        public async Task<ActionResult<Guid>> GetPipelineById(int organizationId, int repositoryId, int pipelineId)
+        public async Task<ActionResult<Guid>> GetPipelineById(Guid organizationId, Guid repositoryId, Guid pipelineId)
         {
             Guid id = _pipelineService.GetPipelineById(organizationId, repositoryId, pipelineId);
             return Ok(new ApiResponse { RequestName = "GetPipelineById", TicketId = id });
@@ -44,7 +44,6 @@ namespace DAPM.ClientApi.Controllers
         //    _createInstanceProducer.PublishMessage(message);
 
         //    return Ok(new ApiResponse { RequestName = "ExecutePipeline", TicketId = id });
-        //    throw new NotImplementedException();
         //}
     }
 }

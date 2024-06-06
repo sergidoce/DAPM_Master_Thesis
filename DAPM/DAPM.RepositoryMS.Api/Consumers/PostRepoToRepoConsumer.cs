@@ -31,7 +31,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
                 Id = repository.Id,
                 Name = repository.Name,
             };
-        
+
             var postResourceToRepoResult = new PostRepoToRepoResultMessage
             {
                 TicketId = message.TicketId,
@@ -45,7 +45,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
 
             _logger.LogInformation("PostRepoToRepoResultMessage produced");
 
-          
+
             return;
         }
     }

@@ -1,5 +1,4 @@
 ﻿using DAPM.ResourceRegistryMS.Api.Models;
-using DAPM.ResourceRegistryMS.Api.Models.DTOs;
 using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 
@@ -24,7 +23,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
         }
 
 
-        public Task<bool> DeleteRepository(int organizationId, int repositoryId)
+        public Task<bool> DeleteRepository(Guid organizationId, Guid repositoryId)
         {
             throw new NotImplementedException();
         }
@@ -34,12 +33,12 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return await _repositoryRepository.GetAllRepositories();
         }
  
-        public async Task<Repository> GetRepositoryById(int organizationId, int repositoryId)
+        public async Task<Repository> GetRepositoryById(Guid organizationId, Guid repositoryId)
         {
             return await _repositoryRepository.GetRepositoryById(organizationId, repositoryId);
         }
 
-        public async Task<IEnumerable<Resource>> GetResourcesOfRepository(int organizationId, int repositoryId)
+        public async Task<IEnumerable<Resource>> GetResourcesOfRepository(Guid organizationId, Guid repositoryId)
         {
             return _resourceRepository.GetResourcesOfRepository(organizationId, repositoryId);
         }

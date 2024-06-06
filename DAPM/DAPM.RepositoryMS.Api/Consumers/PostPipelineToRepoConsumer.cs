@@ -29,7 +29,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
 
             Models.PostgreSQL.Pipeline pipeline = await _repositoryService.CreateNewPipeline(message.RepositoryId, message.Name, message.Pipeline);
 
-            if(pipeline != null)
+            if (pipeline != null)
             {
                 var pipelineDTO = new PipelineDTO()
                 {
@@ -57,7 +57,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
             {
                 _logger.LogInformation("There was an error creating the new pipeline");
             }
-        
+
             return;
         }
     }

@@ -2,8 +2,8 @@
 {
     public class EngineResource
     {
-        public int OrganizationId { get; set; }
-        public int RepositoryId { get; set; }
-        public int ResourceId {  get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid RepositoryId { get; set; }
+        public Guid ResourceId {  get; set; }
     }
 }

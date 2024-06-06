@@ -12,7 +12,7 @@ namespace RabbitMQLibrary.Messages.ClientApi
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public int ItemId { get; set; }
+        public Guid ItemId { get; set; }
         public string ItemType { get; set; }
         public string Message { get; set; }
         public bool Succeeded { get; set; }

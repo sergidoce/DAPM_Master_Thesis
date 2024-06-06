@@ -29,7 +29,6 @@ namespace DAPM.RepositoryMS.Api.Data
 
                 Repository repository = new Repository()
                 {
-                    Id = 1,
                     Name = "DTU Repository"
                 };
 

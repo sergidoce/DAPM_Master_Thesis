@@ -19,12 +19,12 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return true;
         }
 
-        public Task<bool> DeleteResourceType(int resourceTypeId)
+        public Task<bool> DeleteResourceType(Guid resourceTypeId)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<ResourceType> GetResourceTypeById(int id)
+        public async Task<ResourceType> GetResourceTypeById(Guid id)
         {
             var resourceType = await _context.ResourceTypes.FindAsync(id);
 

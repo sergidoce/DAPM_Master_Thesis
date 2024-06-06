@@ -27,7 +27,7 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return await _context.Peers.ToListAsync();
         }
 
-        public async Task<Peer> GetPeerById(int id)
+        public async Task<Peer> GetPeerById(Guid id)
         {
             return await _context.Peers.FindAsync(id);
         }

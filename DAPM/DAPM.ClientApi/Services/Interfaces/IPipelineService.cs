@@ -2,6 +2,6 @@
 {
     public interface IPipelineService
     {
-        public Guid GetPipelineById(int organizationId, int repositoryId, int pipelineId);
+        public Guid GetPipelineById(Guid organizationId, Guid repositoryId, Guid pipelineId);
     }
 }

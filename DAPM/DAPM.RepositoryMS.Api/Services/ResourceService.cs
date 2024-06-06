@@ -16,7 +16,7 @@ namespace DAPM.RepositoryMS.Api.Services
 
         }
 
-        public async Task<int> AddResource(Resource resource)
+        public async Task<Resource> AddResource(Resource resource)
         {
             return await _resourceRepository.AddResource(resource);
         }

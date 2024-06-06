@@ -22,7 +22,7 @@ namespace DAPM.RepositoryMS.Api.Repositories
             return repository;
         }
 
-        public async Task<Repository> GetRepositoryById(int repositoryId)
+        public async Task<Repository> GetRepositoryById(Guid repositoryId)
         {
             return await _context.Repositories.FirstOrDefaultAsync(r => r.Id == repositoryId);
         }

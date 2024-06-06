@@ -10,13 +10,13 @@ namespace DAPM.Orchestrator.Processes
     public class PostPipelineProcess : OrchestratorProcess
     {
 
-        private int _organizationId;
-        private int _repositoryId;
+        private Guid _organizationId;
+        private Guid _repositoryId;
         private string _pipelineName;
         private Pipeline _pipeline;
 
         public PostPipelineProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId
-            , int organizationId, int repositoryId, Pipeline pipeline, string name)
+            , Guid organizationId, Guid repositoryId, Pipeline pipeline, string name)
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;

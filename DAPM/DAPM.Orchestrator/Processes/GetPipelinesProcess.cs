@@ -7,12 +7,12 @@ namespace DAPM.Orchestrator.Processes
 {
     public class GetPipelinesProcess : OrchestratorProcess
     {
-        private int _organizationId;
-        private int _repositoryId;
-        private int? _pipelineId;
+        private Guid _organizationId;
+        private Guid _repositoryId;
+        private Guid? _pipelineId;
 
         public GetPipelinesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId,
-            int organizationId, int repositoryId, int? pipelineId)
+            Guid organizationId, Guid repositoryId, Guid? pipelineId)
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;

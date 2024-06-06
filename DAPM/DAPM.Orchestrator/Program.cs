@@ -43,6 +43,8 @@ builder.Services.AddQueueMessageConsumer<GetPipelinesRequestConsumer, GetPipelin
 builder.Services.AddQueueMessageConsumer<PostResourceRequestConsumer, PostResourceRequest>();
 builder.Services.AddQueueMessageConsumer<PostRepositoryRequestConsumer, PostRepositoryRequest>();
 builder.Services.AddQueueMessageConsumer<PostPipelineRequestConsumer, PostPipelineRequest>();
+builder.Services.AddQueueMessageConsumer<RegisterPeerRequestConsumer, RegisterPeerRequest>();
+
 
 
 

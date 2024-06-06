@@ -9,10 +9,10 @@ namespace DAPM.Orchestrator.Processes
 {
     public class CreateRepositoryProcess : OrchestratorProcess
     {
-        private int _organizationId;
+        private Guid _organizationId;
         private string _repositoryName; 
 
-        public CreateRepositoryProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, int organizationId, string name) 
+        public CreateRepositoryProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid organizationId, string name) 
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;

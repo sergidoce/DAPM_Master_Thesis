@@ -1,4 +1,5 @@
-﻿using DAPM.RepositoryMS.Api.Services.Interfaces;
+﻿using DAPM.RepositoryMS.Api.Models.PostgreSQL;
+using DAPM.RepositoryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
 using RabbitMQLibrary.Messages.Repository;
@@ -27,13 +28,13 @@ namespace DAPM.RepositoryMS.Api.Consumers
         {
             _logger.LogInformation("PostResourceToRepoMessage received");
 
-            int resourceId = await _repositoryService.CreateNewResource(message.RepositoryId, message.Name, message.ResourceFile);
+            var resource = await _repositoryService.CreateNewResource(message.RepositoryId, message.Name, message.ResourceFile);
 
-            if (resourceId != -1)
+            if (resource != null)
             {
                 var resourceDto = new ResourceDTO
                 {
-                    Id = resourceId,
+                    Id = resource.Id,
                     Name = message.Name,
                     OrganizationId = message.OrganizationId,
                     RepositoryId = message.RepositoryId,

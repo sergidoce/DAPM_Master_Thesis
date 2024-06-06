@@ -27,7 +27,7 @@ namespace DAPM.RepositoryMS.Api.Services
             _pipelineRepository = pipelineRepository;
         }
 
-        public async Task<Pipeline> CreateNewPipeline(int repositoryId, string name, RabbitMQLibrary.Models.Pipeline pipeline)
+        public async Task<Pipeline> CreateNewPipeline(Guid repositoryId, string name, RabbitMQLibrary.Models.Pipeline pipeline)
         {
             var pipelineJsonString = Newtonsoft.Json.JsonConvert.SerializeObject(pipeline);
 
@@ -42,9 +42,10 @@ namespace DAPM.RepositoryMS.Api.Services
             var createdPipeline = await _pipelineRepository.AddPipeline(pipelineObject);
 
             return createdPipeline;
+
         }
 
-        public async Task<int> CreateNewResource(int repositoryId, string name, byte[] resourceFile)
+        public async Task<Resource> CreateNewResource(Guid repositoryId, string name, byte[] resourceFile)
         {
             var repository = await _repositoryRepository.GetRepositoryById(repositoryId);
 
@@ -69,13 +70,13 @@ namespace DAPM.RepositoryMS.Api.Services
                         Type = "EventLog"
                     };
 
-                    var id = await _resourceRepository.AddResource(resource);
+                    var newResource = await _resourceRepository.AddResource(resource);
 
-                    return id;
+                    return newResource;
                 }
             }
 
-            return -1;
+            return null;
         }
 
         public async Task<Repository> CreateNewRepository(string name)
@@ -83,7 +84,7 @@ namespace DAPM.RepositoryMS.Api.Services
             return await _repositoryRepository.CreateRepository(name);
         }
 
-        public Task<IEnumerable<Pipeline>> GetPipelinesFromRepository(int repositoryId)
+        public Task<IEnumerable<Pipeline>> GetPipelinesFromRepository(Guid repositoryId)
         {
             throw new NotImplementedException();
         }

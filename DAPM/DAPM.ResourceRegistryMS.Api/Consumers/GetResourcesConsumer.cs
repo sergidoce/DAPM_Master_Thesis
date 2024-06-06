@@ -30,9 +30,9 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
 
             var resources = Enumerable.Empty<Models.Resource>();
 
-            if(message.ResourceId != null)
+            if (message.ResourceId != null)
             {
-                var resource = await _resourceService.GetResourceById(message.OrganizationId, message.RepositoryId, (int)message.ResourceId);
+                var resource = await _resourceService.GetResourceById(message.OrganizationId, message.RepositoryId, (Guid)message.ResourceId);
                 resources = resources.Append(resource);
             }
             else

@@ -7,14 +7,13 @@ using System.Threading.Tasks;
 
 namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
 {
-    public class GetResourcesRequest : IQueueMessage
+    public class RegisterPeerRequest : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-
-        public Guid OrganizationId { get; set; }
-        public Guid RepositoryId { get; set; }
-        public Guid? ResourceId { get; set; }
+        public string IntroductionPeerAddress { get; set; }
+        public string LocalPeerAddress { get; set; }
+        public string PeerName { get; set; }
     }
 }

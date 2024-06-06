@@ -1,5 +1,4 @@
-﻿using DAPM.RepositoryMS.Api.Migrations;
-using DAPM.RepositoryMS.Api.Models.PostgreSQL;
+﻿using DAPM.RepositoryMS.Api.Models.PostgreSQL;
 using DAPM.RepositoryMS.Api.Services.Interfaces;
 using Newtonsoft.Json;
 using RabbitMQLibrary.Interfaces;
@@ -32,7 +31,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
 
             if (message.PipelineId != null)
             {
-                var pipeline = await _pipelineService.GetPipelineById(message.RepositoryId, (int)message.PipelineId);
+                var pipeline = await _pipelineService.GetPipelineById(message.RepositoryId, (Guid)message.PipelineId);
                 pipelines = pipelines.Append(pipeline);
 
             }
@@ -43,7 +42,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
 
             var pipelinesDTOs = Enumerable.Empty<PipelineDTO>();
 
-            foreach(var pipeline in pipelines)
+            foreach (var pipeline in pipelines)
             {
                 var dto = new PipelineDTO()
                 {

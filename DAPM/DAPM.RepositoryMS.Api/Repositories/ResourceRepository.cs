@@ -21,15 +21,15 @@ namespace DAPM.RepositoryMS.Api.Repositories
             _repositoryDbContext = repositoryDbContext;
         }
 
-        public async Task<int> AddResource(Resource resource)
+        public async Task<Resource> AddResource(Resource resource)
         {
             await _repositoryDbContext.Resources.AddAsync(resource);
             _repositoryDbContext.SaveChanges();
-            return resource.Id;
+            return resource;
         }
 
   
-        public Task<Resource> GetResourceById(int repositoryId, int resourceId)
+        public Task<Resource> GetResourceById(Guid repositoryId, Guid resourceId)
         {
             throw new NotImplementedException();
         }

@@ -9,13 +9,13 @@ namespace DAPM.Orchestrator.Processes
 {
     public class PostResourceProcess : OrchestratorProcess
     {
-        private int _organizationId;
-        private int _repositoryId;
+        private Guid _organizationId;
+        private Guid _repositoryId;
         private string _name;
         private byte[] _file;
 
         public PostResourceProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, int organizationId, int repositoryId, string name, byte[] resourceFile) 
+            Guid ticketId, Guid organizationId, Guid repositoryId, string name, byte[] resourceFile) 
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;

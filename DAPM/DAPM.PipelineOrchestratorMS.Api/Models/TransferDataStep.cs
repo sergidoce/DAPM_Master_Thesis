@@ -12,15 +12,15 @@
     {
 
         private EngineResource _resourceToTransfer;
-        private int _destinationOrganization;
-        private int? _destinationRepository;
+        private Guid _destinationOrganization;
+        private Guid? _destinationRepository;
 
         private StorageMode _sourceStorageMode;
         private StorageMode _destinationStorageMode;
 
         public TransferDataStep(EngineResource resourceToTransfer,
-            int destinationOrganization,
-            int? destinationRepository,
+            Guid destinationOrganization,
+            Guid? destinationRepository,
             StorageMode sourceStorageMode,
             StorageMode destinationStorageMode,
             IServiceProvider serviceProvider) : base(serviceProvider)

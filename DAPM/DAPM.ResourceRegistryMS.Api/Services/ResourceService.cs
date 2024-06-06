@@ -1,6 +1,5 @@
 ﻿using DAPM.ResourceRegistryMS.Api.Models;
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
-using DAPM.ResourceRegistryMS.Api.Models.DTOs;
 using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
 
 namespace DAPM.ResourceRegistryMS.Api.Services
@@ -20,7 +19,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             _logger = logger;
         }
 
-        public async Task<Resource> GetResourceById(int organizationId, int repositoryId, int resourceId)
+        public async Task<Resource> GetResourceById(Guid organizationId, Guid repositoryId, Guid resourceId)
         {
             return await _resourceRepository.GetResourceById(organizationId, repositoryId, resourceId);
         }
@@ -40,7 +39,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
                 Name = resourceDto.Name,
                 RepositoryId = repositoryId,
                 PeerId = resourceDto.OrganizationId,
-                ResourceTypeId = 1,
+                ResourceTypeId = Guid.Empty,
             };
 
             await _resourceRepository.AddResource(resource);
@@ -48,7 +47,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return resource;
         }
 
-        public async Task<bool> DeleteResource(int resourceId)
+        public async Task<bool> DeleteResource(Guid resourceId)
         {
             return await _resourceRepository.DeleteResource(resourceId);
         }

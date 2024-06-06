@@ -35,7 +35,7 @@ namespace DAPM.ClientApi.Services
             _postPipelineRequestProducer = postPipelineRequestProducer;
         }
 
-        public Guid GetRepositoryById(int organizationId, int repositoryId)
+        public Guid GetRepositoryById(Guid organizationId, Guid repositoryId)
         {
             Guid ticketId = _ticketService.CreateNewTicket();
 
@@ -54,7 +54,7 @@ namespace DAPM.ClientApi.Services
             return ticketId;
         }
 
-        public Guid GetResourcesOfRepository(int organizationId, int repositoryId)
+        public Guid GetResourcesOfRepository(Guid organizationId, Guid repositoryId)
         {
             Guid ticketId = _ticketService.CreateNewTicket();
 
@@ -73,7 +73,7 @@ namespace DAPM.ClientApi.Services
             return ticketId;
         }
 
-        public Guid PostPipelineToRepository(int organizationId, int repositoryId, PipelineApiDto pipeline)
+        public Guid PostPipelineToRepository(Guid organizationId, Guid repositoryId, PipelineApiDto pipeline)
         {
             Guid ticketId = _ticketService.CreateNewTicket();
 
@@ -96,7 +96,7 @@ namespace DAPM.ClientApi.Services
             return ticketId;
         }
 
-        public Guid PostResourceToRepository(int organizationId, int repositoryId, string name, IFormFile resourceFile)
+        public Guid PostResourceToRepository(Guid organizationId, Guid repositoryId, string name, IFormFile resourceFile)
         {
             Guid ticketId = _ticketService.CreateNewTicket();
 

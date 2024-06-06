@@ -29,12 +29,12 @@ public class ResourceRegistryDbContext : DbContext
             Database.EnsureDeleted();
             Database.Migrate();
 
-            ResourceType csv = new ResourceType { Name = "EventLog", FileExtension = ".csv" };
+            ResourceType csv = new ResourceType {Id = Guid.Empty, Name = "EventLog", FileExtension = ".csv" };
             ResourceTypes.Add(csv);
 
-            Peer dtuPeer = new Peer { Name = "DTU", ApiUrl = "http://dtu.dk" };
-            Peer kuPeer = new Peer { Name = "KU", ApiUrl = "http://ku.dk" };
-            Peer nvPeer = new Peer { Name = "Novo Nordisk", ApiUrl = "http://novonordisk.dk" };
+            Peer dtuPeer = new Peer { Name = "DTU", Domain = "http://dtu.dk" };
+            Peer kuPeer = new Peer { Name = "KU", Domain = "http://ku.dk" };
+            Peer nvPeer = new Peer { Name = "Novo Nordisk", Domain = "http://novonordisk.dk" };
 
             Peers.Add(dtuPeer);
             Peers.Add(kuPeer);

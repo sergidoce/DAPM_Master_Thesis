@@ -64,7 +64,6 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IPeerService, PeerService>();
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
-builder.Services.AddScoped<IResourceTypeService, ResourceTypeService>();
 
 // Add Scoped ResourceRegistry
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();

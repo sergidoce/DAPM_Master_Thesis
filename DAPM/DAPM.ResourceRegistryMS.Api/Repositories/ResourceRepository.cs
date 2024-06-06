@@ -25,7 +25,7 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return true;
         }
 
-        public async Task<bool> DeleteResource(int resourceId)
+        public async Task<bool> DeleteResource(Guid resourceId)
         {
             var resource = await _context.Resources.FindAsync(resourceId);
 
@@ -40,14 +40,15 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return true;
         }
 
-        public async Task<Resource> GetResourceById(int organizationId, int repositoryId, int resourceId)
+        public async Task<Resource> GetResourceById(Guid organizationId, Guid repositoryId, Guid resourceId)
         {
             return (Resource)_context.Resources.Where(r => r.PeerId == organizationId && r.RepositoryId == repositoryId && r.Id == resourceId);
         }
 
-        public IEnumerable<Resource> GetResourcesOfRepository(int organizationId, int repositoryId)
+        public IEnumerable<Resource> GetResourcesOfRepository(Guid organizationId, Guid repositoryId)
         {
             return _context.Resources.Where(r => r.PeerId == organizationId && r.RepositoryId == repositoryId);
         }
+
     }
 }
