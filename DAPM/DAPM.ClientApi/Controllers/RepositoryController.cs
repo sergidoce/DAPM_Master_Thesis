@@ -34,6 +34,13 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse { RequestName = "GetResourcesOfRepository", TicketId = id});
         }
 
+        [HttpGet("{organizationId}/repositories/{repositoryId}/pipelines")]
+        public async Task<ActionResult<Guid>> GetPipelinesOfRepository(Guid organizationId, Guid repositoryId)
+        {
+            Guid id = _repositoryService.GetPipelinesOfRepository(organizationId, repositoryId);
+            return Ok(new ApiResponse { RequestName = "GetPipelinesOfRepository", TicketId = id });
+        }
+
         [HttpPost("{organizationId}/repositories/{repositoryId}/resources")]
         public async Task<ActionResult<Guid>> PostResourceToRepository(Guid organizationId, Guid repositoryId, [FromForm]ResourceForm resourceForm)
         {

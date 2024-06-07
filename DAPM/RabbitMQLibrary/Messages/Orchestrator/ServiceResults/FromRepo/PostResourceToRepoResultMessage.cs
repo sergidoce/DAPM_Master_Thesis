@@ -6,13 +6,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults
+namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo
 {
-    public class GetRepositoriesResultMessage : IQueueMessage
+    public class PostResourceToRepoResultMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public IEnumerable<RepositoryDTO> Repositories { get; set; }
+        public bool Succeeded { get; set; }
+        public string Message { get; set; }
+        public ResourceDTO Resource { get; set; }
     }
 }

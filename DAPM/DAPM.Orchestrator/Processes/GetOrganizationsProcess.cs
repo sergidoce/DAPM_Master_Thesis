@@ -1,7 +1,7 @@
 ﻿using DAPM.Orchestrator.Consumers.ResultConsumers;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 
 namespace DAPM.Orchestrator.Processes

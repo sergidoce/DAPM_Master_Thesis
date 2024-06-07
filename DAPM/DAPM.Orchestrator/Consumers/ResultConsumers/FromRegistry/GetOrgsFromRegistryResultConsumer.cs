@@ -1,8 +1,8 @@
 ﻿using DAPM.Orchestrator.Processes;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 
-namespace DAPM.Orchestrator.Consumers.ResultConsumers
+namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromRegistry
 {
     public class GetOrgsFromRegistryResultConsumer : IQueueConsumer<GetOrganizationsResultMessage>
     {

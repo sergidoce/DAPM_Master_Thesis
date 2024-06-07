@@ -1,7 +1,9 @@
 ﻿using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using RabbitMQLibrary.Messages.Repository;
+using RabbitMQLibrary.Messages.ResourceRegistry;
 
 namespace DAPM.Orchestrator.Processes
 {
@@ -22,17 +24,37 @@ namespace DAPM.Orchestrator.Processes
 
         public override void StartProcess()
         {
-            var getPipelinesFromRepoProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetPipelinesFromRepoMessage>>();
 
-            var message = new GetPipelinesFromRepoMessage()
+            if(_pipelineId != null)
             {
-                TicketId = _ticketId,
-                TimeToLive = TimeSpan.FromMinutes(1),
-                RepositoryId = _repositoryId,
-                PipelineId = _pipelineId,
-            };
+                var getPipelinesFromRepoProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetPipelinesFromRepoMessage>>();
 
-            getPipelinesFromRepoProducer.PublishMessage(message);
+                var message = new GetPipelinesFromRepoMessage()
+                {
+                    TicketId = _ticketId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    RepositoryId = _repositoryId,
+                    PipelineId = _pipelineId,
+                };
+
+                getPipelinesFromRepoProducer.PublishMessage(message);
+            }
+
+            else
+            {
+                var getPipelinesFromRegistryProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetPipelinesMessage>>();
+
+                var message = new GetPipelinesMessage()
+                {
+                    TicketId = _ticketId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    OrganizationId = _organizationId,
+                    RepositoryId = _repositoryId,
+                };
+
+                getPipelinesFromRegistryProducer.PublishMessage(message);
+            }
+            
         }
 
         public override void OnGetPipelinesFromRepoResult(GetPipelinesFromRepoResultMessage message)
@@ -44,6 +66,23 @@ namespace DAPM.Orchestrator.Processes
             {
                 pipeline.OrganizationId = _organizationId;
             }
+
+            var resultMessage = new GetPipelinesProcessResult()
+            {
+                TicketId = _ticketId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                Pipelines = message.Pipelines,
+            };
+
+            getPipelinesProcessResultProducer.PublishMessage(resultMessage);
+
+        }
+
+        public override void OnGetPipelinesFromRegistryResult(GetPipelinesResultMessage message)
+        {
+
+            var getPipelinesProcessResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetPipelinesProcessResult>>();
+
 
             var resultMessage = new GetPipelinesProcessResult()
             {

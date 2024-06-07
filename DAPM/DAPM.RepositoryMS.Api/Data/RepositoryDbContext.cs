@@ -29,6 +29,7 @@ namespace DAPM.RepositoryMS.Api.Data
 
                 Repository repository = new Repository()
                 {
+                    Id = new Guid("8746e302-e56e-46d2-83a2-dda343689a77"),
                     Name = "DTU Repository"
                 };
 

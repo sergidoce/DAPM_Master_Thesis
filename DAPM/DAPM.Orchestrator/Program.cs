@@ -3,9 +3,11 @@ using RabbitMQLibrary.Extensions;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using DAPM.Orchestrator.Consumers.StartProcessConsumers;
 using RabbitMQLibrary.Messages.Orchestrator.ProcessRequests;
-using DAPM.Orchestrator.Consumers.ResultConsumers;
 using DAPM.Orchestrator;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
+using DAPM.Orchestrator.Consumers.ResultConsumers.FromRegistry;
+using DAPM.Orchestrator.Consumers.ResultConsumers.FromRepo;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -58,6 +60,9 @@ builder.Services.AddQueueMessageConsumer<PostRepoToRepoResultConsumer, PostRepoT
 builder.Services.AddQueueMessageConsumer<PostRepoToRegistryResultConsumer, PostRepoToRegistryResultMessage>();
 builder.Services.AddQueueMessageConsumer<PostPipelineToRepoResultConsumer, PostPipelineToRepoResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetPipelinesFromRepoResultConsumer, GetPipelinesFromRepoResultMessage>();
+builder.Services.AddQueueMessageConsumer<PostPipelineToRegistryResultConsumer, PostPipelineToRegistryResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetPipelinesFromRegistryResultConsumer, GetPipelinesResultMessage>();
+
 
 
 

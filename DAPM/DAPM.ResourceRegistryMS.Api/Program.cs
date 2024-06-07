@@ -51,6 +51,8 @@ builder.Services.AddQueueMessageConsumer<PostResourceToRegistryConsumer, PostRes
 builder.Services.AddQueueMessageConsumer<GetOrganizationsConsumer, GetOrganizationsMessage>();
 builder.Services.AddQueueMessageConsumer<GetRepositoriesConsumer, GetRepositoriesMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourcesConsumer, GetResourcesMessage>();
+builder.Services.AddQueueMessageConsumer<GetPipelinesConsumer, GetPipelinesMessage>();
+builder.Services.AddQueueMessageConsumer<PostPipelineToRegistryConsumer, PostPipelineToRegistryMessage>();
 
 
 // Add services to the container.
@@ -64,12 +66,16 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IPeerService, PeerService>();
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
+builder.Services.AddScoped<IPipelineService, PipelineService>();
+
 
 // Add Scoped ResourceRegistry
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 builder.Services.AddScoped<IRepositoryRepository, RepositoryRepository>();
 builder.Services.AddScoped<IResourceTypeRepository, ResourceTypeRepository>();
 builder.Services.AddScoped<IPeerRepository, PeerRepository>();
+builder.Services.AddScoped<IPipelineRepository, PipelineRepository>();
+
 
 
 builder.Services.AddDbContext<ResourceRegistryDbContext>(options =>

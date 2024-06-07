@@ -6,9 +6,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults
+namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo
 {
-    public class PostRepoToRegistryResultMessage : IQueueMessage
+    public class PostRepoToRepoResultMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }

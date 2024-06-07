@@ -57,6 +57,6 @@ namespace RabbitMQLibrary.Models
         public Guid RepositoryId { get; set; }
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public Pipeline Pipeline { get; set; }
+        public Pipeline? Pipeline { get; set; }
     }
 }

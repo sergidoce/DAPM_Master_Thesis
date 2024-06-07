@@ -1,6 +1,7 @@
 ﻿using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
@@ -43,6 +44,23 @@ namespace DAPM.Orchestrator.Processes
 
         public override void OnPostPipelineToRepoResult(PostPipelineToRepoResultMessage message)
         {
+            var postPipelineToRegistryProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostPipelineToRegistryMessage>>();
+
+            message.Pipeline.OrganizationId = _organizationId;
+
+            var postPipelineToRegistryMessage = new PostPipelineToRegistryMessage()
+            {
+                TicketId = _ticketId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                Pipeline = message.Pipeline,
+            };
+
+            postPipelineToRegistryProducer.PublishMessage(postPipelineToRegistryMessage);
+
+        }
+
+        public override void OnPostPipelineToRegistryResult(PostPipelineToRegistryResultMessage message)
+        {
             var postItemProcessResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostItemProcessResult>>();
 
             var postItemProcessResultMessage = new PostItemProcessResult()
@@ -58,7 +76,6 @@ namespace DAPM.Orchestrator.Processes
             postItemProcessResultProducer.PublishMessage(postItemProcessResultMessage);
 
             EndProcess();
-
         }
 
     }

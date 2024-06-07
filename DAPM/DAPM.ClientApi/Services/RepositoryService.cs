@@ -18,6 +18,7 @@ namespace DAPM.ClientApi.Services
         IQueueProducer<GetResourcesRequest> _getResourcesRequestProducer;
         IQueueProducer<PostResourceRequest> _postResourceRequestProducer;
         IQueueProducer<PostPipelineRequest> _postPipelineRequestProducer;
+        IQueueProducer<GetPipelinesRequest> _getPipelinesRequestProducer;
 
         public RepositoryService(
             ILogger<RepositoryService> logger,
@@ -25,7 +26,8 @@ namespace DAPM.ClientApi.Services
             IQueueProducer<GetRepositoriesRequest> getRepositoriesRequestProducer,
             IQueueProducer<GetResourcesRequest> getResourcesRequestProducer,
             IQueueProducer<PostResourceRequest> postResourceRequestProducer,
-            IQueueProducer<PostPipelineRequest> postPipelineRequestProducer) 
+            IQueueProducer<PostPipelineRequest> postPipelineRequestProducer,
+            IQueueProducer<GetPipelinesRequest> getPipelinesRequestProducer) 
         {
             _ticketService = ticketService;
             _logger = logger;
@@ -33,6 +35,7 @@ namespace DAPM.ClientApi.Services
             _getResourcesRequestProducer = getResourcesRequestProducer;
             _postResourceRequestProducer = postResourceRequestProducer;
             _postPipelineRequestProducer = postPipelineRequestProducer;
+            _getPipelinesRequestProducer = getPipelinesRequestProducer;
         }
 
         public Guid GetRepositoryById(Guid organizationId, Guid repositoryId)
@@ -69,6 +72,26 @@ namespace DAPM.ClientApi.Services
             _getResourcesRequestProducer.PublishMessage(message);
 
             _logger.LogDebug("GetResourcesRequest Enqueued");
+
+            return ticketId;
+        }
+
+        public Guid GetPipelinesOfRepository(Guid organizationId, Guid repositoryId)
+        {
+            Guid ticketId = _ticketService.CreateNewTicket();
+
+            var message = new GetPipelinesRequest
+            {
+                TimeToLive = TimeSpan.FromMinutes(1),
+                TicketId = ticketId,
+                OrganizationId = organizationId,
+                RepositoryId = repositoryId,
+                PipelineId = null
+            };
+
+            _getPipelinesRequestProducer.PublishMessage(message);
+
+            _logger.LogDebug("GetPipelinesRequest Enqueued");
 
             return ticketId;
         }
