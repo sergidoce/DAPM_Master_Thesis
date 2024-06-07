@@ -1,5 +1,6 @@
 ﻿using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
+using RabbitMQLibrary.Messages.Repository;
 
 namespace DAPM.Orchestrator
 {
@@ -19,6 +20,7 @@ namespace DAPM.Orchestrator
         public void OnPostPipelineToRepoResult(PostPipelineToRepoResultMessage message);
         public void OnPostPipelineToRegistryResult(PostPipelineToRegistryResultMessage message);
         public void OnCreateRepoInRepoResult(PostRepoToRepoResultMessage message);
+        public void OnGetResourceFilesFromRepoResult(GetResourceFilesFromRepoResultMessage message);
 
 
 

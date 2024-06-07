@@ -54,6 +54,13 @@ namespace DAPM.Orchestrator
             getRepositoriesProcess.StartProcess();
         }
 
+        public void StartGetResourceFilesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid resourceId)
+        {
+            var getResourceFilesProcess = new GetResourceFilesProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, resourceId);
+            _processes[ticketId] = getResourceFilesProcess;
+            getResourceFilesProcess.StartProcess();
+        }
+
         public void StartGetResourcesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid? resourceId)
         {
             var getResourcesProcess = new GetResourcesProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, resourceId);

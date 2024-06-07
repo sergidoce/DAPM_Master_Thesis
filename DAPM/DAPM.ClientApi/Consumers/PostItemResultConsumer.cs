@@ -30,7 +30,7 @@ namespace DAPM.ClientApi.Consumers
             JToken idsJSON = JToken.FromObject(message.ItemIds, serializer);
 
             //Serialization
-            result["itemId"] = idsJSON;
+            result["itemIds"] = idsJSON;
             result["itemType"] = message.ItemType;
             result["succeeded"] = message.Succeeded;
             result["message"] = message.Message;  

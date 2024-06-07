@@ -90,5 +90,10 @@ namespace DAPM.Orchestrator
         {
             return;
         }
+
+        public virtual void OnGetResourceFilesFromRepoResult(GetResourceFilesFromRepoResultMessage message)
+        {
+            return;
+        }
     }
 }

@@ -40,7 +40,7 @@ namespace DAPM.ClientApi.Services
 
         public Guid GetRepositoryById(Guid organizationId, Guid repositoryId)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new GetRepositoriesRequest
             {
@@ -59,7 +59,7 @@ namespace DAPM.ClientApi.Services
 
         public Guid GetResourcesOfRepository(Guid organizationId, Guid repositoryId)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new GetResourcesRequest
             {
@@ -78,7 +78,7 @@ namespace DAPM.ClientApi.Services
 
         public Guid GetPipelinesOfRepository(Guid organizationId, Guid repositoryId)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new GetPipelinesRequest
             {
@@ -98,7 +98,7 @@ namespace DAPM.ClientApi.Services
 
         public Guid PostPipelineToRepository(Guid organizationId, Guid repositoryId, PipelineApiDto pipeline)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new PostPipelineRequest
             {
@@ -121,7 +121,7 @@ namespace DAPM.ClientApi.Services
 
         public Guid PostResourceToRepository(Guid organizationId, Guid repositoryId, string name, IFormFile resourceFile)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             MemoryStream stream = new MemoryStream();
 

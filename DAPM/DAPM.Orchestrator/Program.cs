@@ -46,6 +46,8 @@ builder.Services.AddQueueMessageConsumer<PostResourceRequestConsumer, PostResour
 builder.Services.AddQueueMessageConsumer<PostRepositoryRequestConsumer, PostRepositoryRequest>();
 builder.Services.AddQueueMessageConsumer<PostPipelineRequestConsumer, PostPipelineRequest>();
 builder.Services.AddQueueMessageConsumer<RegisterPeerRequestConsumer, RegisterPeerRequest>();
+builder.Services.AddQueueMessageConsumer<GetResourceFilesRequestConsumer, GetResourceFilesRequest>();
+
 
 
 
@@ -62,6 +64,9 @@ builder.Services.AddQueueMessageConsumer<PostPipelineToRepoResultConsumer, PostP
 builder.Services.AddQueueMessageConsumer<GetPipelinesFromRepoResultConsumer, GetPipelinesFromRepoResultMessage>();
 builder.Services.AddQueueMessageConsumer<PostPipelineToRegistryResultConsumer, PostPipelineToRegistryResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetPipelinesFromRegistryResultConsumer, GetPipelinesResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetResourceFilesFromRepoResultConsumer, GetResourceFilesFromRepoResultMessage>();
+
+
 
 
 

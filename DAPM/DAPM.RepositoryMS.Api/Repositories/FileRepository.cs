@@ -5,6 +5,7 @@ using File = DAPM.RepositoryMS.Api.Models.PostgreSQL.File;
 using DAPM.RepositoryMS.Api.Models;
 using Microsoft.Extensions.Options;
 using DAPM.RepositoryMS.Api.Models.MongoDB;
+using MongoDB.Bson;
 
 namespace DAPM.RepositoryMS.Api.Repositories
 {
@@ -33,6 +34,12 @@ namespace DAPM.RepositoryMS.Api.Repositories
                 Metadata = new MongoDB.Bson.BsonDocument { { "type", "csv" }, { "owner", "me" } }
             };
             return (await _fileBucket.UploadFromBytesAsync(file.Name, file.File, uploadOptions)).ToString();
+        }
+
+        public async Task<byte[]> GetFileContentById(string fileId)
+        {
+            return await _fileBucket.DownloadAsBytesAsync(ObjectId.Parse(fileId));
+
         }
     }
 }

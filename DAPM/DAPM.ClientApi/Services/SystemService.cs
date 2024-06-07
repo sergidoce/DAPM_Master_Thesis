@@ -21,7 +21,7 @@ namespace DAPM.ClientApi.Services
 
         public Guid RegisterPeer(string peerName, string introductionPeerAddress, string localPeerAddress)
         {
-            var ticketId = _ticketService.CreateNewTicket();
+            var ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new RegisterPeerRequest
             {

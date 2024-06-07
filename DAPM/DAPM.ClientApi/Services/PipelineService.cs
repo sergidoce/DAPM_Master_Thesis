@@ -23,7 +23,7 @@ namespace DAPM.ClientApi.Services
 
         public Guid GetPipelineById(Guid organizationId, Guid repositoryId, Guid pipelineId)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new GetPipelinesRequest
             {

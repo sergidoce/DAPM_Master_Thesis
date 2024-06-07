@@ -22,7 +22,7 @@ namespace DAPM.Orchestrator.Processes
 
         public override void StartProcess()
         {
-            var getResourceOfRepoProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetResourcesMessage>>();
+            var getResourcesProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetResourcesMessage>>();
 
             var message = new GetResourcesMessage()
             {
@@ -32,7 +32,7 @@ namespace DAPM.Orchestrator.Processes
                 RepositoryId = _repositoryId,
             };
 
-            getResourceOfRepoProducer.PublishMessage(message);
+            getResourcesProducer.PublishMessage(message);
         }
 
         public override void OnGetResourcesFromRegistryResult(GetResourcesResultMessage message)
