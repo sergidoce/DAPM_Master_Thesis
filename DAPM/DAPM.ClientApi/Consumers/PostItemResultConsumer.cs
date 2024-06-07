@@ -4,6 +4,7 @@ using Newtonsoft.Json.Serialization;
 using Newtonsoft.Json;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.ClientApi.Consumers
 {
@@ -24,9 +25,12 @@ namespace DAPM.ClientApi.Consumers
 
             // Objects used for serialization
             JToken result = new JObject();
+            JsonSerializer serializer = JsonSerializer.Create(new JsonSerializerSettings { ContractResolver = new CamelCasePropertyNamesContractResolver() });
+
+            JToken idsJSON = JToken.FromObject(message.ItemIds, serializer);
 
             //Serialization
-            result["itemId"] = message.ItemId;
+            result["itemId"] = idsJSON;
             result["itemType"] = message.ItemType;
             result["succeeded"] = message.Succeeded;
             result["message"] = message.Message;  

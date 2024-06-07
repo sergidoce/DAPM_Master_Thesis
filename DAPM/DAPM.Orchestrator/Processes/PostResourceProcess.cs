@@ -60,11 +60,18 @@ namespace DAPM.Orchestrator.Processes
         {
             var postItemProcessResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostItemProcessResult>>();
 
+            var itemsIds = new ItemIds()
+            {
+                OrganizationId = message.Resource.OrganizationId,
+                RepositoryId = message.Resource.RepositoryId,
+                ResourceId = message.Resource.Id
+            };
+
             var postItemProcessResultMessage = new PostItemProcessResult()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
-                ItemId = message.Resource.Id,
+                ItemIds = itemsIds,
                 ItemType = "Resource",
                 Message = "The item was posted successfully",
                 Succeeded = true
