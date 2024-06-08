@@ -5,8 +5,9 @@ namespace DAPM.ResourceRegistryMS.Api.Models
     public class Peer
     {
         [Key]
-        public int Id { get; set; }
+        [Required]
+        public Guid Id { get; set; }
         public string Name { get; set; }
-        public string ApiUrl { get; set; }
+        public string Domain { get; set; }
     }
 }

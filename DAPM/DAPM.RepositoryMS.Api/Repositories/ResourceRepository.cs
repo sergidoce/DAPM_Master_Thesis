@@ -5,6 +5,7 @@ using MongoDB.Driver;
 using DAPM.RepositoryMS.Api.Models;
 using DAPM.RepositoryMS.Api.Models.PostgreSQL;
 using DAPM.RepositoryMS.Api.Data;
+using Amazon.Runtime.Internal;
 
 namespace DAPM.RepositoryMS.Api.Repositories
 {
@@ -21,15 +22,21 @@ namespace DAPM.RepositoryMS.Api.Repositories
             _repositoryDbContext = repositoryDbContext;
         }
 
-        public async Task<int> AddResource(Resource resource)
+        public async Task<Resource> AddResource(Resource resource)
         {
             await _repositoryDbContext.Resources.AddAsync(resource);
             _repositoryDbContext.SaveChanges();
-            return resource.Id;
+            return resource;
+        }
+
+        public async Task<Models.PostgreSQL.File> GetResourceFile(Guid repositoryId, Guid resourceId)
+        {
+            var resource = _repositoryDbContext.Resources.First(r => r.Id == resourceId && r.RepositoryId == repositoryId);
+            return _repositoryDbContext.Files.First(f => f.Id == resource.FileId);
         }
 
   
-        public Task<Resource> GetResourceById(int repositoryId, int resourceId)
+        public Task<Resource> GetResourceById(Guid repositoryId, Guid resourceId)
         {
             throw new NotImplementedException();
         }

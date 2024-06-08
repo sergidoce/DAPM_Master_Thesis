@@ -1,7 +1,7 @@
 ﻿using DAPM.ResourceRegistryMS.Api.Models;
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
 using System.Linq;
@@ -30,9 +30,9 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
 
             var peers = Enumerable.Empty<Peer>();
 
-            if(message.OrganizationId != null)
+            if (message.OrganizationId != null)
             {
-                var peer = await _peerService.GetPeer((int)message.OrganizationId);
+                var peer = await _peerService.GetPeer((Guid)message.OrganizationId);
                 peers = peers.Append(peer);
             }
             else
@@ -40,7 +40,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
                 peers = await _peerService.GetAllPeers();
             }
 
-           
+
             IEnumerable<OrganizationDTO> organizations = Enumerable.Empty<OrganizationDTO>();
 
             foreach (var peer in peers)
@@ -49,7 +49,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
                 {
                     Id = peer.Id,
                     Name = peer.Name,
-                    ApiUrl = peer.ApiUrl,
+                    Domain = peer.Domain,
                 };
 
                 organizations = organizations.Append(org);

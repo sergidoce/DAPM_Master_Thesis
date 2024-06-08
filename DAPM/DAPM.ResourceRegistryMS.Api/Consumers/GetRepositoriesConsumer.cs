@@ -2,7 +2,7 @@
 using DAPM.ResourceRegistryMS.Api.Services;
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
 
@@ -33,16 +33,16 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
 
             var repositories = Enumerable.Empty<Repository>();
 
-            if(message.RepositoryId != null)
+            if (message.RepositoryId != null)
             {
-                var repository = await _repositoryService.GetRepositoryById(message.OrganizationId, (int)message.RepositoryId);
+                var repository = await _repositoryService.GetRepositoryById(message.OrganizationId, (Guid)message.RepositoryId);
                 repositories = repositories.Append(repository);
             }
             else
             {
                 repositories = await _peerService.GetRepositoriesOfOrganization(message.OrganizationId);
             }
-            
+
             IEnumerable<RepositoryDTO> repositoriesDTOs = Enumerable.Empty<RepositoryDTO>();
 
             foreach (var repository in repositories)

@@ -1,16 +1,16 @@
 ﻿
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
 using RabbitMQLibrary.Messages.ClientApi;
 using RabbitMQLibrary.Messages.ResourceRegistry;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 
 namespace DAPM.Orchestrator.Processes
 {
     public class GetRepositoriesProcess : OrchestratorProcess
     {
-        private int _organizationId;
-        private int? _repositoryId;
-        public GetRepositoriesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, int organizationId, int? repositoryId) 
+        private Guid _organizationId;
+        private Guid? _repositoryId;
+        public GetRepositoriesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid organizationId, Guid? repositoryId) 
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;

@@ -25,12 +25,12 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             return await _context.Repositories.ToListAsync();
         }
 
-        public async Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(int organizationId)
+        public async Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(Guid organizationId)
         {
-            return _context.Repositories.Where(r => r.PeerId == organizationId);   
+            return _context.Repositories.Where(r => r.PeerId == organizationId);
         }
 
-        public async Task<Repository> GetRepositoryById(int organizationId, int repositoryId)
+        public async Task<Repository> GetRepositoryById(Guid organizationId, Guid repositoryId)
         {
             var repository = _context.Repositories.Include(r => r.Peer).Single(r => r.Id == repositoryId && r.PeerId == organizationId);
 

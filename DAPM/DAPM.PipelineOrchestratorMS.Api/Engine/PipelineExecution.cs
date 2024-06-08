@@ -217,7 +217,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
                 {
                     OrganizationId = currentNode.OrganizationId,
                     RepositoryId = currentNode.RepositoryId,
-                    ResourceId = (int)currentNode.ResourceId,
+                    ResourceId = (Guid)currentNode.ResourceId,
                 };
 
                 executeOperatorStep.OperatorResource = operatorResource;
@@ -256,10 +256,10 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
             {
                 OrganizationId = sourceNode.OrganizationId,
                 RepositoryId = sourceNode.RepositoryId,
-                ResourceId = (int)sourceNode.ResourceId,
+                ResourceId = (Guid)sourceNode.ResourceId,
             };
 
-            int? destinationRepository = null;
+            Guid? destinationRepository = null;
             
             if(targetNode.NodeType == "dataSink")
                 destinationRepository = targetNode.RepositoryId;

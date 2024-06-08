@@ -13,8 +13,8 @@ namespace RabbitMQLibrary.Messages.Repository
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public int OrganizationId { get; set; }
-        public int RepositoryId { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid RepositoryId { get; set; }
         public string Name { get; set; }
         public Pipeline Pipeline { get; set; }
     }

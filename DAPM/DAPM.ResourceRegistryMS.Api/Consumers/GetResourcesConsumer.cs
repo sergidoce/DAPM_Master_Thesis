@@ -1,7 +1,7 @@
 ﻿using DAPM.ResourceRegistryMS.Api.Models;
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
 
@@ -30,9 +30,9 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
 
             var resources = Enumerable.Empty<Models.Resource>();
 
-            if(message.ResourceId != null)
+            if (message.ResourceId != null)
             {
-                var resource = await _resourceService.GetResourceById(message.OrganizationId, message.RepositoryId, (int)message.ResourceId);
+                var resource = await _resourceService.GetResourceById(message.OrganizationId, message.RepositoryId, (Guid)message.ResourceId);
                 resources = resources.Append(resource);
             }
             else
@@ -50,8 +50,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
                     Name = resource.Name,
                     OrganizationId = resource.PeerId,
                     RepositoryId = resource.RepositoryId,
-                    Type = "EventLog",
-                    Extension = ".csv"
+                    Type = resource.ResourceType,
                 };
 
                 resourcesDTOs = resourcesDTOs.Append(r);

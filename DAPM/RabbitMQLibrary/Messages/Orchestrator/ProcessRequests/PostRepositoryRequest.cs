@@ -14,6 +14,6 @@ namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
         public string Name { get; set; }
-        public int OrganizationId { get; set; }
+        public Guid OrganizationId { get; set; }
     }
 }

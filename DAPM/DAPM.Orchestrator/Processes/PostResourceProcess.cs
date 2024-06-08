@@ -1,27 +1,33 @@
 ﻿
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.Orchestrator.Processes
 {
     public class PostResourceProcess : OrchestratorProcess
     {
-        private int _organizationId;
-        private int _repositoryId;
+        private Guid _organizationId;
+        private Guid _repositoryId;
         private string _name;
-        private byte[] _file;
+        private string _resourceType;
 
+        //Resource Files
+        private IEnumerable<FileDTO> _files;
+       
         public PostResourceProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, int organizationId, int repositoryId, string name, byte[] resourceFile) 
+            Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, IEnumerable<FileDTO> files) 
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;
             _repositoryId = repositoryId;
             _name = name;
-            _file = resourceFile;
+            _files = files;
+            _resourceType = resourceType;
         }
 
         public override void StartProcess()
@@ -35,7 +41,8 @@ namespace DAPM.Orchestrator.Processes
                 OrganizationId = _organizationId,
                 RepositoryId = _repositoryId,
                 Name = _name,
-                ResourceFile = _file
+                ResourceType = _resourceType,
+                Files = _files
             };
 
             postResourceToRepoMessageProducer.PublishMessage(message);
@@ -59,11 +66,18 @@ namespace DAPM.Orchestrator.Processes
         {
             var postItemProcessResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostItemProcessResult>>();
 
+            var itemsIds = new ItemIds()
+            {
+                OrganizationId = message.Resource.OrganizationId,
+                RepositoryId = message.Resource.RepositoryId,
+                ResourceId = message.Resource.Id
+            };
+
             var postItemProcessResultMessage = new PostItemProcessResult()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
-                ItemId = message.Resource.Id,
+                ItemIds = itemsIds,
                 ItemType = "Resource",
                 Message = "The item was posted successfully",
                 Succeeded = true

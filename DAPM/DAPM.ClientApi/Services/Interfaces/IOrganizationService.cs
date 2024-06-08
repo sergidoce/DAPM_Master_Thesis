@@ -6,8 +6,8 @@ namespace DAPM.ClientApi.Services.Interfaces
     public interface IOrganizationService
     {
         public Guid GetOrganizations();
-        public Guid GetOrganizationById(int organizationId);
-        public Guid GetRepositoriesOfOrganization(int organizationId);
-        public Guid PostRepositoryToOrganization(int organizationId, string name);
+        public Guid GetOrganizationById(Guid organizationId);
+        public Guid GetRepositoriesOfOrganization(Guid organizationId);
+        public Guid PostRepositoryToOrganization(Guid organizationId, string name);
     }
 }

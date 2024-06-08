@@ -1,5 +1,4 @@
 ﻿using DAPM.ResourceRegistryMS.Api.Models;
-using DAPM.ResourceRegistryMS.Api.Models.DTOs;
 using DAPM.ResourceRegistryMS.Api.Repositories.Interfaces;
 using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Models;
@@ -19,24 +18,13 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             _logger = logger;
         }
 
-        public async Task<bool> AddPeer(PeerDto peerDto)
-        {
-            var peer = new Peer
-            {
-                Id = peerDto.Id,
-                Name = peerDto.Name,
-                ApiUrl = peerDto.ApiUrl,
-            };
 
-            return await _peerRepository.AddPeer(peer);
-        }
-
-        public Task<bool> DeletePeer(int id)
+        public Task<bool> DeletePeer(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Peer> GetPeer(int id)
+        public async Task<Peer> GetPeer(Guid id)
         {
             return await _peerRepository.GetPeerById(id);
         }
@@ -46,12 +34,12 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             return await _peerRepository.GetAllPeers();
         }
 
-        public async Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(int organizationId)
+        public async Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(Guid organizationId)
         {
             return await _repositoryRepository.GetRepositoriesOfOrganization(organizationId); 
         }
 
-        public async Task<Repository> PostRepositoryToOrganization(int organizationId, RepositoryDTO repositoryDTO)
+        public async Task<Repository> PostRepositoryToOrganization(Guid organizationId, RepositoryDTO repositoryDTO)
         {
             Repository repository = new Repository()
             {

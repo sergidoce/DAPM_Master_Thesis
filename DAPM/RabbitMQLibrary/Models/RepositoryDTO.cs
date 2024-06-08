@@ -8,10 +8,10 @@ namespace RabbitMQLibrary.Models
 {
     public class RepositoryDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         public string Name { get; set; }
 
-        public int OrganizationId { get; set; }
+        public Guid OrganizationId { get; set; }
     }
 }

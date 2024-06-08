@@ -51,6 +51,8 @@ builder.Services.AddQueueMessageConsumer<PostResourceToRepoConsumer, PostResourc
 builder.Services.AddQueueMessageConsumer<PostRepoToRepoConsumer, PostRepoToRepoMessage>();
 builder.Services.AddQueueMessageConsumer<PostPipelineToRepoConsumer, PostPipelineToRepoMessage>();
 builder.Services.AddQueueMessageConsumer<GetPipelinesFromRepoConsumer, GetPipelinesFromRepoMessage>();
+builder.Services.AddQueueMessageConsumer<GetResourceFilesFromRepoConsumer, GetResourceFilesFromRepoMessage>();
+
 
 
 builder.Services.AddDbContext<RepositoryDbContext>(options =>
@@ -72,7 +74,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 builder.Services.AddScoped<IPipelineService, PipelineService>();
-
+builder.Services.AddScoped<IFileService, FileService>();
 
 //Repositories
 builder.Services.AddScoped<IResourceRepository, ResourceRepository>();

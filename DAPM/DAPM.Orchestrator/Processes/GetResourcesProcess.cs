@@ -1,18 +1,18 @@
 ﻿
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 
 namespace DAPM.Orchestrator.Processes
 {
     public class GetResourcesProcess : OrchestratorProcess
     {
-        private int _organizationId;
-        private int _repositoryId;
-        private int? _resourceId;
-        public GetResourcesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, int organizationId,
-            int repositoryId, int? resourceId) 
+        private Guid _organizationId;
+        private Guid _repositoryId;
+        private Guid? _resourceId;
+        public GetResourcesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid organizationId,
+            Guid repositoryId, Guid? resourceId) 
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;
@@ -22,7 +22,7 @@ namespace DAPM.Orchestrator.Processes
 
         public override void StartProcess()
         {
-            var getResourceOfRepoProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetResourcesMessage>>();
+            var getResourcesProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetResourcesMessage>>();
 
             var message = new GetResourcesMessage()
             {
@@ -32,7 +32,7 @@ namespace DAPM.Orchestrator.Processes
                 RepositoryId = _repositoryId,
             };
 
-            getResourceOfRepoProducer.PublishMessage(message);
+            getResourcesProducer.PublishMessage(message);
         }
 
         public override void OnGetResourcesFromRegistryResult(GetResourcesResultMessage message)

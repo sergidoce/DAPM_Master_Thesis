@@ -20,4 +20,8 @@
     <ProjectReference Include="..\RabbitMQLibrary\RabbitMQLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="TemporaryFiles\" />
+  </ItemGroup>
+
 </Project>

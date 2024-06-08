@@ -9,9 +9,9 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
         public List<string> SourceHandles { get; set; }
         public List<string> TargetHandles { get; set; }
 
-        public int OrganizationId { get; set; }
-        public int RepositoryId { get; set; }
-        public int? ResourceId { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid RepositoryId { get; set; }
+        public Guid? ResourceId { get; set; }
 
         private List<Guid> _associatedSteps { get; set; }
 

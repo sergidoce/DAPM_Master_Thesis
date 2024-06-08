@@ -1,6 +1,7 @@
 ﻿using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
@@ -10,13 +11,13 @@ namespace DAPM.Orchestrator.Processes
     public class PostPipelineProcess : OrchestratorProcess
     {
 
-        private int _organizationId;
-        private int _repositoryId;
+        private Guid _organizationId;
+        private Guid _repositoryId;
         private string _pipelineName;
         private Pipeline _pipeline;
 
         public PostPipelineProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId
-            , int organizationId, int repositoryId, Pipeline pipeline, string name)
+            , Guid organizationId, Guid repositoryId, Pipeline pipeline, string name)
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;
@@ -43,13 +44,37 @@ namespace DAPM.Orchestrator.Processes
 
         public override void OnPostPipelineToRepoResult(PostPipelineToRepoResultMessage message)
         {
+            var postPipelineToRegistryProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostPipelineToRegistryMessage>>();
+
+            message.Pipeline.OrganizationId = _organizationId;
+
+            var postPipelineToRegistryMessage = new PostPipelineToRegistryMessage()
+            {
+                TicketId = _ticketId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                Pipeline = message.Pipeline,
+            };
+
+            postPipelineToRegistryProducer.PublishMessage(postPipelineToRegistryMessage);
+
+        }
+
+        public override void OnPostPipelineToRegistryResult(PostPipelineToRegistryResultMessage message)
+        {
             var postItemProcessResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostItemProcessResult>>();
+
+            var itemsIds = new ItemIds()
+            {
+                OrganizationId = message.Pipeline.OrganizationId,
+                RepositoryId = message.Pipeline.RepositoryId,
+                PipelineId = message.Pipeline.Id,
+            };
 
             var postItemProcessResultMessage = new PostItemProcessResult()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
-                ItemId = message.Pipeline.Id,
+                ItemIds = itemsIds,
                 ItemType = "Pipeline",
                 Message = "The item was posted successfully",
                 Succeeded = true
@@ -58,7 +83,6 @@ namespace DAPM.Orchestrator.Processes
             postItemProcessResultProducer.PublishMessage(postItemProcessResultMessage);
 
             EndProcess();
-
         }
 
     }

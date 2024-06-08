@@ -5,7 +5,7 @@
         public EngineResource OperatorResource { get; set; }
         public List<EngineResource> InputResources { get; set; }
 
-        public int TargetOrganization { get; set; }
+        public Guid TargetOrganization { get; set; }
 
         public ExecuteOperatorStep(IServiceProvider serviceProvider) : base(serviceProvider)
         {

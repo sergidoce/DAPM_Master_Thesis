@@ -28,9 +28,9 @@ namespace DAPM.ClientApi.Services
             _postRepositoryRequestProducer = postRepositoryRequestProducer;
         }
 
-        public Guid GetOrganizationById(int organizationId)
+        public Guid GetOrganizationById(Guid organizationId)
         {
-            var ticketId = _ticketService.CreateNewTicket();
+            var ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new GetOrganizationsRequest
             {
@@ -49,7 +49,7 @@ namespace DAPM.ClientApi.Services
         public Guid GetOrganizations()
         {
        
-            var ticketId = _ticketService.CreateNewTicket();
+            var ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new GetOrganizationsRequest
             {
@@ -66,9 +66,9 @@ namespace DAPM.ClientApi.Services
 
         }
 
-        public Guid GetRepositoriesOfOrganization(int organizationId)
+        public Guid GetRepositoriesOfOrganization(Guid organizationId)
         {
-            var ticketId = _ticketService.CreateNewTicket();
+            var ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new GetRepositoriesRequest
             {
@@ -85,9 +85,9 @@ namespace DAPM.ClientApi.Services
             return ticketId;
         }
 
-        public Guid PostRepositoryToOrganization(int organizationId, string name)
+        public Guid PostRepositoryToOrganization(Guid organizationId, string name)
         {
-            var ticketId = _ticketService.CreateNewTicket();
+            var ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new PostRepositoryRequest
             {

@@ -9,15 +9,15 @@ namespace DAPM.RepositoryMS.Api.Models.PostgreSQL
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        public Guid Id { get; set; }
 
         [Required]
-        public int RepositoryId { get; set; }
+        public Guid RepositoryId { get; set; }
 
         [Required]
         public string Name { get; set; }
 
-        public int FileId { get; set; }
+        public Guid FileId { get; set; }
 
         [Required]
         public string Type { get; set; }
