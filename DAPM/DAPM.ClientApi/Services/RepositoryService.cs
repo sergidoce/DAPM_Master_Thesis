@@ -119,14 +119,22 @@ namespace DAPM.ClientApi.Services
             return ticketId;
         }
 
-        public Guid PostResourceToRepository(Guid organizationId, Guid repositoryId, string name, IFormFile resourceFile)
+        public Guid PostResourceToRepository(Guid organizationId, Guid repositoryId, string name, IFormFile resourceFile, string resourceType)
         {
             Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
+            var fileDTOs = new List<FileDTO>();
 
             MemoryStream stream = new MemoryStream();
-
             resourceFile.CopyTo(stream);
 
+            var fileDTO = new FileDTO()
+            {
+                Name = Path.GetFileNameWithoutExtension(resourceFile.FileName),
+                Extension = Path.GetExtension(resourceFile.FileName),
+                Content = stream.ToArray()
+            };
+
+            fileDTOs.Add(fileDTO);
 
             var message = new PostResourceRequest
             {
@@ -135,7 +143,8 @@ namespace DAPM.ClientApi.Services
                 OrganizationId = organizationId,
                 RepositoryId = repositoryId,
                 Name = name,
-                ResourceFile = stream.ToArray()
+                ResourceType = resourceType,
+                Files = fileDTOs,
 
             };
 

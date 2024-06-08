@@ -75,9 +75,9 @@ namespace DAPM.Orchestrator
             postPipelineProcess.StartProcess();
         }
 
-        public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, byte[] resourceFile)
+        public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, IEnumerable<FileDTO> files)
         {
-            var postResourceProcess = new PostResourceProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, name, resourceFile);
+            var postResourceProcess = new PostResourceProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, name, resourceType, files);
             _processes[ticketId] = postResourceProcess;
             postResourceProcess.StartProcess();
         }

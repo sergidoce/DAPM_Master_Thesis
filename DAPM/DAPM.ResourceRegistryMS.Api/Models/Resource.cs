@@ -15,7 +15,7 @@ namespace DAPM.ResourceRegistryMS.Api.Models
 
         public Guid PeerId { get; set; }
         public Guid RepositoryId { get; set; }
-        public Guid ResourceTypeId { get; set; }
+        public string ResourceType { get; set; }
 
 
         // Navigation Attributes (Foreign Keys)
@@ -24,7 +24,5 @@ namespace DAPM.ResourceRegistryMS.Api.Models
         public virtual Peer Peer { get; set; }
         [ForeignKey("PeerId, RepositoryId")]
         public virtual Repository Repository { get; set; }
-        [ForeignKey("ResourceTypeId")]
-        public virtual ResourceType ResourceType { get; set; }
     }
 }

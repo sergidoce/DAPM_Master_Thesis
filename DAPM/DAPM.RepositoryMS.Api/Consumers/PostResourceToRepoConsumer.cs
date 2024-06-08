@@ -28,7 +28,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
         {
             _logger.LogInformation("PostResourceToRepoMessage received");
 
-            var resource = await _repositoryService.CreateNewResource(message.RepositoryId, message.Name, message.ResourceFile);
+            var resource = await _repositoryService.CreateNewResource(message.RepositoryId, message.Name, message.ResourceType, message.Files);
 
             if (resource != null)
             {
@@ -38,8 +38,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
                     Name = message.Name,
                     OrganizationId = message.OrganizationId,
                     RepositoryId = message.RepositoryId,
-                    Type = "EventLog",
-                    Extension = ".csv"
+                    Type = message.ResourceType,
                 };
 
                 var postResourceToRepoResult = new PostResourceToRepoResultMessage

@@ -92,12 +92,11 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid>("ResourceTypeId")
-                        .HasColumnType("uuid");
+                    b.Property<string>("ResourceType")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.HasKey("PeerId", "RepositoryId", "Id");
-
-                    b.HasIndex("ResourceTypeId");
 
                     b.ToTable("Resources");
                 });
@@ -159,12 +158,6 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("DAPM.ResourceRegistryMS.Api.Models.ResourceType", "ResourceType")
-                        .WithMany()
-                        .HasForeignKey("ResourceTypeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("DAPM.ResourceRegistryMS.Api.Models.Repository", "Repository")
                         .WithMany()
                         .HasForeignKey("PeerId", "RepositoryId")
@@ -174,8 +167,6 @@ namespace DAPM.ResourceRegistryMS.Api.Migrations
                     b.Navigation("Peer");
 
                     b.Navigation("Repository");
-
-                    b.Navigation("ResourceType");
                 });
 #pragma warning restore 612, 618
         }

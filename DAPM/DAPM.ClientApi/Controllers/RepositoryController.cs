@@ -47,7 +47,7 @@ namespace DAPM.ClientApi.Controllers
             if (resourceForm.Name == null || resourceForm.ResourceFile == null)
                 return BadRequest();
 
-            Guid id = _repositoryService.PostResourceToRepository(organizationId, repositoryId, resourceForm.Name, resourceForm.ResourceFile);
+            Guid id = _repositoryService.PostResourceToRepository(organizationId, repositoryId, resourceForm.Name, resourceForm.ResourceFile, resourceForm.ResourceType);
             return Ok(new ApiResponse { RequestName = "PostResourceToRepository", TicketId = id });
         }
 

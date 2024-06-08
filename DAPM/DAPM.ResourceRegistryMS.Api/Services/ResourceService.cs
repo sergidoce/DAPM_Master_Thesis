@@ -39,7 +39,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
                 Name = resourceDto.Name,
                 RepositoryId = repositoryId,
                 PeerId = resourceDto.OrganizationId,
-                ResourceTypeId = Guid.Empty,
+                ResourceType = resourceDto.Type,
             };
 
             await _resourceRepository.AddResource(resource);
