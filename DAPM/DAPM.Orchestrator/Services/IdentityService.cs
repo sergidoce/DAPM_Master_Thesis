@@ -1,4 +1,9 @@
 ﻿using DAPM.Orchestrator.Services.Models;
+using Microsoft.Extensions.DependencyInjection;
+using RabbitMQLibrary.Interfaces;
+using RabbitMQLibrary.Messages.Repository;
+using RabbitMQLibrary.Messages.ResourceRegistry;
+using RabbitMQLibrary.Models;
 using System.Text.Json;
 
 namespace DAPM.Orchestrator.Services
@@ -7,11 +12,14 @@ namespace DAPM.Orchestrator.Services
     {
         private ILogger<IdentityService> _logger;
         private string _identityConfigurationPath;
+        private IServiceProvider _serviceProvider;
+        private IServiceScope _serviceScope;
 
-        public IdentityService(ILogger<IdentityService> logger)
+        public IdentityService(ILogger<IdentityService> logger, IServiceProvider serviceProvider)
         {
             _logger = logger;
-
+            _serviceProvider = serviceProvider;
+            _serviceScope = _serviceProvider.CreateScope();
             var currentDirectory = Directory.GetCurrentDirectory();
             var path = Path.Combine(Directory.GetCurrentDirectory(), "Services");
             path = Path.Combine(path, "Configuration");
@@ -27,6 +35,22 @@ namespace DAPM.Orchestrator.Services
             
             string jsonString = JsonSerializer.Serialize(identity);
             File.WriteAllText(_identityConfigurationPath, jsonString);
+
+            var postPeerProducer =  _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostPeerMessage>>();
+
+
+            var postPeerMessage = new PostPeerMessage()
+            {
+                TimeToLive = TimeSpan.FromMinutes(1),
+                Organization = new OrganizationDTO()
+                {
+                    Id = (Guid)identity.Id,
+                    Name = identity.Name,
+                    Domain = identity.Domain
+                }
+            };
+
+            postPeerProducer.PublishMessage(postPeerMessage);
 
             return identity;
         }

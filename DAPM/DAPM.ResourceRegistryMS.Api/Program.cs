@@ -55,6 +55,7 @@ builder.Services.AddQueueMessageConsumer<GetPipelinesConsumer, GetPipelinesMessa
 builder.Services.AddQueueMessageConsumer<PostPipelineToRegistryConsumer, PostPipelineToRegistryMessage>();
 builder.Services.AddQueueMessageConsumer<ApplyRegistryUpdateConsumer, ApplyRegistryUpdateMessage>();
 builder.Services.AddQueueMessageConsumer<GetEntriesFromOrgConsumer, GetEntriesFromOrgMessage>();
+builder.Services.AddQueueMessageConsumer<PostPeerConsumer, PostPeerMessage>();
 
 
 // Add services to the container.
