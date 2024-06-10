@@ -1,6 +1,7 @@
-﻿using DAPM.RepositoryMS.Api.Services.Interfaces;
+﻿using DAPM.RepositoryMS.Api.Models.PostgreSQL;
+using DAPM.RepositoryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
@@ -27,18 +28,17 @@ namespace DAPM.RepositoryMS.Api.Consumers
         {
             _logger.LogInformation("PostResourceToRepoMessage received");
 
-            int resourceId = await _repositoryService.CreateNewResource(message.RepositoryId, message.Name, message.ResourceFile);
+            var resource = await _repositoryService.CreateNewResource(message.RepositoryId, message.Name, message.ResourceType, message.Files);
 
-            if (resourceId != -1)
+            if (resource != null)
             {
                 var resourceDto = new ResourceDTO
                 {
-                    Id = resourceId,
+                    Id = resource.Id,
                     Name = message.Name,
                     OrganizationId = message.OrganizationId,
                     RepositoryId = message.RepositoryId,
-                    Type = "EventLog",
-                    Extension = ".csv"
+                    Type = message.ResourceType,
                 };
 
                 var postResourceToRepoResult = new PostResourceToRepoResultMessage

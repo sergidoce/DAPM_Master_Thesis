@@ -1,4 +1,5 @@
-﻿using DAPM.ClientApi.Models.DTOs;
+﻿using DAPM.ClientApi.Models;
+using DAPM.ClientApi.Models.DTOs;
 using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -6,7 +7,7 @@ namespace DAPM.ClientApi.Controllers
 {
    
     [ApiController]
-    [Route("[controller]")]
+    [Route("organizations/")]
     public class ResourceController : ControllerBase
     {
 
@@ -17,6 +18,20 @@ namespace DAPM.ClientApi.Controllers
         {
             _logger = logger;
             _resourceService = resourceService;
+        }
+
+        [HttpGet("{organizationId}/repositories/{repositoryId}/resources/{resourceId}")]
+        public async Task<ActionResult<Guid>> GetResourceById(Guid organizationId, Guid repositoryId, Guid resourceId)
+        {
+            Guid id = _resourceService.GetResourceById(organizationId, repositoryId, resourceId);
+            return Ok(new ApiResponse { RequestName = "GetResourceById", TicketId = id });
+        }
+
+        [HttpGet("{organizationId}/repositories/{repositoryId}/resources/{resourceId}/file")]
+        public async Task<ActionResult<Guid>> GetResourceFileById(Guid organizationId, Guid repositoryId, Guid resourceId)
+        {
+            Guid id = _resourceService.GetResourceFileById(organizationId, repositoryId, resourceId);
+            return Ok(new ApiResponse { RequestName = "GetResourceFileById", TicketId = id });
         }
     }
     

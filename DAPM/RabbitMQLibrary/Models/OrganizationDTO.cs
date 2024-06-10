@@ -8,8 +8,8 @@ namespace RabbitMQLibrary.Models
 {
     public class OrganizationDTO
     {
-        public int Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
-        public string ApiUrl { get; set; }
+        public string Domain { get; set; }
     }
 }

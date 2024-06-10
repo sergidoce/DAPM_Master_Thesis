@@ -8,9 +8,9 @@ namespace RabbitMQLibrary.Models
 {
     public class Resource
     {
-        public int OrganizationId { get; set; }
-        public int RepositoryId { get; set; }
-        public int ResourceId { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid RepositoryId { get; set; }
+        public Guid ResourceId { get; set; }
         public string? Name { get; set; }
     }
     public class HandleData
@@ -53,10 +53,10 @@ namespace RabbitMQLibrary.Models
 
     public class PipelineDTO
     {
-        public int OrganizationId { get; set; }
-        public int RepositoryId { get; set; }
-        public int Id { get; set; }
+        public Guid OrganizationId { get; set; }
+        public Guid RepositoryId { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
-        public Pipeline Pipeline { get; set; }
+        public Pipeline? Pipeline { get; set; }
     }
 }

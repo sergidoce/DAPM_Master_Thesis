@@ -1,5 +1,6 @@
 ﻿using DAPM.Orchestrator.Processes;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 
 namespace DAPM.Orchestrator
 {
@@ -76,6 +77,21 @@ namespace DAPM.Orchestrator
         }
 
         public virtual void OnGetPipelinesFromRepoResult(GetPipelinesFromRepoResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnGetPipelinesFromRegistryResult(GetPipelinesResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnPostPipelineToRegistryResult(PostPipelineToRegistryResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnGetResourceFilesFromRepoResult(GetResourceFilesFromRepoResultMessage message)
         {
             return;
         }

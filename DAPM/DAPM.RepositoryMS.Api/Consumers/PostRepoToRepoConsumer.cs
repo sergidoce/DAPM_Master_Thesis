@@ -1,7 +1,7 @@
 ﻿using DAPM.RepositoryMS.Api.Models.PostgreSQL;
 using DAPM.RepositoryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Models;
 
@@ -31,7 +31,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
                 Id = repository.Id,
                 Name = repository.Name,
             };
-        
+
             var postResourceToRepoResult = new PostRepoToRepoResultMessage
             {
                 TicketId = message.TicketId,
@@ -45,7 +45,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
 
             _logger.LogInformation("PostRepoToRepoResultMessage produced");
 
-          
+
             return;
         }
     }

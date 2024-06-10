@@ -12,6 +12,7 @@ public class ResourceRegistryDbContext : DbContext
     }
 
     public DbSet<Resource> Resources { get; set; }
+    public DbSet<Pipeline> Pipelines { get; set; }
     public DbSet<Repository> Repositories { get; set; }
     public DbSet<Peer> Peers { get; set; }
     public DbSet<ResourceType> ResourceTypes { get; set; }
@@ -20,6 +21,7 @@ public class ResourceRegistryDbContext : DbContext
     {
         builder.Entity<Repository>().HasKey(r => new { r.PeerId, r.Id });
         builder.Entity<Resource>().HasKey(r => new { r.PeerId, r.RepositoryId, r.Id });
+        builder.Entity<Pipeline>().HasKey(r => new { r.PeerId, r.RepositoryId, r.Id });
     }
 
     public void InitializeDatabase()
@@ -29,26 +31,17 @@ public class ResourceRegistryDbContext : DbContext
             Database.EnsureDeleted();
             Database.Migrate();
 
-            ResourceType csv = new ResourceType { Name = "EventLog", FileExtension = ".csv" };
+            ResourceType csv = new ResourceType {Id = Guid.Empty, Name = "EventLog", FileExtension = ".csv" };
             ResourceTypes.Add(csv);
 
-            Peer dtuPeer = new Peer { Name = "DTU", ApiUrl = "http://dtu.dk" };
-            Peer kuPeer = new Peer { Name = "KU", ApiUrl = "http://ku.dk" };
-            Peer nvPeer = new Peer { Name = "Novo Nordisk", ApiUrl = "http://novonordisk.dk" };
+            Peer dtuPeer = new Peer { Id = new Guid("43b2c65f-f82c-4aff-b049-ccdac4e02671"), Name = "DTU", Domain = "http://dtu.dk" };
+       
 
             Peers.Add(dtuPeer);
-            Peers.Add(kuPeer);
-            Peers.Add(nvPeer);
-
-
-            Repository dtuRepo = new Repository { Name = "DTU Repository", Peer = dtuPeer };
-            Repository kuRepo = new Repository { Name = "KU Repository", Peer = kuPeer };
-            Repository nvRepo = new Repository { Name = "NovoNordisk Repository", Peer = nvPeer };
+            Repository dtuRepo = new Repository { Id = new Guid("8746e302-e56e-46d2-83a2-dda343689a77"), Name = "DTU Repository", PeerId = dtuPeer.Id };
+       
 
             Repositories.Add(dtuRepo);
-            Repositories.Add(kuRepo);
-            Repositories.Add(nvRepo);
-
 
             SaveChanges();
         }

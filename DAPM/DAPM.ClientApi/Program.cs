@@ -47,6 +47,8 @@ builder.Services.AddQueueMessageConsumer<PostItemResultConsumer, PostItemProcess
 builder.Services.AddQueueMessageConsumer<GetRepositoriesProcessResultConsumer, GetRepositoriesProcessResult>();
 builder.Services.AddQueueMessageConsumer<GetResourcesProcessResultConsumer, GetResourcesProcessResult>();
 builder.Services.AddQueueMessageConsumer<GetPipelinesProcessResultConsumer, GetPipelinesProcessResult>();
+builder.Services.AddQueueMessageConsumer<GetResourceFilesProcessResultConsumer, GetResourceFilesProcessResult>();
+
 
 
 
@@ -56,7 +58,6 @@ builder.Services.AddQueueMessageConsumer<GetPipelinesProcessResultConsumer, GetP
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
-builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IPipelineService, PipelineService>();
 builder.Services.AddSingleton<ITicketService, TicketService>();
 

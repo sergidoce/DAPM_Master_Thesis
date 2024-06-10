@@ -18,6 +18,7 @@ namespace DAPM.ClientApi.Services
         IQueueProducer<GetResourcesRequest> _getResourcesRequestProducer;
         IQueueProducer<PostResourceRequest> _postResourceRequestProducer;
         IQueueProducer<PostPipelineRequest> _postPipelineRequestProducer;
+        IQueueProducer<GetPipelinesRequest> _getPipelinesRequestProducer;
 
         public RepositoryService(
             ILogger<RepositoryService> logger,
@@ -25,7 +26,8 @@ namespace DAPM.ClientApi.Services
             IQueueProducer<GetRepositoriesRequest> getRepositoriesRequestProducer,
             IQueueProducer<GetResourcesRequest> getResourcesRequestProducer,
             IQueueProducer<PostResourceRequest> postResourceRequestProducer,
-            IQueueProducer<PostPipelineRequest> postPipelineRequestProducer) 
+            IQueueProducer<PostPipelineRequest> postPipelineRequestProducer,
+            IQueueProducer<GetPipelinesRequest> getPipelinesRequestProducer) 
         {
             _ticketService = ticketService;
             _logger = logger;
@@ -33,11 +35,12 @@ namespace DAPM.ClientApi.Services
             _getResourcesRequestProducer = getResourcesRequestProducer;
             _postResourceRequestProducer = postResourceRequestProducer;
             _postPipelineRequestProducer = postPipelineRequestProducer;
+            _getPipelinesRequestProducer = getPipelinesRequestProducer;
         }
 
-        public Guid GetRepositoryById(int organizationId, int repositoryId)
+        public Guid GetRepositoryById(Guid organizationId, Guid repositoryId)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new GetRepositoriesRequest
             {
@@ -54,9 +57,9 @@ namespace DAPM.ClientApi.Services
             return ticketId;
         }
 
-        public Guid GetResourcesOfRepository(int organizationId, int repositoryId)
+        public Guid GetResourcesOfRepository(Guid organizationId, Guid repositoryId)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new GetResourcesRequest
             {
@@ -73,9 +76,29 @@ namespace DAPM.ClientApi.Services
             return ticketId;
         }
 
-        public Guid PostPipelineToRepository(int organizationId, int repositoryId, PipelineApiDto pipeline)
+        public Guid GetPipelinesOfRepository(Guid organizationId, Guid repositoryId)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
+
+            var message = new GetPipelinesRequest
+            {
+                TimeToLive = TimeSpan.FromMinutes(1),
+                TicketId = ticketId,
+                OrganizationId = organizationId,
+                RepositoryId = repositoryId,
+                PipelineId = null
+            };
+
+            _getPipelinesRequestProducer.PublishMessage(message);
+
+            _logger.LogDebug("GetPipelinesRequest Enqueued");
+
+            return ticketId;
+        }
+
+        public Guid PostPipelineToRepository(Guid organizationId, Guid repositoryId, PipelineApiDto pipeline)
+        {
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
             var message = new PostPipelineRequest
             {
@@ -96,14 +119,22 @@ namespace DAPM.ClientApi.Services
             return ticketId;
         }
 
-        public Guid PostResourceToRepository(int organizationId, int repositoryId, string name, IFormFile resourceFile)
+        public Guid PostResourceToRepository(Guid organizationId, Guid repositoryId, string name, IFormFile resourceFile, string resourceType)
         {
-            Guid ticketId = _ticketService.CreateNewTicket();
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
+            var fileDTOs = new List<FileDTO>();
 
             MemoryStream stream = new MemoryStream();
-
             resourceFile.CopyTo(stream);
 
+            var fileDTO = new FileDTO()
+            {
+                Name = Path.GetFileNameWithoutExtension(resourceFile.FileName),
+                Extension = Path.GetExtension(resourceFile.FileName),
+                Content = stream.ToArray()
+            };
+
+            fileDTOs.Add(fileDTO);
 
             var message = new PostResourceRequest
             {
@@ -112,7 +143,8 @@ namespace DAPM.ClientApi.Services
                 OrganizationId = organizationId,
                 RepositoryId = repositoryId,
                 Name = name,
-                ResourceFile = stream.ToArray()
+                ResourceType = resourceType,
+                Files = fileDTOs,
 
             };
 

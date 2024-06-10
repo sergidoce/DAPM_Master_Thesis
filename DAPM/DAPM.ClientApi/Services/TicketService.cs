@@ -12,18 +12,25 @@ namespace DAPM.ClientApi.Services
         NotFound = 3,
     }
 
+    public enum TicketResolutionType
+    {
+        Json = 0,
+        File = 1,
+    }
 
     public class TicketService : ITicketService
     {
         private readonly ILogger<ITicketService> _logger;
         private Dictionary<Guid, JToken> _ticketResolutions;
         private Dictionary<Guid, TicketStatus> _ticketStatus;
+        private Dictionary<Guid, TicketResolutionType> _ticketResolutionType;
 
         public TicketService(ILogger<ITicketService> logger) 
         {
             _logger = logger;
             _ticketStatus = new Dictionary<Guid, TicketStatus>();
             _ticketResolutions = new Dictionary<Guid, JToken>();
+            _ticketResolutionType = new Dictionary<Guid, TicketResolutionType>();
         }
         public JToken GetTicketResolution(Guid ticketId)
         {
@@ -85,10 +92,16 @@ namespace DAPM.ClientApi.Services
                 return TicketStatus.NotFound;
         }
 
-        public Guid CreateNewTicket()
+        public TicketResolutionType GetTicketResolutionType(Guid ticketId)
+        {
+            return _ticketResolutionType[ticketId];
+        }
+
+        public Guid CreateNewTicket(TicketResolutionType resolutionType)
         {
             Guid guid = Guid.NewGuid();
             _ticketStatus[guid] = TicketStatus.NotCompleted;
+            _ticketResolutionType[guid] = resolutionType;
             _logger.LogInformation($"A new ticket has been created");
             return guid;
         }

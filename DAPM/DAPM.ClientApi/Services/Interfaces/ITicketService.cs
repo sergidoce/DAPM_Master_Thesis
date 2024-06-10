@@ -6,7 +6,8 @@ namespace DAPM.ClientApi.Services.Interfaces
     {
         public TicketStatus GetTicketStatus(Guid ticketId);
         public JToken GetTicketResolution(Guid ticketId);
-        public Guid CreateNewTicket();
+        public TicketResolutionType GetTicketResolutionType(Guid ticketId);
+        public Guid CreateNewTicket(TicketResolutionType resolutionType);
         public void UpdateTicketResolution(Guid ticketId, JToken resolution);
     }
 }

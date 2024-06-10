@@ -4,11 +4,11 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories.Interfaces
 {
     public interface IResourceRepository
     {
-        public Task<Resource> GetResourceById(int organizationId, int repositoryId, int resourceId);
-        public IEnumerable<Resource> GetResourcesOfRepository(int organizationId, int repositoryId);
+        public Task<Resource> GetResourceById(Guid organizationId, Guid repositoryId, Guid resourceId);
+        public IEnumerable<Resource> GetResourcesOfRepository(Guid organizationId, Guid repositoryId);
         public Task<IEnumerable<Resource>> GetAllResources();
         public Task<bool> AddResource(Resource resource);
-        public Task<bool> DeleteResource(int resourceId);
+        public Task<bool> DeleteResource(Guid resourceId);
 
     }
 }

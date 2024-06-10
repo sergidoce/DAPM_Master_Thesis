@@ -21,31 +21,38 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpGet("{organizationId}/repositories/{repositoryId}")]
-        public async Task<ActionResult<Guid>> GetRepositoryById(int organizationId, int repositoryId)
+        public async Task<ActionResult<Guid>> GetRepositoryById(Guid organizationId, Guid repositoryId)
         {
             Guid id = _repositoryService.GetRepositoryById(organizationId, repositoryId);
             return Ok(new ApiResponse { RequestName = "GetRepositoryById", TicketId = id});
         }
 
         [HttpGet("{organizationId}/repositories/{repositoryId}/resources")]
-        public async Task<ActionResult<Guid>> GetResourcesOfRepository(int organizationId, int repositoryId)
+        public async Task<ActionResult<Guid>> GetResourcesOfRepository(Guid organizationId, Guid repositoryId)
         {
             Guid id = _repositoryService.GetResourcesOfRepository(organizationId, repositoryId);
             return Ok(new ApiResponse { RequestName = "GetResourcesOfRepository", TicketId = id});
         }
 
+        [HttpGet("{organizationId}/repositories/{repositoryId}/pipelines")]
+        public async Task<ActionResult<Guid>> GetPipelinesOfRepository(Guid organizationId, Guid repositoryId)
+        {
+            Guid id = _repositoryService.GetPipelinesOfRepository(organizationId, repositoryId);
+            return Ok(new ApiResponse { RequestName = "GetPipelinesOfRepository", TicketId = id });
+        }
+
         [HttpPost("{organizationId}/repositories/{repositoryId}/resources")]
-        public async Task<ActionResult<Guid>> PostResourceToRepository(int organizationId, int repositoryId, [FromForm]ResourceForm resourceForm)
+        public async Task<ActionResult<Guid>> PostResourceToRepository(Guid organizationId, Guid repositoryId, [FromForm]ResourceForm resourceForm)
         {
             if (resourceForm.Name == null || resourceForm.ResourceFile == null)
                 return BadRequest();
 
-            Guid id = _repositoryService.PostResourceToRepository(organizationId, repositoryId, resourceForm.Name, resourceForm.ResourceFile);
+            Guid id = _repositoryService.PostResourceToRepository(organizationId, repositoryId, resourceForm.Name, resourceForm.ResourceFile, resourceForm.ResourceType);
             return Ok(new ApiResponse { RequestName = "PostResourceToRepository", TicketId = id });
         }
 
         [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines")]
-        public async Task<ActionResult<Guid>> PostPipelineToRepository(int organizationId, int repositoryId, [FromBody]PipelineApiDto pipelineApiDto)
+        public async Task<ActionResult<Guid>> PostPipelineToRepository(Guid organizationId, Guid repositoryId, [FromBody]PipelineApiDto pipelineApiDto)
         {
             Guid id = _repositoryService.PostPipelineToRepository(organizationId, repositoryId, pipelineApiDto);
             return Ok(new ApiResponse { RequestName = "PostPipelineToRepository", TicketId = id });

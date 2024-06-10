@@ -1,7 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 
@@ -9,10 +10,10 @@ namespace DAPM.Orchestrator.Processes
 {
     public class CreateRepositoryProcess : OrchestratorProcess
     {
-        private int _organizationId;
+        private Guid _organizationId;
         private string _repositoryName; 
 
-        public CreateRepositoryProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, int organizationId, string name) 
+        public CreateRepositoryProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid organizationId, string name) 
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;
@@ -53,11 +54,17 @@ namespace DAPM.Orchestrator.Processes
         {
             var postItemProcessResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostItemProcessResult>>();
 
+            var itemsIds = new ItemIds()
+            {
+                OrganizationId = message.Repository.OrganizationId,
+                RepositoryId = message.Repository.Id,
+            };
+
             var postItemProcessResultMessage = new PostItemProcessResult()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
-                ItemId = message.Repository.Id,
+                ItemIds = itemsIds,
                 ItemType = "Repository",
                 Message = "The item was posted successfully",
                 Succeeded = true

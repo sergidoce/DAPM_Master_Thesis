@@ -1,7 +1,7 @@
 ﻿using DAPM.ResourceRegistryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
-using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
 
@@ -25,7 +25,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
         {
             _logger.LogInformation("PostRepositoryToRegistryMessage received");
 
-            
+
             var createdRepository = await _peerService.PostRepositoryToOrganization(message.Repository.OrganizationId, message.Repository);
             if (createdRepository != null)
             {
@@ -34,7 +34,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
                     Id = createdRepository.Id,
                     Name = createdRepository.Name,
                     OrganizationId = createdRepository.PeerId,
-                }; 
+                };
 
                 var resultMessage = new PostRepoToRegistryResultMessage
                 {
@@ -48,7 +48,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
                 _postRepoToRegistryResultMessageProducer.PublishMessage(resultMessage);
                 _logger.LogInformation("PostRepositoryToRegistryResultMessage published");
             }
-            
+
 
             return;
 

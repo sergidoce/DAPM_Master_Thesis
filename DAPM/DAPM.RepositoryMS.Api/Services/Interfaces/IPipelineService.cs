@@ -4,6 +4,6 @@ namespace DAPM.RepositoryMS.Api.Services.Interfaces
 {
     public interface IPipelineService
     {
-        Task<Pipeline> GetPipelineById(int repositoryId, int pipelineId);
+        Task<Pipeline> GetPipelineById(Guid repositoryId, Guid pipelineId);
     }
 }

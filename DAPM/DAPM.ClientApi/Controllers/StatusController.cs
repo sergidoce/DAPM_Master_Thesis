@@ -1,4 +1,5 @@
 ﻿using DAPM.ClientApi.Models;
+using DAPM.ClientApi.Services;
 using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
@@ -19,12 +20,27 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpGet(("{ticketId}"))]
-        public async Task<ActionResult<int>> Get(Guid ticketId)
+        public async Task<IActionResult> Get(Guid ticketId)
         {
-            JToken responseJSON = _ticketService.GetTicketResolution(ticketId);
-            var response = responseJSON.ToString();
 
-            return Ok(response);
+            TicketResolutionType resolutionType = _ticketService.GetTicketResolutionType(ticketId);
+
+            JToken resolutionJSON = _ticketService.GetTicketResolution(ticketId);
+
+            if(resolutionType == TicketResolutionType.Json || (int)resolutionJSON["status"] != 1)
+            {
+                var response = resolutionJSON.ToString();
+                return Ok(response);
+            }
+            else
+            {
+                var filePath = resolutionJSON["result"]["filePath"].ToString();
+                var fileName = resolutionJSON["result"]["fileName"].ToString();
+                var fileFormat = resolutionJSON["result"]["fileFormat"].ToString();
+                var fileContent = await System.IO.File.ReadAllBytesAsync(filePath);
+
+                return File(fileContent, "application/octet-stream", fileName + fileFormat);
+            }
         }
     }
 }
