@@ -16,7 +16,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromRegistry
 
         public Task ConsumeAsync(ApplyRegistryUpdateResult message)
         {
-            CollabHandshakeProcess process = (CollabHandshakeProcess)_orchestratorEngine.GetProcess(message.TicketId);
+            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
             process.OnApplyRegistryUpdateResult(message);
 
             return Task.CompletedTask;

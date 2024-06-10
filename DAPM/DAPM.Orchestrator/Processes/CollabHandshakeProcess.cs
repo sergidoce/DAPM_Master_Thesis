@@ -15,6 +15,7 @@ namespace DAPM.Orchestrator.Processes
 {
     public class CollabHandshakeProcess : OrchestratorProcess
     {
+        private ILogger<CollabHandshakeProcess> _logger;
         private Identity _localPeerIdentity;
         private Identity _requestedPeerIdentity;
         private IIdentityService _identityService;
@@ -27,10 +28,13 @@ namespace DAPM.Orchestrator.Processes
             _requestedPeerDomain = requestedPeerDomain;
             _identityService = serviceProvider.GetRequiredService<IIdentityService>();
             _localPeerIdentity = _identityService.GetIdentity();
+            _logger = serviceProvider.GetRequiredService<ILogger<CollabHandshakeProcess>>();
         }
 
         public override void StartProcess()
         {
+
+            _logger.LogInformation("HANDSHAKE STARTED");
             var sendHandshakeRequestProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendHandshakeRequestMessage>>();
 
 
@@ -54,8 +58,8 @@ namespace DAPM.Orchestrator.Processes
 
         public override void OnHandshakeRequestResponse(HandshakeRequestResponseMessage message)
         {
-
-            if(message.IsRequestAccepted == false)
+            _logger.LogInformation("HANDSHAKE REQUEST RESPONSE RECEIVED");
+            if (message.IsRequestAccepted == false)
             {
                 EndProcess();
                 return;
@@ -113,6 +117,8 @@ namespace DAPM.Orchestrator.Processes
 
         public override void OnRegistryUpdate(RegistryUpdateMessage message)
         {
+
+            _logger.LogInformation("REGISTRY UPDATE RECEIVED");
             var applyRegistryUpdateProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ApplyRegistryUpdateMessage>>();
             
 
@@ -153,6 +159,7 @@ namespace DAPM.Orchestrator.Processes
 
         public override void OnHandshakeAck(HandshakeAckMessage message)
         {
+            _logger.LogInformation("HANDSHAKE ACK RECEIVED");
             var handshakeProcessResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<CollabHandshakeProcessResult>>();
 
             var senderIdentityDto = new IdentityDTO()

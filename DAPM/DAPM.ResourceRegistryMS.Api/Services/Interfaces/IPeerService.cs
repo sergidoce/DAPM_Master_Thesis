@@ -9,8 +9,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services.Interfaces
 
         Task<IEnumerable<Peer>> GetAllPeers();
 
-        Task<bool> DeletePeer(Guid id);
-
+        Task<Peer> PostPeer(OrganizationDTO organizationDTO);
         Task<IEnumerable<Repository>> GetRepositoriesOfOrganization(Guid organizationId);
         Task<Repository> PostRepositoryToOrganization(Guid organizationId, RepositoryDTO repository); 
     }

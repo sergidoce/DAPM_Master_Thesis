@@ -12,6 +12,7 @@ namespace DAPM.Orchestrator.Processes
 {
     public class CollabHandshakeResponseProcess : OrchestratorProcess
     {
+        private ILogger<CollabHandshakeResponseProcess> _logger;
         private IIdentityService _identityService;
         private Identity _requesterPeerIdentity;
         private Identity _localPeerIdentity;
@@ -23,10 +24,12 @@ namespace DAPM.Orchestrator.Processes
             _requesterPeerIdentity = requesterPeerIdentity;
             _identityService = serviceProvider.GetRequiredService<IIdentityService>();
             _localPeerIdentity = _identityService.GetIdentity();
+            _logger = serviceProvider.GetRequiredService<ILogger<CollabHandshakeResponseProcess>>();
         }
 
         public override void StartProcess()
         {
+            _logger.LogInformation("HANDSHAKE RESPONSE PROCESS STARTED");
             var sendRequestResponseProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendHandshakeRequestResponseMessage>>();
 
             var isRequestAccepted = true;
@@ -58,6 +61,8 @@ namespace DAPM.Orchestrator.Processes
  
         public override void OnRegistryUpdate(RegistryUpdateMessage message)
         {
+            _logger.LogInformation("REGISTRY UPDATE RECEIVED");
+
             var applyRegistryUpdateProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ApplyRegistryUpdateMessage>>();
 
 
@@ -120,6 +125,8 @@ namespace DAPM.Orchestrator.Processes
 
         public override void OnHandshakeAck(HandshakeAckMessage message)
         {
+
+            _logger.LogInformation("HANDSHAKE ACK RECEIVED");
             var sendHandshakeAckProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendHandshakeAckMessage>>();
 
             var senderIdentityDto = new IdentityDTO()
