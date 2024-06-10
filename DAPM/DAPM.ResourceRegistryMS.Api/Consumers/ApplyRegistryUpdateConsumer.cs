@@ -16,12 +16,13 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
         private IQueueProducer<ApplyRegistryUpdateResult> _resultProducer;
 
         public ApplyRegistryUpdateConsumer(IPeerService peerService, IRepositoryService repositoryService,
-            IResourceService resourceService, IPipelineService pipelineService)
+            IResourceService resourceService, IPipelineService pipelineService, IQueueProducer<ApplyRegistryUpdateResult> resultProducer)
         {
             _peerService = peerService;
             _repositoryService = repositoryService;
             _resourceService = resourceService;
             _pipelineService = pipelineService;
+            _resultProducer = resultProducer;
         }
 
         public async Task ConsumeAsync(ApplyRegistryUpdateMessage message)

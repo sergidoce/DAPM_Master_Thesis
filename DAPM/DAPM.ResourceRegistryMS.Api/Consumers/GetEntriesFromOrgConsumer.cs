@@ -17,12 +17,13 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
         private IQueueProducer<GetEntriesFromOrgResult> _resultProducer;
 
         public GetEntriesFromOrgConsumer(IPeerService peerService, IRepositoryService repositoryService,
-            IResourceService resourceService, IPipelineService pipelineService)
+            IResourceService resourceService, IPipelineService pipelineService, IQueueProducer<GetEntriesFromOrgResult> resultProducer)
         {
             _peerService = peerService;
             _repositoryService = repositoryService;
             _resourceService = resourceService;
             _pipelineService = pipelineService;
+            _resultProducer = resultProducer;
         }
 
         public async Task ConsumeAsync(GetEntriesFromOrgMessage message)
