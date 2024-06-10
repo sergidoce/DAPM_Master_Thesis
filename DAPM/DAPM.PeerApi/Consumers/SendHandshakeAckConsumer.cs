@@ -28,7 +28,7 @@ namespace DAPM.PeerApi.Consumers
             };
 
             var url = "http://" + targetDomain + PeerApiEndpoints.HandshakeAckEndpoint;
-            var body = JsonSerializer.Serialize(message.HandshakeAck);
+            var body = JsonSerializer.Serialize(handshakeAckDto);
 
             var response = await _httpService.SendPostRequestAsync(url, body);
 
