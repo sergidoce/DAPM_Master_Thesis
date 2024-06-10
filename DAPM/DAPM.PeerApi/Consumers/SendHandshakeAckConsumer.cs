@@ -1,4 +1,5 @@
-﻿using DAPM.PeerApi.Services.Interfaces;
+﻿using DAPM.PeerApi.Models.HandshakeDtos;
+using DAPM.PeerApi.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.PeerApi;
 using System.Text.Json;
@@ -17,6 +18,14 @@ namespace DAPM.PeerApi.Consumers
         {
             var targetDomain = message.TargetPeerDomain;
             var senderIdentity = message.SenderPeerIdentity;
+
+
+            var handshakeAckDto = new HandshakeAckDto()
+            {
+                HandshakeId = message.TicketId,
+                IsDone = message.HandshakeAck.IsCompleted,
+                SenderIdentity = senderIdentity,
+            };
 
             var url = "http://" + targetDomain + PeerApiEndpoints.HandshakeAckEndpoint;
             var body = JsonSerializer.Serialize(message.HandshakeAck);

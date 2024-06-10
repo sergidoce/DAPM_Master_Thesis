@@ -162,12 +162,6 @@ namespace DAPM.Orchestrator.Processes
             _logger.LogInformation("HANDSHAKE ACK RECEIVED");
             var handshakeProcessResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<CollabHandshakeProcessResult>>();
 
-            var senderIdentityDto = new IdentityDTO()
-            {
-                Id = _localPeerIdentity.Id,
-                Name = _localPeerIdentity.Name,
-                Domain = _localPeerIdentity.Domain,
-            };
 
             var collabHandshakeProcessResult = new CollabHandshakeProcessResult()
             {
