@@ -16,6 +16,7 @@ namespace DAPM.PeerApi.Controllers
         public RegistryController(ILogger<RegistryController> logger, IQueueProducer<RegistryUpdateMessage> registryUpdateProducer)
         {
             _logger = logger;
+            _registryUpdateProducer = registryUpdateProducer;
         }
 
         [HttpPost("updates")]
