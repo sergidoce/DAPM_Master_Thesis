@@ -2,6 +2,6 @@
 {
     public interface ISystemService
     {
-        public Guid RegisterPeer(string peerName, string introductionPeerAddress, string localPeerAddress);
+        public Guid StartCollabHandshake(string introductionPeerDomain);
     }
 }

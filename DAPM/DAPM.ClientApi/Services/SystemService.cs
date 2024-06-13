@@ -8,33 +8,32 @@ namespace DAPM.ClientApi.Services
     {
         private ITicketService _ticketService;
         private ILogger<SystemService> _logger;
-        private IQueueProducer<RegisterPeerRequest> _registerPeerRequestProducer;
+        private IQueueProducer<CollabHandshakeRequest> _collabHandshakeRequestProducer;
 
         public SystemService(ITicketService ticketService,
-            IQueueProducer<RegisterPeerRequest> registerPeerRequestProducer,
+            IQueueProducer<CollabHandshakeRequest> collabHandshakeRequestProducer,
             ILogger<SystemService> logger)
         {
             _ticketService = ticketService;
-            _registerPeerRequestProducer = registerPeerRequestProducer;
+            _collabHandshakeRequestProducer = collabHandshakeRequestProducer;
             _logger = logger;
         }
 
-        public Guid RegisterPeer(string peerName, string introductionPeerAddress, string localPeerAddress)
+        public Guid StartCollabHandshake(string targetPeerDomain)
         {
             var ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
 
-            var message = new RegisterPeerRequest
+            var message = new CollabHandshakeRequest
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = ticketId,
-                IntroductionPeerAddress = introductionPeerAddress,
-                LocalPeerAddress = localPeerAddress,
-                PeerName = peerName,
+                RequestedPeerDomain = targetPeerDomain,
+     
             };
 
-            _registerPeerRequestProducer.PublishMessage(message);
+            _collabHandshakeRequestProducer.PublishMessage(message);
 
-            _logger.LogDebug("RegisterPeerRequest Enqueued");
+            _logger.LogDebug("CollabHandshakeRequest Enqueued");
 
             return ticketId;
         }

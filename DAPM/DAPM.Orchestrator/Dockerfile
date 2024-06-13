@@ -22,4 +22,10 @@ RUN dotnet publish "./DAPM.Orchestrator.csproj" -c $BUILD_CONFIGURATION -o /app/
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
+
+# Change file permissions
+USER root
+RUN chmod -R 777 /app
+USER app
+
 ENTRYPOINT ["dotnet", "DAPM.Orchestrator.dll"]

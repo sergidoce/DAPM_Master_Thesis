@@ -1,4 +1,5 @@
 ﻿using DAPM.Orchestrator.Processes;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 
@@ -92,6 +93,31 @@ namespace DAPM.Orchestrator
         }
 
         public virtual void OnGetResourceFilesFromRepoResult(GetResourceFilesFromRepoResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnHandshakeRequestResponse(HandshakeRequestResponseMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnRegistryUpdate(RegistryUpdateMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnApplyRegistryUpdateResult(ApplyRegistryUpdateResult message)
+        {
+            return;
+        }
+
+        public virtual void OnGetEntriesFromOrgResult(GetEntriesFromOrgResult message)
+        {
+            return;
+        }
+
+        public virtual void OnHandshakeAck(HandshakeAckMessage message)
         {
             return;
         }
