@@ -20,11 +20,11 @@ namespace DAPM.ClientApi.Controllers
         }
 
 
-        //[HttpPost("register-peer")]
-        //public async Task<ActionResult<Guid>> RegisterPeer([FromBody] RegisterPeerDto registerPeerDto)
-        //{
-        //    Guid id = _systemService.RegisterPeer(registerPeerDto.PeerName, registerPeerDto.IntroductionPeerAddress, registerPeerDto.LocalPeerAddress);
-        //    return Ok(new ApiResponse { RequestName = "RegisterPeer", TicketId = id });
-        //}
+        [HttpPost("collab-handshake")]
+        public async Task<ActionResult<Guid>> StartCollabHandshake([FromBody] CollabHandshakeDto collabHandshakeDto)
+        {
+            Guid id = _systemService.StartCollabHandshake(collabHandshakeDto.TargetPeerDomain);
+            return Ok(new ApiResponse { RequestName = "CollabHandshake", TicketId = id });
+        }
     }
 }

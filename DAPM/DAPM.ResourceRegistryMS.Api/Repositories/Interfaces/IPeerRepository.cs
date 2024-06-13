@@ -6,6 +6,6 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories.Interfaces
     {
         public Task<IEnumerable<Peer>> GetAllPeers();
         public Task<Peer> GetPeerById(Guid id);
-        public Task<bool> AddPeer(Peer peer);
+        public Task<Peer> AddPeer(Peer peer);
     }
 }

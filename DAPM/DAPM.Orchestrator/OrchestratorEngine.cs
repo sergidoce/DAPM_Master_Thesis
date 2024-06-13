@@ -1,4 +1,5 @@
 ﻿using DAPM.Orchestrator.Processes;
+using DAPM.Orchestrator.Services.Models;
 using RabbitMQLibrary.Models;
 using System.Xml.Linq;
 
@@ -24,6 +25,20 @@ namespace DAPM.Orchestrator
         public OrchestratorProcess GetProcess(Guid processId)
         {
             return _processes[processId];
+        }
+
+        public void StartCollabHandshakeProcess(Guid ticketId, string requestedPeerDomain)
+        {
+            var collabHandshakeProcess = new CollabHandshakeProcess(this, _serviceProvider, ticketId, requestedPeerDomain);
+            _processes[ticketId] = collabHandshakeProcess;
+            collabHandshakeProcess.StartProcess();
+        }
+
+        public void StartCollabHandshakeResponseProcess(Guid ticketId, Identity requesterPeerIdentity)
+        {
+            var registerPeerProcess = new CollabHandshakeResponseProcess(this, _serviceProvider, ticketId, requesterPeerIdentity);
+            _processes[ticketId] = registerPeerProcess;
+            registerPeerProcess.StartProcess();
         }
 
         public void StartCreateRepositoryProcess(Guid ticketId, Guid organizationId, string name)
@@ -82,11 +97,5 @@ namespace DAPM.Orchestrator
             postResourceProcess.StartProcess();
         }
 
-        public void StartRegisterPeerProcess(Guid ticketId, string introductionPeerAddress, string localPeerAddress, string peerName)
-        {
-            var registerPeerProcess = new RegisterPeerProcess(this, _serviceProvider, ticketId, introductionPeerAddress, localPeerAddress, peerName);
-            _processes[ticketId] = registerPeerProcess;
-            registerPeerProcess.StartProcess();
-        }
     }
 }

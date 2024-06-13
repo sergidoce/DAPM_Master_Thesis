@@ -1,19 +1,20 @@
 ﻿using RabbitMQLibrary.Interfaces;
+using RabbitMQLibrary.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
+namespace RabbitMQLibrary.Messages.PeerApi
 {
-    public class RegisterPeerRequest : IQueueMessage
+    public class SendHandshakeAckMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public string IntroductionPeerAddress { get; set; }
-        public string LocalPeerAddress { get; set; }
-        public string PeerName { get; set; }
+        public IdentityDTO SenderPeerIdentity { get; set; }
+        public string TargetPeerDomain { get; set; }
+        public HandshakeAckDTO HandshakeAck { get; set; }
     }
 }

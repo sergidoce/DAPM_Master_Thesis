@@ -1,4 +1,5 @@
-﻿using RabbitMQLibrary.Models;
+﻿using DAPM.Orchestrator.Services.Models;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.Orchestrator
 {
@@ -14,6 +15,7 @@ namespace DAPM.Orchestrator
         public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, IEnumerable<FileDTO> files);
         public void StartPostPipelineProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Pipeline pipeline, string name);
         public void StartGetPipelinesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid? pipelineId);
-        public void StartRegisterPeerProcess(Guid ticketId, string introductionPeerAddress, string localPeerAddress, string peerName);
+        public void StartCollabHandshakeProcess(Guid ticketId, string requestedPeerDomain);
+        public void StartCollabHandshakeResponseProcess(Guid ticketId, Identity requesterPeerIdentity);
     }
 }

@@ -8,6 +8,9 @@ using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using DAPM.Orchestrator.Consumers.ResultConsumers.FromRegistry;
 using DAPM.Orchestrator.Consumers.ResultConsumers.FromRepo;
+using DAPM.Orchestrator.Services;
+using DAPM.Orchestrator.Consumers.ResultConsumers.FromPeerApi;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,8 +48,9 @@ builder.Services.AddQueueMessageConsumer<GetPipelinesRequestConsumer, GetPipelin
 builder.Services.AddQueueMessageConsumer<PostResourceRequestConsumer, PostResourceRequest>();
 builder.Services.AddQueueMessageConsumer<PostRepositoryRequestConsumer, PostRepositoryRequest>();
 builder.Services.AddQueueMessageConsumer<PostPipelineRequestConsumer, PostPipelineRequest>();
-builder.Services.AddQueueMessageConsumer<RegisterPeerRequestConsumer, RegisterPeerRequest>();
+builder.Services.AddQueueMessageConsumer<CollabHandshakeRequestConsumer, CollabHandshakeRequest>();
 builder.Services.AddQueueMessageConsumer<GetResourceFilesRequestConsumer, GetResourceFilesRequest>();
+builder.Services.AddQueueMessageConsumer<HandshakeRequestConsumer, HandshakeRequestMessage>();
 
 
 
@@ -66,16 +70,20 @@ builder.Services.AddQueueMessageConsumer<PostPipelineToRegistryResultConsumer, P
 builder.Services.AddQueueMessageConsumer<GetPipelinesFromRegistryResultConsumer, GetPipelinesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourceFilesFromRepoResultConsumer, GetResourceFilesFromRepoResultMessage>();
 
-
-
-
-
+builder.Services.AddQueueMessageConsumer<HandshakeAckConsumer, HandshakeAckMessage>();
+builder.Services.AddQueueMessageConsumer<HandshakeRequestResponseConsumer, HandshakeRequestResponseMessage>();
+builder.Services.AddQueueMessageConsumer<RegistryUpdateConsumer, RegistryUpdateMessage>();
+builder.Services.AddQueueMessageConsumer<ApplyRegistryUpdateResultConsumer, ApplyRegistryUpdateResult>();
+builder.Services.AddQueueMessageConsumer<GetEntriesFromOrgResultConsumer, GetEntriesFromOrgResult>();
 
 
 
 builder.Services.AddSingleton<IOrchestratorEngine, OrchestratorEngine>();
+builder.Services.AddSingleton<IIdentityService, IdentityService>();
 
 var app = builder.Build();
+
+app.Services.GetService<IIdentityService>().GetIdentity();
 
 app.MapDefaultEndpoints();
 
