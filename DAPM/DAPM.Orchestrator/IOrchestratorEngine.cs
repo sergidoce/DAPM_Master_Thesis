@@ -13,9 +13,16 @@ namespace DAPM.Orchestrator
         public void StartGetResourcesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid? resourceId);
         public void StartGetResourceFilesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid resourceId);
         public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, IEnumerable<FileDTO> files);
-        public void StartPostPipelineProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Pipeline pipeline, string name);
-        public void StartGetPipelinesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid? pipelineId);
         public void StartCollabHandshakeProcess(Guid ticketId, string requestedPeerDomain);
         public void StartCollabHandshakeResponseProcess(Guid ticketId, Identity requesterPeerIdentity);
+
+
+        // Pipeline Processes
+        public void StartPostPipelineProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Pipeline pipeline, string name);
+        public void StartGetPipelinesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid? pipelineId);
+        public void StartCreatePipelineExecutionProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid pipelineId);
+        public void StartTransferDataActionProcess(Guid ticketId, TransferDataActionDTO data);
+        public void StartExecuteOperatorActionProcess(Guid ticketId, ExecuteOperatorActionDTO data);
+        public void StartPipelineStartCommandProcess(Guid ticketId, Guid executionId);
     }
 }

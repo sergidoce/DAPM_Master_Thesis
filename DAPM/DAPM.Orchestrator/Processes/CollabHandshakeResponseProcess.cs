@@ -7,6 +7,7 @@ using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.PeerApi;
 using RabbitMQLibrary.Models;
 using RabbitMQLibrary.Messages.ResourceRegistry;
+using RabbitMQLibrary.Messages.PeerApi.Handshake;
 
 namespace DAPM.Orchestrator.Processes
 {

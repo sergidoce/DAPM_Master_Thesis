@@ -1,7 +1,7 @@
 ﻿using DAPM.PeerApi.Models.HandshakeDtos;
 using DAPM.PeerApi.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
-using RabbitMQLibrary.Messages.PeerApi;
+using RabbitMQLibrary.Messages.PeerApi.Handshake;
 using System.Text.Json;
 
 namespace DAPM.PeerApi.Consumers

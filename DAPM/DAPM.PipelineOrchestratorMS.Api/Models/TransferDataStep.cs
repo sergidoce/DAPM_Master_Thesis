@@ -1,4 +1,10 @@
-﻿namespace DAPM.PipelineOrchestratorMS.Api.Models
+﻿using Microsoft.Extensions.DependencyInjection;
+using RabbitMQLibrary.Interfaces;
+using RabbitMQLibrary.Messages.Orchestrator.ProcessRequests;
+using RabbitMQLibrary.Messages.PipelineOrchestrator;
+using RabbitMQLibrary.Models;
+
+namespace DAPM.PipelineOrchestratorMS.Api.Models
 {
 
     public enum StorageMode
@@ -23,14 +29,14 @@
             Guid? destinationRepository,
             StorageMode sourceStorageMode,
             StorageMode destinationStorageMode,
-            IServiceProvider serviceProvider) : base(serviceProvider)
+            Guid executionId,
+            IServiceProvider serviceProvider) : base(executionId, serviceProvider)
         {
             _resourceToTransfer = resourceToTransfer;
             _destinationOrganization = destinationOrganization;
             _destinationRepository = destinationRepository;
             _sourceStorageMode = sourceStorageMode;
             _destinationStorageMode = destinationStorageMode;
-
         }
 
         public EngineResource GetResourceToTransfer()
@@ -40,7 +46,23 @@
 
         public override void Execute()
         {
-            throw new NotImplementedException();
+            var transferDataRequestProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<TransferDataActionRequest>>();
+
+            var data = new TransferDataActionDTO()
+            {
+                ExecutionId = ExecutionId,
+                StepId = Id
+            };
+
+
+            var message = new TransferDataActionRequest()
+            {
+                TicketId = Id,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                Data = data
+            };
+
+            transferDataRequestProducer.PublishMessage(message);
         }
     }
 }

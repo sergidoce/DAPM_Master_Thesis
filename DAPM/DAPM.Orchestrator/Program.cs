@@ -11,6 +11,10 @@ using DAPM.Orchestrator.Consumers.ResultConsumers.FromRepo;
 using DAPM.Orchestrator.Services;
 using DAPM.Orchestrator.Consumers.ResultConsumers.FromPeerApi;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
+using DAPM.Orchestrator.Consumers;
+using RabbitMQLibrary.Messages.Orchestrator.Other;
+using DAPM.Orchestrator.Consumers.ResultConsumers.FromPipelineOrchestrator;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPipelineOrchestrator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,7 +44,7 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader());
 });
 
-//StartRequests
+//START PROCESS REQUESTS
 builder.Services.AddQueueMessageConsumer<GetOrganizationsRequestConsumer, GetOrganizationsRequest>();
 builder.Services.AddQueueMessageConsumer<GetRepositoriesRequestConsumer, GetRepositoriesRequest>();
 builder.Services.AddQueueMessageConsumer<GetResourcesRequestConsumer, GetResourcesRequest>();
@@ -48,15 +52,23 @@ builder.Services.AddQueueMessageConsumer<GetPipelinesRequestConsumer, GetPipelin
 builder.Services.AddQueueMessageConsumer<PostResourceRequestConsumer, PostResourceRequest>();
 builder.Services.AddQueueMessageConsumer<PostRepositoryRequestConsumer, PostRepositoryRequest>();
 builder.Services.AddQueueMessageConsumer<PostPipelineRequestConsumer, PostPipelineRequest>();
-builder.Services.AddQueueMessageConsumer<CollabHandshakeRequestConsumer, CollabHandshakeRequest>();
 builder.Services.AddQueueMessageConsumer<GetResourceFilesRequestConsumer, GetResourceFilesRequest>();
+
+//Handshake
+builder.Services.AddQueueMessageConsumer<CollabHandshakeRequestConsumer, CollabHandshakeRequest>();
 builder.Services.AddQueueMessageConsumer<HandshakeRequestConsumer, HandshakeRequestMessage>();
 
 
+//Pipeline Execution
+builder.Services.AddQueueMessageConsumer<CreatePipelineExecutionRequestConsumer, CreatePipelineExecutionRequest>();
+builder.Services.AddQueueMessageConsumer<TransferDataActionRequestConsumer, TransferDataActionRequest>();
+builder.Services.AddQueueMessageConsumer<ExecuteOperatorActionRequestConsumer, ExecuteOperatorActionRequest>();
+builder.Services.AddQueueMessageConsumer<PipelineStartCommandRequestConsumer, PipelineStartCommandRequest>();
 
 
 
-//ServicesResults
+
+//SERVICE RESULTS
 builder.Services.AddQueueMessageConsumer<GetOrgsFromRegistryResultConsumer, GetOrganizationsResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetReposFromRegistryResultConsumer, GetRepositoriesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourcesFromRegistryResultConsumer, GetResourcesResultMessage>();
@@ -70,13 +82,17 @@ builder.Services.AddQueueMessageConsumer<PostPipelineToRegistryResultConsumer, P
 builder.Services.AddQueueMessageConsumer<GetPipelinesFromRegistryResultConsumer, GetPipelinesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourceFilesFromRepoResultConsumer, GetResourceFilesFromRepoResultMessage>();
 
+// Handshake
 builder.Services.AddQueueMessageConsumer<HandshakeAckConsumer, HandshakeAckMessage>();
 builder.Services.AddQueueMessageConsumer<HandshakeRequestResponseConsumer, HandshakeRequestResponseMessage>();
 builder.Services.AddQueueMessageConsumer<RegistryUpdateConsumer, RegistryUpdateMessage>();
 builder.Services.AddQueueMessageConsumer<ApplyRegistryUpdateResultConsumer, ApplyRegistryUpdateResult>();
 builder.Services.AddQueueMessageConsumer<GetEntriesFromOrgResultConsumer, GetEntriesFromOrgResult>();
 
-
+// Pipeline Execution
+builder.Services.AddQueueMessageConsumer<ActionResultReceivedConsumer, ActionResultReceivedMessage>();
+builder.Services.AddQueueMessageConsumer<CreatePipelineExecutionResultConsumer, CreatePipelineExecutionResultMessage>();
+builder.Services.AddQueueMessageConsumer<CommandEnqueuedConsumer, CommandEnqueuedMessage>();
 
 builder.Services.AddSingleton<IOrchestratorEngine, OrchestratorEngine>();
 builder.Services.AddSingleton<IIdentityService, IdentityService>();

@@ -4,8 +4,19 @@ using RabbitMQLibrary.Models;
 
 namespace DAPM.PipelineOrchestratorMS.Api.Engine
 {
+
+    public enum PipelineExecutionState
+    {
+        NotStarted,
+        Running,
+        Completed,
+        Faulted
+    }
+
+
     public class PipelineExecution : IPipelineExecution
     {
+        private Guid _id;
         private ILogger<PipelineExecution> _logger;
         private IServiceProvider _serviceProvider;
         private Pipeline _pipeline;
@@ -18,9 +29,12 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
         private List<Step> _steps;
         private Dictionary<Guid, Step> _stepsDictionary;
 
-        public PipelineExecution(Pipeline pipelineDto, IServiceProvider serviceProvider) 
-        {
 
+        private PipelineExecutionState _state;
+
+        public PipelineExecution(Guid id, Pipeline pipelineDto, IServiceProvider serviceProvider) 
+        {
+            _id = id;
             _nodes = new Dictionary<Guid, EngineNode>();
             _successorDictionary = new Dictionary<Guid, List<Guid>>();
             _predecessorDictionary = new Dictionary<Guid, List<Guid>>();
@@ -32,6 +46,8 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
             _logger = _serviceProvider.GetService<ILogger<PipelineExecution>>();
 
             _pipeline = pipelineDto;
+            _state = PipelineExecutionState.NotStarted;
+
             InitGraph();
 
         }
@@ -40,21 +56,22 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
 
         public void StartExecution()
         {
+            _state = PipelineExecutionState.Running;
             ExecuteAvailableSteps();
         }
 
-        public void ProcessActionAck(ActionAck actionAck)
+        public void ProcessActionResult(ActionResultDTO actionResult)
         {
-            var result = actionAck.ActionResult;
+            var result = actionResult.ActionResult;
 
             if(result == ActionResult.Completed)
             {
-                _stepsDictionary[actionAck.StepId].Status = StepStatus.Completed;
+                _stepsDictionary[actionResult.StepId].Status = StepStatus.Completed;
                 ExecuteAvailableSteps();
             }
             else
             {
-                _logger.LogInformation($"There was an error in step {actionAck.StepId}");
+                _logger.LogInformation($"There was an error in step {actionResult.StepId}");
             }
         }
 
@@ -65,6 +82,12 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
         private void ExecuteAvailableSteps()
         {
             var availableSteps = GetAvailableSteps();
+
+            if(availableSteps.Count() == 0)
+            {
+                _state = PipelineExecutionState.Completed;
+                return;
+            }
 
             foreach (var step in availableSteps)
             {
@@ -78,6 +101,9 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
 
             foreach (var step in _stepsDictionary.Values)
             {
+                if (step.Status == StepStatus.Completed)
+                    continue;
+
                 var available = true;
                 var prerequisites = step.PrerequisiteSteps;
                 foreach (var prerequisite in prerequisites)
@@ -186,7 +212,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
                 return result;
             }
 
-            ExecuteOperatorStep executeOperatorStep = new ExecuteOperatorStep(_serviceProvider);
+            ExecuteOperatorStep executeOperatorStep = new ExecuteOperatorStep(_id ,_serviceProvider);
 
             var predecessorNodesIds = _predecessorDictionary[currentNode.Id];
 
@@ -267,7 +293,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
             var sourceStorageMode = GetStorageModeFromNode(sourceNode);
             var targetStorageMode = GetStorageModeFromNode(targetNode);
 
-            var step = new TransferDataStep(resourceToTransfer, targetNode.OrganizationId, destinationRepository, sourceStorageMode, targetStorageMode, _serviceProvider);
+            var step = new TransferDataStep(resourceToTransfer, targetNode.OrganizationId, destinationRepository, sourceStorageMode, targetStorageMode, _id, _serviceProvider);
 
             return step;
         }

@@ -5,6 +5,7 @@ using DAPM.PeerApi.Consumers;
 using RabbitMQLibrary.Messages.PeerApi;
 using DAPM.PeerApi.Services.Interfaces;
 using DAPM.PeerApi.Services;
+using RabbitMQLibrary.Messages.PeerApi.Handshake;
 
 var builder = WebApplication.CreateBuilder(args);
 

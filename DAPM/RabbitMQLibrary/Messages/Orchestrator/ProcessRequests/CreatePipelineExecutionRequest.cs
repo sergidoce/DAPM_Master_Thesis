@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
 {
-    public class StartPipelineExecutionRequest : IQueueMessage
+    public class CreatePipelineExecutionRequest : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
