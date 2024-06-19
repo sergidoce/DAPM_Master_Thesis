@@ -48,6 +48,7 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
 });
 
 builder.Services.AddQueueMessageConsumer<PostResourceToRepoConsumer, PostResourceToRepoMessage>();
+builder.Services.AddQueueMessageConsumer<PostOperatorToRepoConsumer, PostOperatorToRepoMessage>();
 builder.Services.AddQueueMessageConsumer<PostRepoToRepoConsumer, PostRepoToRepoMessage>();
 builder.Services.AddQueueMessageConsumer<PostPipelineToRepoConsumer, PostPipelineToRepoMessage>();
 builder.Services.AddQueueMessageConsumer<GetPipelinesFromRepoConsumer, GetPipelinesFromRepoMessage>();
@@ -81,6 +82,8 @@ builder.Services.AddScoped<IResourceRepository, ResourceRepository>();
 builder.Services.AddScoped<IRepositoryRepository, RepositoryRepository>();
 builder.Services.AddScoped<IFileRepository, FileRepository>();
 builder.Services.AddScoped<IPipelineRepository, PipelineRepository>();
+builder.Services.AddScoped<IOperatorRepository, OperatorRepository>();
+
 
 builder.Services.Configure<FileStorageDatabaseSettings>(
     builder.Configuration.GetSection("FileStorageDatabase"));

@@ -10,7 +10,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
     public enum StorageMode
     {
         Permanent,
-        Temporal
+        Temporary
     }
 
 
@@ -51,9 +51,18 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
             var data = new TransferDataActionDTO()
             {
                 ExecutionId = ExecutionId,
-                StepId = Id
-            };
+                StepId = Id,
+                OriginOrganizationId = _resourceToTransfer.OrganizationId,
+                OriginRepositoryId = _resourceToTransfer.RepositoryId,
+                OriginResourceId = _resourceToTransfer.ResourceId,
 
+                SourceStorageMode = (int)_sourceStorageMode,
+                DestinationStorageMode = (int)_destinationStorageMode,
+
+                DestinationOrganizationId = _destinationOrganization,
+                DestinationRepositoryId = _destinationRepository,
+
+            };
 
             var message = new TransferDataActionRequest()
             {

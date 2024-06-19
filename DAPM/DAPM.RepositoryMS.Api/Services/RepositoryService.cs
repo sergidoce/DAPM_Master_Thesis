@@ -3,6 +3,7 @@ using DAPM.RepositoryMS.Api.Models.MongoDB;
 using DAPM.RepositoryMS.Api.Models.PostgreSQL;
 using DAPM.RepositoryMS.Api.Repositories.Interfaces;
 using DAPM.RepositoryMS.Api.Services.Interfaces;
+using MongoDB.Bson;
 using RabbitMQLibrary.Models;
 
 namespace DAPM.RepositoryMS.Api.Services
@@ -14,18 +15,21 @@ namespace DAPM.RepositoryMS.Api.Services
         private IFileRepository _fileRepository;
         private IRepositoryRepository _repositoryRepository;
         private IPipelineRepository _pipelineRepository;
+        private IOperatorRepository _operatorRepository;
 
         public RepositoryService(ILogger<RepositoryService> logger,
             IResourceRepository resourceRepository,
             IFileRepository fileRepository,
             IRepositoryRepository repositoryRepository,
-            IPipelineRepository pipelineRepository)
+            IPipelineRepository pipelineRepository,
+            IOperatorRepository operatorRepository)
         {
             _logger = logger;
             _resourceRepository = resourceRepository;
             _fileRepository = fileRepository;
             _repositoryRepository = repositoryRepository;
             _pipelineRepository = pipelineRepository;
+            _operatorRepository = operatorRepository;
         }
 
         public async Task<Models.PostgreSQL.Pipeline> CreateNewPipeline(Guid repositoryId, string name, RabbitMQLibrary.Models.Pipeline pipeline)
@@ -45,22 +49,21 @@ namespace DAPM.RepositoryMS.Api.Services
 
         }
 
-        public async Task<Models.PostgreSQL.Resource> CreateNewResource(Guid repositoryId, string name, string resourceType, IEnumerable<FileDTO> files)
+        public async Task<Models.PostgreSQL.Resource> CreateNewResource(Guid repositoryId, string name, string resourceType, FileDTO fileDto)
         {
             var repository = await _repositoryRepository.GetRepositoryById(repositoryId);
-            var fileDTO = files.First();
 
             if(repository != null)
             {
-                string objectId = await _fileRepository.AddFile(new MongoFile { Name = fileDTO.Name, File = fileDTO.Content });
+                string objectId = await _fileRepository.AddFile(new MongoFile { Name = fileDto.Name, File = fileDto.Content });
 
                 if(objectId != null)
                 {
                     var file = new Models.PostgreSQL.File
                     {
-                        Name = fileDTO.Name,
+                        Name = fileDto.Name,
                         MongoDbFileId = objectId,
-                        Extension = fileDTO.Extension
+                        Extension = fileDto.Extension
                     };
 
                     var resource = new Models.PostgreSQL.Resource
@@ -74,6 +77,50 @@ namespace DAPM.RepositoryMS.Api.Services
                     var newResource = await _resourceRepository.AddResource(resource);
 
                     return newResource;
+                }
+            }
+
+            return null;
+        }
+
+
+        public async Task<Models.PostgreSQL.Operator> CreateNewOperator(Guid repositoryId, string name, string resourceType, FileDTO sourceCode, FileDTO dockerfile)
+        {
+            var repository = await _repositoryRepository.GetRepositoryById(repositoryId);
+
+            if (repository != null)
+            {
+                string sourceCodeObjectId = await _fileRepository.AddFile(new MongoFile { Name = sourceCode.Name, File = sourceCode.Content });
+                string dockerfileObjectId = await _fileRepository.AddFile(new MongoFile { Name = dockerfile.Name, File = dockerfile.Content });
+
+                if (sourceCodeObjectId != null && dockerfileObjectId != null)
+                {
+                    var sourceCodeFile = new Models.PostgreSQL.File
+                    {
+                        Name = sourceCode.Name,
+                        MongoDbFileId = sourceCodeObjectId,
+                        Extension = sourceCode.Extension
+                    };
+
+                    var dockerfileFile = new Models.PostgreSQL.File
+                    {
+                        Name = dockerfile.Name,
+                        MongoDbFileId = dockerfileObjectId,
+                        Extension = dockerfile.Extension
+                    };
+
+                    var op = new Models.PostgreSQL.Operator
+                    {
+                        Name = name,
+                        Repository = repository,
+                        Type = resourceType,
+                        DockerfileFile = dockerfileFile,
+                        SourceCodeFile = sourceCodeFile,
+                    };
+
+                    var newOperator = await _operatorRepository.AddOperator(op);
+
+                    return newOperator;
                 }
             }
 

@@ -8,12 +8,12 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
     {
         public EngineResource OperatorResource { get; set; }
         public List<EngineResource> InputResources { get; set; }
-
-        public Guid TargetOrganization { get; set; }
+        public List<EngineResource> OutputResources { get; set; }
 
         public ExecuteOperatorStep(Guid id, IServiceProvider serviceProvider) : base(id, serviceProvider)
         {
            InputResources = new List<EngineResource>();
+           OutputResources = new List<EngineResource>();    
         }
 
 

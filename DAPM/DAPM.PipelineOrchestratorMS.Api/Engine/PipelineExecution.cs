@@ -247,7 +247,6 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
                 };
 
                 executeOperatorStep.OperatorResource = operatorResource;
-                executeOperatorStep.TargetOrganization = currentNode.OrganizationId;
 
                 result.Add(executeOperatorStep);
                 AssociateNodeWithStep(currentNode.Id, executeOperatorStep.Id);
@@ -301,7 +300,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
         private StorageMode GetStorageModeFromNode(EngineNode node)
         {
             if (node.NodeType == "operator")
-                return StorageMode.Temporal;
+                return StorageMode.Temporary;
             if (node.NodeType == "dataSource")
                 return StorageMode.Permanent;
 

@@ -9,6 +9,11 @@ namespace RabbitMQLibrary.Models
     public class ExecuteOperatorActionDTO
     {
         public Guid ExecutionId { get; set; }
-        public Guid StepId { get; set; }    
+        public Guid StepId { get; set; }
+        
+        public ResourceDTO OperatorResource { get; set; }
+        public List<ResourceDTO> InputResources { get; set; }
+        public List<ResourceDTO> OutputResources { get; set; }
+
     }
 }

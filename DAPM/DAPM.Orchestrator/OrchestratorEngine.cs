@@ -114,11 +114,20 @@ namespace DAPM.Orchestrator
             postPipelineProcess.StartProcess();
         }
 
-        public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, IEnumerable<FileDTO> files)
+        public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, FileDTO file)
         {
-            var postResourceProcess = new PostResourceProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, name, resourceType, files);
+            var postResourceProcess = new PostResourceProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, name, resourceType, file);
             _processes[ticketId] = postResourceProcess;
             postResourceProcess.StartProcess();
+        }
+
+        public void StartPostOperatorProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, FileDTO sourceCodeFile,
+            FileDTO dockerfileFile)
+        {
+            var postOperatorProcess = new PostOperatorProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, name, resourceType, sourceCodeFile,
+                dockerfileFile);
+            _processes[ticketId] = postOperatorProcess;
+            postOperatorProcess.StartProcess();
         }
 
         public void StartTransferDataActionProcess(Guid ticketId, TransferDataActionDTO data)

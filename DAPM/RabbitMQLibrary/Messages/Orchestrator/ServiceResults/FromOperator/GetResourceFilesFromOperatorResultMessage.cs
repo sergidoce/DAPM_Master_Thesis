@@ -6,17 +6,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages.Repository
+namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator
 {
-    public class PostResourceToRepoMessage : IQueueMessage
+    public class GetResourceFilesFromOperatorResultMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public Guid OrganizationId { get; set; }
-        public Guid RepositoryId { get; set; }
-        public string Name { get; set; }
-        public string ResourceType { get; set; }
-        public FileDTO File { get; set; }
+        public List<FileDTO> Files { get; set; }
     }
 }

@@ -1,21 +1,18 @@
-﻿using DAPM.RepositoryMS.Api.Models.PostgreSQL;
-using DAPM.RepositoryMS.Api.Services.Interfaces;
+﻿using DAPM.RepositoryMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using RabbitMQLibrary.Messages.Repository;
-using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
 
 namespace DAPM.RepositoryMS.Api.Consumers
 {
-    public class PostResourceToRepoConsumer : IQueueConsumer<PostResourceToRepoMessage>
+    public class PostOperatorToRepoConsumer : IQueueConsumer<PostOperatorToRepoMessage>
     {
-
-        private ILogger<PostResourceToRepoConsumer> _logger;
+        private ILogger<PostOperatorToRepoConsumer> _logger;
         private IRepositoryService _repositoryService;
         IQueueProducer<PostResourceToRepoResultMessage> _postResourceToRepoResultProducer;
 
-        public PostResourceToRepoConsumer(ILogger<PostResourceToRepoConsumer> logger, 
+        public PostOperatorToRepoConsumer(ILogger<PostOperatorToRepoConsumer> logger,
             IRepositoryService repositoryService,
             IQueueProducer<PostResourceToRepoResultMessage> postResourceToRepoResultProducer)
         {
@@ -24,17 +21,17 @@ namespace DAPM.RepositoryMS.Api.Consumers
             _postResourceToRepoResultProducer = postResourceToRepoResultProducer;
         }
 
-        public async Task ConsumeAsync(PostResourceToRepoMessage message)
+        public async Task ConsumeAsync(PostOperatorToRepoMessage message)
         {
-            _logger.LogInformation("PostResourceToRepoMessage received");
+            _logger.LogInformation("PostOperatorToRepoMessage received");
 
-            var resource = await _repositoryService.CreateNewResource(message.RepositoryId, message.Name, message.ResourceType, message.File);
+            var op = await _repositoryService.CreateNewOperator(message.RepositoryId, message.Name, message.ResourceType, message.SourceCode, message.Dockerfile);
 
-            if (resource != null)
+            if (op != null)
             {
                 var resourceDto = new ResourceDTO
                 {
-                    Id = resource.Id,
+                    Id = op.Id,
                     Name = message.Name,
                     OrganizationId = message.OrganizationId,
                     RepositoryId = message.RepositoryId,
@@ -50,12 +47,12 @@ namespace DAPM.RepositoryMS.Api.Consumers
 
                 _postResourceToRepoResultProducer.PublishMessage(postResourceToRepoResult);
 
-                _logger.LogInformation("PostResourceToRepoResultMessage produced");
+                _logger.LogInformation("PostOperatorToRepoResultMessage produced");
 
             }
             else
             {
-                _logger.LogInformation("Creation of new resource failed");
+                _logger.LogInformation("Creation of new operator failed");
             }
 
             return;

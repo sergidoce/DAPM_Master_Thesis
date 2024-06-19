@@ -1,4 +1,4 @@
-﻿
+﻿using Microsoft.Extensions.DependencyInjection;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.ClientApi;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
@@ -9,7 +9,7 @@ using RabbitMQLibrary.Models;
 
 namespace DAPM.Orchestrator.Processes
 {
-    public class PostResourceProcess : OrchestratorProcess
+    public class PostOperatorProcess : OrchestratorProcess
     {
         private Guid _organizationId;
         private Guid _repositoryId;
@@ -17,24 +17,26 @@ namespace DAPM.Orchestrator.Processes
         private string _resourceType;
 
         //Resource Files
-        private FileDTO _file;
-       
-        public PostResourceProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, FileDTO file) 
+        private FileDTO _sourceCodeFile;
+        private FileDTO _dockerfileFile;
+
+        public PostOperatorProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
+            Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, FileDTO sourceCodeFile, FileDTO dockerfileFile)
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;
             _repositoryId = repositoryId;
             _name = name;
-            _file = file;
+            _sourceCodeFile = sourceCodeFile;
+            _dockerfileFile = dockerfileFile;
             _resourceType = resourceType;
         }
 
         public override void StartProcess()
         {
-            var postResourceToRepoMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostResourceToRepoMessage>>();
+            var postOperatorToRepoMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostOperatorToRepoMessage>>();
 
-            var message = new PostResourceToRepoMessage()
+            var message = new PostOperatorToRepoMessage()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
@@ -42,10 +44,11 @@ namespace DAPM.Orchestrator.Processes
                 RepositoryId = _repositoryId,
                 Name = _name,
                 ResourceType = _resourceType,
-                File = _file
+                SourceCode = _sourceCodeFile,
+                Dockerfile = _dockerfileFile
             };
 
-            postResourceToRepoMessageProducer.PublishMessage(message);
+            postOperatorToRepoMessageProducer.PublishMessage(message);
         }
 
         public override void OnPostResourceToRepoResult(PostResourceToRepoResultMessage message)
@@ -78,7 +81,7 @@ namespace DAPM.Orchestrator.Processes
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 ItemIds = itemsIds,
-                ItemType = "Resource",
+                ItemType = "Operator Resource",
                 Message = "The item was posted successfully",
                 Succeeded = true
             };

@@ -15,6 +15,8 @@ using DAPM.Orchestrator.Consumers;
 using RabbitMQLibrary.Messages.Orchestrator.Other;
 using DAPM.Orchestrator.Consumers.ResultConsumers.FromPipelineOrchestrator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPipelineOrchestrator;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator;
+using DAPM.Orchestrator.Consumers.ResultConsumers.FromOperator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -50,6 +52,7 @@ builder.Services.AddQueueMessageConsumer<GetRepositoriesRequestConsumer, GetRepo
 builder.Services.AddQueueMessageConsumer<GetResourcesRequestConsumer, GetResourcesRequest>();
 builder.Services.AddQueueMessageConsumer<GetPipelinesRequestConsumer, GetPipelinesRequest>();
 builder.Services.AddQueueMessageConsumer<PostResourceRequestConsumer, PostResourceRequest>();
+builder.Services.AddQueueMessageConsumer<PostOperatorRequestConsumer, PostOperatorRequest>();
 builder.Services.AddQueueMessageConsumer<PostRepositoryRequestConsumer, PostRepositoryRequest>();
 builder.Services.AddQueueMessageConsumer<PostPipelineRequestConsumer, PostPipelineRequest>();
 builder.Services.AddQueueMessageConsumer<GetResourceFilesRequestConsumer, GetResourceFilesRequest>();
@@ -73,6 +76,7 @@ builder.Services.AddQueueMessageConsumer<GetOrgsFromRegistryResultConsumer, GetO
 builder.Services.AddQueueMessageConsumer<GetReposFromRegistryResultConsumer, GetRepositoriesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourcesFromRegistryResultConsumer, GetResourcesResultMessage>();
 builder.Services.AddQueueMessageConsumer<PostResourceToRepoResultConsumer, PostResourceToRepoResultMessage>();
+builder.Services.AddQueueMessageConsumer<PostResourceToOperatorResultConsumer, PostResourceToOperatorResultMessage>();
 builder.Services.AddQueueMessageConsumer<PostResourceToRegistryResultConsumer, PostResourceToRegistryResultMessage>();
 builder.Services.AddQueueMessageConsumer<PostRepoToRepoResultConsumer, PostRepoToRepoResultMessage>();
 builder.Services.AddQueueMessageConsumer<PostRepoToRegistryResultConsumer, PostRepoToRegistryResultMessage>();
@@ -81,6 +85,11 @@ builder.Services.AddQueueMessageConsumer<GetPipelinesFromRepoResultConsumer, Get
 builder.Services.AddQueueMessageConsumer<PostPipelineToRegistryResultConsumer, PostPipelineToRegistryResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetPipelinesFromRegistryResultConsumer, GetPipelinesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourceFilesFromRepoResultConsumer, GetResourceFilesFromRepoResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetResourceFilesFromOperatorResultConsumer, GetResourceFilesFromOperatorResultMessage>();
+builder.Services.AddQueueMessageConsumer<SendResourceToPeerResultConsumer, SendResourceToPeerResultMessage>();
+builder.Services.AddQueueMessageConsumer<ExecuteOperatorResultConsumer, ExecuteOperatorResultMessage>();
+
+
 
 // Handshake
 builder.Services.AddQueueMessageConsumer<HandshakeAckConsumer, HandshakeAckMessage>();

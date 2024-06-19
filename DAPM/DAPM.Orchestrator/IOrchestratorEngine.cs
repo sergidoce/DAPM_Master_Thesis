@@ -12,7 +12,10 @@ namespace DAPM.Orchestrator
         public void StartCreateRepositoryProcess(Guid ticketId, Guid organizationId, string name);
         public void StartGetResourcesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid? resourceId);
         public void StartGetResourceFilesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid resourceId);
-        public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, IEnumerable<FileDTO> files);
+        public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType,
+            FileDTO file);
+        public void StartPostOperatorProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType,
+            FileDTO sourceCodeFile, FileDTO dockerfileFile);
         public void StartCollabHandshakeProcess(Guid ticketId, string requestedPeerDomain);
         public void StartCollabHandshakeResponseProcess(Guid ticketId, Identity requesterPeerIdentity);
 
