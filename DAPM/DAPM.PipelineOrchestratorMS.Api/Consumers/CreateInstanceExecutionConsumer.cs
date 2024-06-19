@@ -1,5 +1,6 @@
 ﻿using DAPM.PipelineOrchestratorMS.Api.Engine.Interfaces;
 using RabbitMQLibrary.Interfaces;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPipelineOrchestrator;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
 
 namespace DAPM.PipelineOrchestratorMS.Api.Consumers
@@ -9,18 +10,31 @@ namespace DAPM.PipelineOrchestratorMS.Api.Consumers
 
         private ILogger<CreateInstanceExecutionConsumer> _logger;
         private IPipelineOrchestrationEngine _pipelineOrchestrationEngine;
+        private IQueueProducer<CreatePipelineExecutionResultMessage> _createExecutionResultProducer;
 
-        public CreateInstanceExecutionConsumer(ILogger<CreateInstanceExecutionConsumer> logger, IPipelineOrchestrationEngine pipelineOrchestrationEngine)
+        public CreateInstanceExecutionConsumer(ILogger<CreateInstanceExecutionConsumer> logger, 
+            IPipelineOrchestrationEngine pipelineOrchestrationEngine,
+            IQueueProducer<CreatePipelineExecutionResultMessage> createExecutionResultProducer)
         {
             _logger = logger;
             _pipelineOrchestrationEngine = pipelineOrchestrationEngine;
+            _createExecutionResultProducer = createExecutionResultProducer;
         }
         public Task ConsumeAsync(CreateInstanceExecutionMessage message)
         {
             _logger.LogInformation("CreateInstanceExecutionMessage received");
 
+            var executionId = _pipelineOrchestrationEngine.CreatePipelineExecutionInstance(message.Pipeline.Pipeline);
 
-            _pipelineOrchestrationEngine.CreateNewExecutionInstance(message.Pipeline);
+            var resultMessage = new CreatePipelineExecutionResultMessage()
+            {
+                TicketId = message.TicketId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                Succeeded = true,
+                PipelineExecutionId = executionId,
+            };
+
+            _createExecutionResultProducer.PublishMessage(resultMessage);
 
             return Task.CompletedTask;
         }

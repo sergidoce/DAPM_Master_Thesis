@@ -1,5 +1,7 @@
 ﻿using DAPM.Orchestrator.Processes;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPipelineOrchestrator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 
@@ -118,6 +120,36 @@ namespace DAPM.Orchestrator
         }
 
         public virtual void OnHandshakeAck(HandshakeAckMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnCreatePipelineExecutionResult(CreatePipelineExecutionResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnCommandEnqueued(CommandEnqueuedMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnGetResourceFilesFromOperatorResult(GetResourceFilesFromOperatorResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnPostResourceToOperatorResult(PostResourceToOperatorResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnSendResourceToPeerResult(SendResourceToPeerResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnExecuteOperatorResult(ExecuteOperatorResultMessage message)
         {
             return;
         }

@@ -17,16 +17,16 @@ namespace DAPM.Orchestrator.Processes
         private string _resourceType;
 
         //Resource Files
-        private IEnumerable<FileDTO> _files;
+        private FileDTO _file;
        
         public PostResourceProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, IEnumerable<FileDTO> files) 
+            Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, FileDTO file) 
             : base(engine, serviceProvider, ticketId)
         {
             _organizationId = organizationId;
             _repositoryId = repositoryId;
             _name = name;
-            _files = files;
+            _file = file;
             _resourceType = resourceType;
         }
 
@@ -42,7 +42,7 @@ namespace DAPM.Orchestrator.Processes
                 RepositoryId = _repositoryId,
                 Name = _name,
                 ResourceType = _resourceType,
-                Files = _files
+                File = _file
             };
 
             postResourceToRepoMessageProducer.PublishMessage(message);

@@ -7,8 +7,9 @@
         Faulted,
     }
 
-    public class ActionAck
+    public class ActionResultDTO
     {
+        public Guid ExecutionId { get; set; }
         public Guid StepId { get; set; }
         public ActionResult ActionResult { get; set; }
         public string Message { get; set; }

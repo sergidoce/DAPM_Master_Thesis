@@ -17,6 +17,6 @@ namespace RabbitMQLibrary.Messages.Repository
         public Guid RepositoryId { get; set; }
         public string Name { get; set; }
         public string ResourceType { get; set; }
-        public IEnumerable<FileDTO> Files { get; set; }
+        public FileDTO File { get; set; }
     }
 }

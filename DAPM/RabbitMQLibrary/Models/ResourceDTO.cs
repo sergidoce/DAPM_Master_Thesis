@@ -13,5 +13,6 @@ namespace RabbitMQLibrary.Models
         public Guid OrganizationId { get; set; }
         public Guid RepositoryId { get; set; }
         public string Type { get; set; }
+        public FileDTO? File { get; set; }
     }
 }

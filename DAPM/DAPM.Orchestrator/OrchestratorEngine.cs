@@ -1,5 +1,8 @@
 ﻿using DAPM.Orchestrator.Processes;
+using DAPM.Orchestrator.Processes.PipelineActions;
+using DAPM.Orchestrator.Processes.PipelineCommands;
 using DAPM.Orchestrator.Services.Models;
+using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Models;
 using System.Xml.Linq;
 
@@ -41,11 +44,25 @@ namespace DAPM.Orchestrator
             registerPeerProcess.StartProcess();
         }
 
+        public void StartCreatePipelineExecutionProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid pipelineId)
+        {
+            var createPipelineExecutionProcess = new CreatePipelineExecutionProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, pipelineId);
+            _processes[ticketId] = createPipelineExecutionProcess;
+            createPipelineExecutionProcess.StartProcess();
+        }
+
         public void StartCreateRepositoryProcess(Guid ticketId, Guid organizationId, string name)
         {
             var createRepositoryProcess = new CreateRepositoryProcess(this, _serviceProvider, ticketId, organizationId, name);
             _processes[ticketId] = createRepositoryProcess;
             createRepositoryProcess.StartProcess();
+        }
+
+        public void StartExecuteOperatorActionProcess(Guid ticketId, ExecuteOperatorActionDTO data)
+        {
+            var executeOperatorActionProcess = new ExecuteOperatorActionProcess(this, _serviceProvider, ticketId, data);
+            _processes[ticketId] = executeOperatorActionProcess;
+            executeOperatorActionProcess.StartProcess();
         }
 
         public void StartGetOrganizationProcess(Guid ticketId, Guid? organizationId)
@@ -83,6 +100,13 @@ namespace DAPM.Orchestrator
             getResourcesProcess.StartProcess();
         }
 
+        public void StartPipelineStartCommandProcess(Guid ticketId, Guid executionId)
+        {
+            var pipelineStartCommandProcess = new PipelineStartCommandProcess(this, _serviceProvider, ticketId, executionId);
+            _processes[ticketId] = pipelineStartCommandProcess;
+            pipelineStartCommandProcess.StartProcess();
+        }
+
         public void StartPostPipelineProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Pipeline pipeline, string name)
         {
             var postPipelineProcess = new PostPipelineProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, pipeline, name);
@@ -90,12 +114,27 @@ namespace DAPM.Orchestrator
             postPipelineProcess.StartProcess();
         }
 
-        public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, IEnumerable<FileDTO> files)
+        public void StartPostResourceProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, FileDTO file)
         {
-            var postResourceProcess = new PostResourceProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, name, resourceType, files);
+            var postResourceProcess = new PostResourceProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, name, resourceType, file);
             _processes[ticketId] = postResourceProcess;
             postResourceProcess.StartProcess();
         }
 
+        public void StartPostOperatorProcess(Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, FileDTO sourceCodeFile,
+            FileDTO dockerfileFile)
+        {
+            var postOperatorProcess = new PostOperatorProcess(this, _serviceProvider, ticketId, organizationId, repositoryId, name, resourceType, sourceCodeFile,
+                dockerfileFile);
+            _processes[ticketId] = postOperatorProcess;
+            postOperatorProcess.StartProcess();
+        }
+
+        public void StartTransferDataActionProcess(Guid ticketId, TransferDataActionDTO data)
+        {
+            var transferDataActionProcess = new TransferDataActionProcess(this, _serviceProvider, ticketId, data);
+            _processes[ticketId] = transferDataActionProcess;
+            transferDataActionProcess.StartProcess();
+        }
     }
 }

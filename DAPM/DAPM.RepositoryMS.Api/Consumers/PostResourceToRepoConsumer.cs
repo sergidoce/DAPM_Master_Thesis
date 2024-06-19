@@ -28,7 +28,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
         {
             _logger.LogInformation("PostResourceToRepoMessage received");
 
-            var resource = await _repositoryService.CreateNewResource(message.RepositoryId, message.Name, message.ResourceType, message.Files);
+            var resource = await _repositoryService.CreateNewResource(message.RepositoryId, message.Name, message.ResourceType, message.File);
 
             if (resource != null)
             {

@@ -36,21 +36,7 @@ namespace DAPM.Orchestrator.Services
             string jsonString = JsonSerializer.Serialize(identity);
             File.WriteAllText(_identityConfigurationPath, jsonString);
 
-            var postPeerProducer =  _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostPeerMessage>>();
-
-
-            var postPeerMessage = new PostPeerMessage()
-            {
-                TimeToLive = TimeSpan.FromMinutes(1),
-                Organization = new OrganizationDTO()
-                {
-                    Id = (Guid)identity.Id,
-                    Name = identity.Name,
-                    Domain = identity.Domain
-                }
-            };
-
-            postPeerProducer.PublishMessage(postPeerMessage);
+            PostIdentityToRegistry(identity);
 
             return identity;
         }
@@ -65,6 +51,7 @@ namespace DAPM.Orchestrator.Services
             }
             else
             {
+                PostIdentityToRegistry(identity);
                 return identity;
             }
         }
@@ -74,6 +61,24 @@ namespace DAPM.Orchestrator.Services
         {
             string jsonString = File.ReadAllText(_identityConfigurationPath);
             return JsonSerializer.Deserialize<Identity>(jsonString)!;
+        }
+
+        private void PostIdentityToRegistry(Identity identity)
+        {
+            var postPeerProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostPeerMessage>>();
+
+            var postPeerMessage = new PostPeerMessage()
+            {
+                TimeToLive = TimeSpan.FromMinutes(1),
+                Organization = new OrganizationDTO()
+                {
+                    Id = (Guid)identity.Id,
+                    Name = identity.Name,
+                    Domain = identity.Domain
+                }
+            };
+
+            postPeerProducer.PublishMessage(postPeerMessage);
         }
     }
 }

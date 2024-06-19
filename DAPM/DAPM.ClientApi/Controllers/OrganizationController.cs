@@ -1,4 +1,5 @@
 ﻿using DAPM.ClientApi.Models;
+using DAPM.ClientApi.Models.DTOs;
 using DAPM.ClientApi.Services;
 using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
@@ -41,9 +42,9 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpPost("{organizationId}/repositories")]
-        public async Task<ActionResult<Guid>> PostRepositoryToOrganization(Guid organizationId, [FromBody] string name)
+        public async Task<ActionResult<Guid>> PostRepositoryToOrganization(Guid organizationId, [FromBody] RepositoryApiDto repositoryDto)
         {
-            Guid id = _organizationService.PostRepositoryToOrganization(organizationId, name);
+            Guid id = _organizationService.PostRepositoryToOrganization(organizationId, repositoryDto.Name);
             return Ok(new ApiResponse { RequestName = "PostRepositoryToOrganization", TicketId = id });
         }
 

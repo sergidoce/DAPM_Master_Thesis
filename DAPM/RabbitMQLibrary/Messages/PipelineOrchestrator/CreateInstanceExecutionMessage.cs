@@ -14,6 +14,6 @@ namespace RabbitMQLibrary.Messages.PipelineOrchestrator
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
 
-        public Pipeline Pipeline { get; set; }
+        public PipelineDTO Pipeline { get; set; }
     }
 }

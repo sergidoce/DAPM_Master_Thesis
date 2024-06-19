@@ -17,6 +17,12 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
         }
         public async Task<Peer> AddPeer(Peer peer)
         {
+
+            if(_context.Peers.Any(p => p.Id == peer.Id))
+            {
+                return peer;
+            }
+
             await _context.Peers.AddAsync(peer);
             _context.SaveChanges();
             return peer;

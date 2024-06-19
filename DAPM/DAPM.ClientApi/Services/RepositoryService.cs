@@ -17,6 +17,7 @@ namespace DAPM.ClientApi.Services
         IQueueProducer<GetRepositoriesRequest> _getRepositoriesRequestProducer;
         IQueueProducer<GetResourcesRequest> _getResourcesRequestProducer;
         IQueueProducer<PostResourceRequest> _postResourceRequestProducer;
+        IQueueProducer<PostOperatorRequest> _postOperatorRequestProducer;
         IQueueProducer<PostPipelineRequest> _postPipelineRequestProducer;
         IQueueProducer<GetPipelinesRequest> _getPipelinesRequestProducer;
 
@@ -27,7 +28,8 @@ namespace DAPM.ClientApi.Services
             IQueueProducer<GetResourcesRequest> getResourcesRequestProducer,
             IQueueProducer<PostResourceRequest> postResourceRequestProducer,
             IQueueProducer<PostPipelineRequest> postPipelineRequestProducer,
-            IQueueProducer<GetPipelinesRequest> getPipelinesRequestProducer) 
+            IQueueProducer<GetPipelinesRequest> getPipelinesRequestProducer,
+            IQueueProducer<PostOperatorRequest> postOperatorRequestProducer) 
         {
             _ticketService = ticketService;
             _logger = logger;
@@ -36,6 +38,7 @@ namespace DAPM.ClientApi.Services
             _postResourceRequestProducer = postResourceRequestProducer;
             _postPipelineRequestProducer = postPipelineRequestProducer;
             _getPipelinesRequestProducer = getPipelinesRequestProducer;
+            _postOperatorRequestProducer = postOperatorRequestProducer;
         }
 
         public Guid GetRepositoryById(Guid organizationId, Guid repositoryId)
@@ -122,7 +125,6 @@ namespace DAPM.ClientApi.Services
         public Guid PostResourceToRepository(Guid organizationId, Guid repositoryId, string name, IFormFile resourceFile, string resourceType)
         {
             Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
-            var fileDTOs = new List<FileDTO>();
 
             MemoryStream stream = new MemoryStream();
             resourceFile.CopyTo(stream);
@@ -134,8 +136,6 @@ namespace DAPM.ClientApi.Services
                 Content = stream.ToArray()
             };
 
-            fileDTOs.Add(fileDTO);
-
             var message = new PostResourceRequest
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
@@ -144,11 +144,53 @@ namespace DAPM.ClientApi.Services
                 RepositoryId = repositoryId,
                 Name = name,
                 ResourceType = resourceType,
-                Files = fileDTOs,
+                File = fileDTO,
 
             };
 
             _postResourceRequestProducer.PublishMessage(message);
+
+            _logger.LogDebug("PostResourceRequest Enqueued");
+
+            return ticketId;
+        }
+
+        public Guid PostOperatorToRepository(Guid organizationId, Guid repositoryId, string name, IFormFile sourceCodeFile, IFormFile dockerfileFile, string resourceType)
+        {
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
+
+            MemoryStream sourceCodeStream = new MemoryStream();
+            MemoryStream dockerFileStream = new MemoryStream();
+            sourceCodeFile.CopyTo(sourceCodeStream);
+            dockerfileFile.CopyTo(dockerFileStream);
+
+            var sourceCodeFileDTO = new FileDTO()
+            {
+                Name = Path.GetFileNameWithoutExtension(sourceCodeFile.FileName),
+                Extension = Path.GetExtension(sourceCodeFile.FileName),
+                Content = sourceCodeStream.ToArray()
+            };
+
+            var dockerfileFileDTO = new FileDTO()
+            {
+                Name = Path.GetFileNameWithoutExtension(dockerfileFile.FileName),
+                Extension = Path.GetExtension(dockerfileFile.FileName),
+                Content = dockerFileStream.ToArray()
+            };
+
+            var message = new PostOperatorRequest
+            {
+                TimeToLive = TimeSpan.FromMinutes(1),
+                TicketId = ticketId,
+                OrganizationId = organizationId,
+                RepositoryId = repositoryId,
+                Name = name,
+                ResourceType = resourceType,
+                SourceCodeFile = sourceCodeFileDTO,
+                DockerfileFile = dockerfileFileDTO,
+            };
+
+            _postOperatorRequestProducer.PublishMessage(message);
 
             _logger.LogDebug("PostResourceRequest Enqueued");
 

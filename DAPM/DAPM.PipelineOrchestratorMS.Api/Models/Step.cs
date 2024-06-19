@@ -13,17 +13,21 @@
     public abstract class Step
     {
         public Guid Id { get; set; }
+        public Guid ExecutionId { get; set; }
         public StepStatus Status { get; set; }
         public List<Guid> PrerequisiteSteps { get; set; }
 
-        private IServiceProvider _serviceProvider;
+        protected IServiceProvider _serviceProvider;
+        protected IServiceScope _serviceScope;
 
-        public Step(IServiceProvider serviceProvider)
+        public Step(Guid executionId, IServiceProvider serviceProvider)
         {
             Id = Guid.NewGuid();
             Status = StepStatus.NotStarted;
             PrerequisiteSteps = new List<Guid>();
             _serviceProvider = serviceProvider;
+            _serviceScope = _serviceProvider.CreateScope();
+            ExecutionId = executionId;
         }
 
         public abstract void Execute();

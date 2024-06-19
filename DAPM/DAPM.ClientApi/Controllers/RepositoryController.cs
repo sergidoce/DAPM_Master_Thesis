@@ -51,6 +51,17 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse { RequestName = "PostResourceToRepository", TicketId = id });
         }
 
+        [HttpPost("{organizationId}/repositories/{repositoryId}/resources/operators")]
+        public async Task<ActionResult<Guid>> PostResourceToRepository(Guid organizationId, Guid repositoryId, [FromForm] OperatorForm resourceForm)
+        {
+            if (resourceForm.Name == null || resourceForm.SourceCodeFile == null)
+                return BadRequest();
+
+            Guid id = _repositoryService.PostOperatorToRepository(organizationId, repositoryId, resourceForm.Name, 
+                resourceForm.SourceCodeFile, resourceForm.DockerfileFile, resourceForm.ResourceType);
+            return Ok(new ApiResponse { RequestName = "PostOperatorToRepository", TicketId = id });
+        }
+
         [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines")]
         public async Task<ActionResult<Guid>> PostPipelineToRepository(Guid organizationId, Guid repositoryId, [FromBody]PipelineApiDto pipelineApiDto)
         {
