@@ -1,9 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+
+using RabbitMQLibrary.Models;
 
 namespace DAPM.OperatorMS.Api.Services.Interfaces
 {
     public interface IOperatorService
     {
-        Task<byte[]> ExecuteMiner(string operatorName, string parameter);
+        Task<FileDTO> ExecuteMiner(Guid executionId, Guid stepId);
     }
 }

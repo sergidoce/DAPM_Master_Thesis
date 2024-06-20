@@ -1,6 +1,10 @@
 using DAPM.OperatorMS.Api.Services.Interfaces;
 using DAPM.OperatorMS.Api.Services;
 using Microsoft.AspNetCore.Http.Features;
+using Docker.DotNet;
+using RabbitMQLibrary.Implementation;
+using RabbitMQLibrary.Extensions;
+using DAPM.OperatorMS.Api;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,33 +21,42 @@ builder.Services.Configure<FormOptions>(x =>
     x.MultipartHeadersLengthLimit = int.MaxValue;
 });
 
-builder.Services.AddCors(options =>
+// RabbitMQ
+builder.Services.AddQueueing(new QueueingConfigurationSettings
 {
-    options.AddPolicy("AllowAll", builder =>
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader());
+    RabbitMqConsumerConcurrency = 5,
+    RabbitMqHostname = "rabbitmq",
+    RabbitMqPort = 5672,
+    RabbitMqPassword = "guest",
+    RabbitMqUsername = "guest"
 });
 
+//Docker Daemon
+builder.Services.AddSingleton<DockerClient>(_ =>
+{
+    DockerClient client = new DockerClientConfiguration(
+    new Uri("unix:///var/run/docker.sock"))
+     .CreateClient();
+    return client;
+});
+
+builder.Services.AddSingleton<IOperatorEngine, OperatorEngine>();
+
 // Add services to the container.
+builder.Services.AddScoped<IOperatorService, OperatorService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<IOperatorService, OperatorService>();
-
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
 // Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseSwagger();
+app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
 
