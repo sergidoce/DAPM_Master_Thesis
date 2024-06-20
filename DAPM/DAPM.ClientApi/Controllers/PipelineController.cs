@@ -13,13 +13,12 @@ namespace DAPM.ClientApi.Controllers
     {
         private readonly ILogger<PipelineController> _logger;
         private readonly IPipelineService _pipelineService;
-        IQueueProducer<CreateInstanceExecutionMessage> _createInstanceProducer;
+        
 
         public PipelineController(ILogger<PipelineController> logger, IPipelineService pipelineService, IQueueProducer<CreateInstanceExecutionMessage> createInstanceProducer)
         {
             _logger = logger;
             _pipelineService = pipelineService;
-            _createInstanceProducer = createInstanceProducer;
         }
 
         [HttpGet("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}")]
@@ -29,21 +28,18 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse { RequestName = "GetPipelineById", TicketId = id });
         }
 
-        //[HttpPost("/pipelineExecutionTest")]
-        //public async Task<ActionResult<Guid>> PostPipelineToRepository([FromBody] PipelineApiDto pipelineApiDto)
-        //{
-        //    Guid id = Guid.NewGuid();
+        [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/executions")]
+        public async Task<ActionResult<Guid>> CreatePipelineExecutionInstance(Guid organizationId, Guid repositoryId, Guid pipelineId)
+        {
+            Guid id = _pipelineService.CreatePipelineExecution(organizationId, repositoryId, pipelineId);
+            return Ok(new ApiResponse { RequestName = "CreatePipelineExecutionInstance", TicketId = id });
+        }
 
-        //    var message = new CreateInstanceExecutionMessage()
-        //    {
-        //        TicketId = id,
-        //        TimeToLive = TimeSpan.FromMinutes(1),
-        //        Pipeline = pipelineApiDto.Pipeline,
-        //    };
-
-        //    _createInstanceProducer.PublishMessage(message);
-
-        //    return Ok(new ApiResponse { RequestName = "ExecutePipeline", TicketId = id });
-        //}
+        [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/executions/{executionId}/commands/start")]
+        public async Task<ActionResult<Guid>> PostStartCommand(Guid organizationId, Guid repositoryId, Guid pipelineId, Guid executionId)
+        {
+            Guid id = _pipelineService.PostStartCommand(organizationId, repositoryId, pipelineId, executionId);
+            return Ok(new ApiResponse { RequestName = "PostStartCommand", TicketId = id });
+        }
     }
 }

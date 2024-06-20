@@ -18,15 +18,21 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             _logger = logger;
         }
 
-
-        public Task<bool> DeletePeer(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
         public async Task<Peer> GetPeer(Guid id)
         {
             return await _peerRepository.GetPeerById(id);
+        }
+
+        public async Task<Peer> PostPeer(OrganizationDTO organizationDTO)
+        {
+            var peer = new Peer()
+            {
+                Id = organizationDTO.Id,
+                Name = organizationDTO.Name,
+                Domain = organizationDTO.Domain,
+            };
+
+            return await _peerRepository.AddPeer(peer);
         }
 
         public async Task<IEnumerable<Peer>> GetAllPeers()

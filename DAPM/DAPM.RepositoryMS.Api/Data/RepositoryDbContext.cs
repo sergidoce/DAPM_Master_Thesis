@@ -18,6 +18,7 @@ namespace DAPM.RepositoryMS.Api.Data
         public DbSet<Repository> Repositories { get; set; }
         public DbSet<Models.PostgreSQL.File>  Files { get; set; }
         public DbSet<Pipeline> Pipelines { get; set; }
+        public DbSet<Operator> Operators { get; set; }
 
 
         public void InitializeDatabase()
@@ -26,14 +27,6 @@ namespace DAPM.RepositoryMS.Api.Data
             {
                 Database.EnsureDeleted();
                 Database.Migrate();
-
-                Repository repository = new Repository()
-                {
-                    Id = new Guid("8746e302-e56e-46d2-83a2-dda343689a77"),
-                    Name = "DTU Repository"
-                };
-
-                Repositories.Add(repository);
 
                 SaveChanges();
             }

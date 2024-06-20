@@ -13,6 +13,7 @@ namespace RabbitMQLibrary.Messages.ClientApi
         public Guid RepositoryId { get; set; }
         public Guid? ResourceId { get; set; }
         public Guid? PipelineId { get; set; }
+        public Guid? ExecutionId { get; set; }
     }
 
     public class PostItemProcessResult : IQueueMessage

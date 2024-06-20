@@ -19,4 +19,8 @@
     <ProjectReference Include="..\RabbitMQLibrary\RabbitMQLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\Configuration\" />
+  </ItemGroup>
+
 </Project>

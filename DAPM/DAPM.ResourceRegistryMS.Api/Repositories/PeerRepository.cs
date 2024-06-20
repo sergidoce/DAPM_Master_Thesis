@@ -15,11 +15,17 @@ namespace DAPM.ResourceRegistryMS.Api.Repositories
             _logger = logger;
             _context = context;
         }
-        public async Task<bool> AddPeer(Peer peer)
+        public async Task<Peer> AddPeer(Peer peer)
         {
+
+            if(_context.Peers.Any(p => p.Id == peer.Id))
+            {
+                return peer;
+            }
+
             await _context.Peers.AddAsync(peer);
             _context.SaveChanges();
-            return true;
+            return peer;
         }
 
         public async Task<IEnumerable<Peer>> GetAllPeers()

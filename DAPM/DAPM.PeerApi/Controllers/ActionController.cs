@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace DAPM.PeerApi.Controllers
 {
     [ApiController]
-    [Route("actions")]
+    [Route("actions/")]
     public class ActionController : ControllerBase
     {
         private readonly ILogger<ActionController> _logger;
@@ -17,19 +17,23 @@ namespace DAPM.PeerApi.Controllers
             _actionService = actionService;
         }
 
-        [HttpPost("/send-data")]
+        [HttpPost("send-data")]
         public async Task<ActionResult<Guid>> PostSendDataAction([FromBody] SendDataActionDto actionDto)
         {
             throw new NotImplementedException();
         }
 
-        [HttpPost("/execute-algorithm")]
+        [HttpPost("execute-algorithm")]
         public async Task<ActionResult<Guid>> PostExecuteAlgorithmAction([FromBody] string name)
         {
             throw new NotImplementedException();
         }
 
-        
+        [HttpPost("action-result")]
+        public async Task<ActionResult> PostActionResult()
+        {
+            return Ok();
+        }
 
     }
 }

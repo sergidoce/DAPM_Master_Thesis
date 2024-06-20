@@ -1,5 +1,9 @@
-﻿using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
+﻿using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPipelineOrchestrator;
+using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
+using RabbitMQLibrary.Messages.PeerApi;
 using RabbitMQLibrary.Messages.Repository;
 
 namespace DAPM.Orchestrator
@@ -16,13 +20,25 @@ namespace DAPM.Orchestrator
         public void OnGetPipelinesFromRegistryResult(GetPipelinesResultMessage message);
         public void OnGetPipelinesFromRepoResult(GetPipelinesFromRepoResultMessage message);
         public void OnPostResourceToRepoResult(PostResourceToRepoResultMessage message);
+        public void OnPostResourceToOperatorResult(PostResourceToOperatorResultMessage message);
         public void OnPostResourceToRegistryResult(PostResourceToRegistryResultMessage message);
         public void OnPostPipelineToRepoResult(PostPipelineToRepoResultMessage message);
         public void OnPostPipelineToRegistryResult(PostPipelineToRegistryResultMessage message);
         public void OnCreateRepoInRepoResult(PostRepoToRepoResultMessage message);
         public void OnGetResourceFilesFromRepoResult(GetResourceFilesFromRepoResultMessage message);
+        public void OnGetResourceFilesFromOperatorResult(GetResourceFilesFromOperatorResultMessage message);
+        public void OnSendResourceToPeerResult(SendResourceToPeerResultMessage message);
 
 
+        public void OnHandshakeRequestResponse(HandshakeRequestResponseMessage message);
+        public void OnRegistryUpdate(RegistryUpdateMessage message);
+        public void OnApplyRegistryUpdateResult(ApplyRegistryUpdateResult message);
+        public void OnGetEntriesFromOrgResult(GetEntriesFromOrgResult message);
+        public void OnHandshakeAck(HandshakeAckMessage message);
+
+        public void OnCreatePipelineExecutionResult(CreatePipelineExecutionResultMessage message);
+        public void OnCommandEnqueued(CommandEnqueuedMessage message);
+        public void OnExecuteOperatorResult(ExecuteOperatorResultMessage message);
 
     }
 }

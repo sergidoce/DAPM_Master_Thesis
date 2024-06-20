@@ -45,6 +45,40 @@ namespace DAPM.RepositoryMS.Api.Migrations
                     b.ToTable("Files");
                 });
 
+            modelBuilder.Entity("DAPM.RepositoryMS.Api.Models.PostgreSQL.Operator", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("DockerfileFileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<Guid>("RepositoryId")
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("SourceCodeFileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("DockerfileFileId");
+
+                    b.HasIndex("RepositoryId");
+
+                    b.HasIndex("SourceCodeFileId");
+
+                    b.ToTable("Operators");
+                });
+
             modelBuilder.Entity("DAPM.RepositoryMS.Api.Models.PostgreSQL.Pipeline", b =>
                 {
                     b.Property<Guid>("Id")
@@ -111,6 +145,33 @@ namespace DAPM.RepositoryMS.Api.Migrations
                     b.HasIndex("RepositoryId");
 
                     b.ToTable("Resources");
+                });
+
+            modelBuilder.Entity("DAPM.RepositoryMS.Api.Models.PostgreSQL.Operator", b =>
+                {
+                    b.HasOne("DAPM.RepositoryMS.Api.Models.PostgreSQL.File", "DockerfileFile")
+                        .WithMany()
+                        .HasForeignKey("DockerfileFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAPM.RepositoryMS.Api.Models.PostgreSQL.Repository", "Repository")
+                        .WithMany()
+                        .HasForeignKey("RepositoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("DAPM.RepositoryMS.Api.Models.PostgreSQL.File", "SourceCodeFile")
+                        .WithMany()
+                        .HasForeignKey("SourceCodeFileId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DockerfileFile");
+
+                    b.Navigation("Repository");
+
+                    b.Navigation("SourceCodeFile");
                 });
 
             modelBuilder.Entity("DAPM.RepositoryMS.Api.Models.PostgreSQL.Pipeline", b =>
