@@ -1,6 +1,7 @@
 ﻿using DAPM.ClientApi.Models;
 using DAPM.ClientApi.Models.DTOs;
 using DAPM.ClientApi.Services.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
@@ -8,6 +9,7 @@ using RabbitMQLibrary.Messages.PipelineOrchestrator;
 namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
+    [EnableCors("AllowAll")]
     [Route("organizations/")]
     public class PipelineController : ControllerBase
     {

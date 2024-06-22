@@ -1,12 +1,14 @@
 ﻿using DAPM.ClientApi.Models;
 using DAPM.ClientApi.Services;
 using DAPM.ClientApi.Services.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
 
 namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
+    [EnableCors("AllowAll")]
     [Route("status")]
     public class StatusController : ControllerBase
     {
