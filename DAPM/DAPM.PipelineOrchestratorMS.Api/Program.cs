@@ -56,6 +56,8 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseCors("AllowAll");
+
 app.UseAuthorization();
 
 app.MapControllers();

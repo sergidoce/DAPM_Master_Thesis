@@ -2,12 +2,14 @@
 using DAPM.ClientApi.Models.DTOs;
 using DAPM.ClientApi.Services;
 using DAPM.ClientApi.Services.Interfaces;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQLibrary.Models;
 
 namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
+    [EnableCors("AllowAll")]
     [Route("organizations/")]
     public class RepositoryController : ControllerBase
     {
