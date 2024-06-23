@@ -84,18 +84,26 @@ namespace DAPM.Orchestrator.Processes
             var targetOrganizations = message.Organizations;
             var repositoriesList = new List<RepositoryDTO>() { _createdRepository};
 
+            if(targetOrganizations.Count() == 0)
+            {
+                FinishProcess();
+            }
 
-            SendRegistryUpdates(targetOrganizations, 
-                Enumerable.Empty<OrganizationDTO>(),
-                repositoriesList,
-                Enumerable.Empty<ResourceDTO>(),
-                Enumerable.Empty<PipelineDTO>());
+            else
+            {
+                SendRegistryUpdates(targetOrganizations,
+                    Enumerable.Empty<OrganizationDTO>(),
+                    repositoriesList,
+                    Enumerable.Empty<ResourceDTO>(),
+                    Enumerable.Empty<PipelineDTO>());
+            }
 
         }
 
         private void SendRegistryUpdates(IEnumerable<OrganizationDTO> targetOrganizations, IEnumerable<OrganizationDTO> organizations,
             IEnumerable<RepositoryDTO> repositories, IEnumerable<ResourceDTO> resources, IEnumerable<PipelineDTO> pipelines)
         {
+
             var sendRegistryUpdateProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendRegistryUpdateMessage>>();
             var identityDTO = new IdentityDTO()
             {
@@ -115,7 +123,7 @@ namespace DAPM.Orchestrator.Processes
 
             var registryUpdateMessages = new List<SendRegistryUpdateMessage>();
 
-            foreach (var organization in organizations)
+            foreach (var organization in targetOrganizations)
             {
                 var domain = organization.Domain;
                 var registryUpdateMessage = new SendRegistryUpdateMessage()
