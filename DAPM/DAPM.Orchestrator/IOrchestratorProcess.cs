@@ -34,7 +34,7 @@ namespace DAPM.Orchestrator
         public void OnRegistryUpdate(RegistryUpdateMessage message);
         public void OnApplyRegistryUpdateResult(ApplyRegistryUpdateResult message);
         public void OnGetEntriesFromOrgResult(GetEntriesFromOrgResult message);
-        public void OnHandshakeAck(HandshakeAckMessage message);
+        public void OnRegistryUpdateAck(RegistryUpdateAckMessage message);
 
         public void OnCreatePipelineExecutionResult(CreatePipelineExecutionResultMessage message);
         public void OnCommandEnqueued(CommandEnqueuedMessage message);

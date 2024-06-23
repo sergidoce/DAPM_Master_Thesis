@@ -18,7 +18,7 @@ namespace DAPM.Orchestrator
             FileDTO sourceCodeFile, FileDTO dockerfileFile);
         public void StartCollabHandshakeProcess(Guid ticketId, string requestedPeerDomain);
         public void StartCollabHandshakeResponseProcess(Guid ticketId, Identity requesterPeerIdentity);
-
+        public void StartRegistryUpdateProcess(Guid ticketId, RegistryUpdateDTO registryUpdate);
 
         // Pipeline Processes
         public void StartPostPipelineProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Pipeline pipeline, string name);

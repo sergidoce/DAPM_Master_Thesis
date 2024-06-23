@@ -14,5 +14,6 @@ namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
         public RegistryUpdateDTO RegistryUpdate { get; set; }
+        public bool IsPartOfHandshake { get; set; }
     }
 }
