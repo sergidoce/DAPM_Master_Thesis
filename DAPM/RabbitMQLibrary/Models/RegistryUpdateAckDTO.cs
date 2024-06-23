@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace RabbitMQLibrary.Models
 {
-    public class HandshakeAckDTO
+    public class RegistryUpdateAckDTO
     {
         public bool IsCompleted { get; set; }
     }

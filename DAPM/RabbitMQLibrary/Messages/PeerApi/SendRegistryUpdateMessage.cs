@@ -16,5 +16,6 @@ namespace RabbitMQLibrary.Messages.PeerApi
         public IdentityDTO SenderPeerIdentity { get; set; }
         public string TargetPeerDomain { get; set; }
         public RegistryUpdateDTO RegistryUpdate { get; set; }
+        public bool IsPartOfHandshake { get; set; }
     }
 }

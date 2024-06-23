@@ -6,15 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages.PeerApi.Handshake
+namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi
 {
-    public class SendHandshakeAckMessage : IQueueMessage
+    public class RegistryUpdateAckMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public IdentityDTO SenderPeerIdentity { get; set; }
-        public string TargetPeerDomain { get; set; }
-        public HandshakeAckDTO HandshakeAck { get; set; }
+        public IdentityDTO PeerSenderIdentity { get; set; }
+        public RegistryUpdateAckDTO RegistryUpdateAck { get; set; }
     }
 }

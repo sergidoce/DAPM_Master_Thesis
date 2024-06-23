@@ -117,18 +117,19 @@ namespace DAPM.Orchestrator.Processes
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = senderIdentityDto,
                 TargetPeerDomain = _requesterPeerIdentity.Domain,
-                RegistryUpdate = registryUpdate
+                RegistryUpdate = registryUpdate,
+                IsPartOfHandshake = true
 
             };
 
             sendRegistryUpdateProducer.PublishMessage(sendRegistryUpdateMessage);
         }
 
-        public override void OnHandshakeAck(HandshakeAckMessage message)
+        public override void OnRegistryUpdateAck(RegistryUpdateAckMessage message)
         {
 
             _logger.LogInformation("HANDSHAKE ACK RECEIVED");
-            var sendHandshakeAckProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendHandshakeAckMessage>>();
+            var sendHandshakeAckProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendRegistryUpdateAckMessage>>();
 
             var senderIdentityDto = new IdentityDTO()
             {
@@ -137,13 +138,13 @@ namespace DAPM.Orchestrator.Processes
                 Domain = _localPeerIdentity.Domain,
             };
 
-            var sendHandshakeAckMessage = new SendHandshakeAckMessage()
+            var sendHandshakeAckMessage = new SendRegistryUpdateAckMessage()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = senderIdentityDto,
                 TargetPeerDomain = _requesterPeerIdentity.Domain,
-                HandshakeAck = new HandshakeAckDTO() { IsCompleted = true }
+                RegistryUpdateAck = new RegistryUpdateAckDTO() { IsCompleted = true }
 
             };
 
