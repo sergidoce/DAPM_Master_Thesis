@@ -92,7 +92,7 @@ builder.Services.AddQueueMessageConsumer<ExecuteOperatorResultConsumer, ExecuteO
 
 
 // Handshake
-builder.Services.AddQueueMessageConsumer<HandshakeAckConsumer, HandshakeAckMessage>();
+builder.Services.AddQueueMessageConsumer<RegistryUpdateAckConsumer, RegistryUpdateAckMessage>();
 builder.Services.AddQueueMessageConsumer<HandshakeRequestResponseConsumer, HandshakeRequestResponseMessage>();
 builder.Services.AddQueueMessageConsumer<RegistryUpdateConsumer, RegistryUpdateMessage>();
 builder.Services.AddQueueMessageConsumer<ApplyRegistryUpdateResultConsumer, ApplyRegistryUpdateResult>();

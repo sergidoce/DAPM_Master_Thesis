@@ -5,19 +5,19 @@ using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 
 namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromPeerApi
 {
-    public class HandshakeAckConsumer : IQueueConsumer<HandshakeAckMessage>
+    public class RegistryUpdateAckConsumer : IQueueConsumer<RegistryUpdateAckMessage>
     {
         private IOrchestratorEngine _orchestratorEngine;
 
-        public HandshakeAckConsumer(IOrchestratorEngine orchestratorEngine)
+        public RegistryUpdateAckConsumer(IOrchestratorEngine orchestratorEngine)
         {
             _orchestratorEngine = orchestratorEngine;
         }
 
-        public Task ConsumeAsync(HandshakeAckMessage message)
+        public Task ConsumeAsync(RegistryUpdateAckMessage message)
         {
             OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
-            process.OnHandshakeAck(message);
+            process.OnRegistryUpdateAck(message);
 
             return Task.CompletedTask;
         }

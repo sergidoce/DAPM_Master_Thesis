@@ -32,12 +32,6 @@ namespace DAPM.PeerApi.Controllers
             return Ok("Handshake request response received");
         }
 
-        [HttpPost("ack")]
-        public async Task<ActionResult> PostHandshakeAck([FromBody] HandshakeAckDto handshakeAckDto)
-        {
-            _handshakeService.OnHandshakeAck(handshakeAckDto.HandshakeId,
-                handshakeAckDto.SenderIdentity, handshakeAckDto);
-            return Ok("Handshake ack received");
-        }
+
     }
 }

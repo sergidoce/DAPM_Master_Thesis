@@ -5,6 +5,7 @@ using DAPM.Orchestrator.Services.Models;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Models;
 using System.Xml.Linq;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DAPM.Orchestrator
 {
@@ -135,6 +136,13 @@ namespace DAPM.Orchestrator
             var transferDataActionProcess = new TransferDataActionProcess(this, _serviceProvider, ticketId, data);
             _processes[ticketId] = transferDataActionProcess;
             transferDataActionProcess.StartProcess();
+        }
+
+        public void StartRegistryUpdateProcess(Guid ticketId, RegistryUpdateDTO registryUpdate, IdentityDTO senderIdentity)
+        {
+            var registryUpdateProcess = new RegistryUpdateProcess(this, _serviceProvider, ticketId, registryUpdate, senderIdentity);
+            _processes[ticketId] = registryUpdateProcess;
+            registryUpdateProcess.StartProcess();
         }
     }
 }

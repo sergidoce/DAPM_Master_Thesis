@@ -29,7 +29,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
         public async Task ConsumeAsync(GetEntriesFromOrgMessage message)
         {
             var peer = await _peerService.GetPeer(message.OrganizationId);
-            var repositories = await _peerService.GetRepositoriesOfOrganization(message.OrganizationId);
+            var repositories = (await _peerService.GetRepositoriesOfOrganization(message.OrganizationId)).ToList();
             var resources = new List<Models.Resource>();
             var pipelines = new List<Models.Pipeline>();
 

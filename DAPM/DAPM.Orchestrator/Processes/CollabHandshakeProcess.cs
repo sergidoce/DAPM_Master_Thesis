@@ -109,7 +109,8 @@ namespace DAPM.Orchestrator.Processes
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = senderIdentityDto,
                 TargetPeerDomain = _requestedPeerDomain,
-                RegistryUpdate = registryUpdate 
+                RegistryUpdate = registryUpdate,
+                IsPartOfHandshake = true
                 
             };
 
@@ -136,7 +137,7 @@ namespace DAPM.Orchestrator.Processes
 
         public override void OnApplyRegistryUpdateResult(ApplyRegistryUpdateResult message)
         {
-            var sendHandshakeAckProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendHandshakeAckMessage>>();
+            var sendRegistryUpdateAckProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendRegistryUpdateAckMessage>>();
 
             var senderIdentityDto = new IdentityDTO()
             {
@@ -145,22 +146,22 @@ namespace DAPM.Orchestrator.Processes
                 Domain = _localPeerIdentity.Domain,
             };
 
-            var sendHandshakeAckMessage = new SendHandshakeAckMessage()
+            var sendRegistryUpdateAckMessage = new SendRegistryUpdateAckMessage()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = senderIdentityDto,
                 TargetPeerDomain = _requestedPeerDomain,
-                HandshakeAck = new HandshakeAckDTO() { IsCompleted = true }
+                RegistryUpdateAck = new RegistryUpdateAckDTO() { IsCompleted = true }
 
             };
 
-            sendHandshakeAckProducer.PublishMessage(sendHandshakeAckMessage);
+            sendRegistryUpdateAckProducer.PublishMessage(sendRegistryUpdateAckMessage);
         }
 
-        public override void OnHandshakeAck(HandshakeAckMessage message)
+        public override void OnRegistryUpdateAck(RegistryUpdateAckMessage message)
         {
-            _logger.LogInformation("HANDSHAKE ACK RECEIVED");
+            _logger.LogInformation("REGISTRY UPDATE ACK RECEIVED");
             var handshakeProcessResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<CollabHandshakeProcessResult>>();
 
 
@@ -169,7 +170,7 @@ namespace DAPM.Orchestrator.Processes
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 RequestedPeerIdentity = message.PeerSenderIdentity,
-                Succeeded = message.HandshakeAck.IsCompleted,
+                Succeeded = message.RegistryUpdateAck.IsCompleted,
                 Message = "The handshake was successful"
                
             };
