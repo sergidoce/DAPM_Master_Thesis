@@ -84,19 +84,13 @@ namespace DAPM.Orchestrator.Processes
             var targetOrganizations = message.Organizations;
             var repositoriesList = new List<RepositoryDTO>() { _createdRepository};
 
-            if(targetOrganizations.Count() == 0)
-            {
-                FinishProcess();
-            }
-
-            else
-            {
-                SendRegistryUpdates(targetOrganizations,
-                    Enumerable.Empty<OrganizationDTO>(),
-                    repositoriesList,
-                    Enumerable.Empty<ResourceDTO>(),
-                    Enumerable.Empty<PipelineDTO>());
-            }
+            
+            SendRegistryUpdates(targetOrganizations,
+                Enumerable.Empty<OrganizationDTO>(),
+                repositoriesList,
+                Enumerable.Empty<ResourceDTO>(),
+                Enumerable.Empty<PipelineDTO>());
+            
 
         }
 
@@ -125,6 +119,10 @@ namespace DAPM.Orchestrator.Processes
 
             foreach (var organization in targetOrganizations)
             {
+
+                if (organization.Id == _localPeerIdentity.Id)
+                    continue;
+
                 var domain = organization.Domain;
                 var registryUpdateMessage = new SendRegistryUpdateMessage()
                 {
@@ -141,8 +139,15 @@ namespace DAPM.Orchestrator.Processes
                 _registryUpdatesNotCompletedCounter++;
             }
 
-            foreach(var message in registryUpdateMessages)
-                sendRegistryUpdateProducer.PublishMessage(message);
+            if (registryUpdateMessages.Count() == 0)
+            {
+                FinishProcess();
+            }
+            else
+            {
+                foreach (var message in registryUpdateMessages)
+                    sendRegistryUpdateProducer.PublishMessage(message);
+            }
 
         }
 
