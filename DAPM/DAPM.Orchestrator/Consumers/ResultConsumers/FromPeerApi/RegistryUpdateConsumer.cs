@@ -24,7 +24,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromPeerApi
             }
             else
             {
-                _orchestratorEngine.StartRegistryUpdateProcess(message.TicketId, message.RegistryUpdate);
+                _orchestratorEngine.StartRegistryUpdateProcess(message.TicketId, message.RegistryUpdate, message.SenderIdentity);
             }
             
             return Task.CompletedTask;

@@ -32,6 +32,7 @@ namespace DAPM.PeerApi.Services
             var message = new RegistryUpdateMessage()
             {
                 TicketId = (Guid)registryUpdateDto.RegistryUpdateId,
+                SenderIdentity = registryUpdateDto.SenderIdentity,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 RegistryUpdate = registryUpdateDTO,
                 IsPartOfHandshake = registryUpdateDto.IsPartOfHandshake,

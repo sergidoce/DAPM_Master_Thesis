@@ -12,12 +12,13 @@ namespace DAPM.Orchestrator.Processes
     public class RegistryUpdateProcess : OrchestratorProcess
     {
         private RegistryUpdateDTO _registryUpdateDTO;
+        private IdentityDTO _senderIdentityDTO;
 
-
-        public RegistryUpdateProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, RegistryUpdateDTO registryUpdateDTO)
+        public RegistryUpdateProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, RegistryUpdateDTO registryUpdateDTO, IdentityDTO senderIdentity)
             : base(engine, serviceProvider, ticketId)
         {
             _registryUpdateDTO = registryUpdateDTO;
+            _senderIdentityDTO = senderIdentity;
         }
 
         public override void StartProcess()
@@ -51,6 +52,7 @@ namespace DAPM.Orchestrator.Processes
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = identityDTO,
+                TargetPeerDomain = _senderIdentityDTO.Domain,
                 RegistryUpdateAck = new RegistryUpdateAckDTO() { IsCompleted = true }
             };
 

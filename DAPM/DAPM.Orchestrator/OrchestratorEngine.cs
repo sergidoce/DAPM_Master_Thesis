@@ -138,9 +138,9 @@ namespace DAPM.Orchestrator
             transferDataActionProcess.StartProcess();
         }
 
-        public void StartRegistryUpdateProcess(Guid ticketId, RegistryUpdateDTO registryUpdate)
+        public void StartRegistryUpdateProcess(Guid ticketId, RegistryUpdateDTO registryUpdate, IdentityDTO senderIdentity)
         {
-            var registryUpdateProcess = new RegistryUpdateProcess(this, _serviceProvider, ticketId, registryUpdate);
+            var registryUpdateProcess = new RegistryUpdateProcess(this, _serviceProvider, ticketId, registryUpdate, senderIdentity);
             _processes[ticketId] = registryUpdateProcess;
             registryUpdateProcess.StartProcess();
         }
