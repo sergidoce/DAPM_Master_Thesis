@@ -5,6 +5,8 @@ using Docker.DotNet;
 using RabbitMQLibrary.Implementation;
 using RabbitMQLibrary.Extensions;
 using DAPM.OperatorMS.Api;
+using DAPM.OperatorMS.Api.Consumers;
+using RabbitMQLibrary.Messages.Operator;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -43,7 +45,12 @@ builder.Services.AddSingleton<DockerClient>(_ =>
 builder.Services.AddSingleton<IOperatorEngine, OperatorEngine>();
 
 // Add services to the container.
-builder.Services.AddScoped<IOperatorService, OperatorService>();
+builder.Services.AddScoped<IDockerService, DockerService>();
+
+// Add consumers
+builder.Services.AddQueueMessageConsumer<GetExecutionOutputMessageConsumer, GetExecutionOutputMessage>();
+builder.Services.AddQueueMessageConsumer<ExecuteOperatorMessageConsumer, ExecuteOperatorMessage>();
+builder.Services.AddQueueMessageConsumer<PostInputResourceMessageConsumer, PostInputResourceMessage>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

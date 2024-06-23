@@ -1,41 +1,37 @@
-﻿using DAPM.OperatorMS.Api.Processes;
+﻿using DAPM.OperatorMS.Api.Services;
 using RabbitMQLibrary.Messages.Operator;
 
 namespace DAPM.OperatorMS.Api
 {
     public class OperatorEngine : IOperatorEngine
     {
-        private Dictionary<Guid, OperatorProcess> _processes;
+        private Dictionary<Guid, OperatorExecution> _executions;
         private IServiceProvider _serviceProvider;
+        private DockerService _dockerService;
 
-        public OperatorEngine(IServiceProvider serviceProvider) 
+        public OperatorEngine(IServiceProvider serviceProvider, DockerService dockerService) 
         {
-            _processes = new Dictionary<Guid, OperatorProcess>();
+            _executions = new Dictionary<Guid, OperatorExecution>();
             _serviceProvider = serviceProvider;
+            _dockerService = dockerService;
         }
 
-        public void DeleteProcess(Guid processId) 
+        public void DeleteExecution(Guid executionId) 
         {
-            _processes.Remove(processId);
+            _executions.Remove(executionId);
         }
 
-        public OperatorProcess GetProcess(Guid processId)
+        public OperatorExecution GetExecution(Guid executionId)
         {
-            return _processes[processId];
+            return _executions[executionId];
         }
 
-        public void StartStoreFilesProcess(StoreFilesForExecutionMessage message) 
+        public async Task<bool> StartOperatorExecution(ExecuteOperatorMessage message)
         {
-            var storeFilesProcess = new StoreFilesProcess(this, _serviceProvider, message.TicketId, message);
-            _processes[message.TicketId] = storeFilesProcess;
-            storeFilesProcess.StartProcess();
-        }
-
-        public void StartExecuteMinerProcess(ExecuteMinerMessage message)
-        {
-            var executeMinerProcess = new ExecuteMinerProcess(this, _serviceProvider, message.TicketId, message);
-            _processes[message.TicketId] = executeMinerProcess;
-            executeMinerProcess.StartProcess();
+            var operatorExecution = new OperatorExecution(this, message.TicketId, message.PipelineExecutionId, message.OutputResourceId, message.SourceCode, message.Dockerfile, _dockerService);
+            _executions[message.TicketId] = operatorExecution;
+            bool succeeded = await operatorExecution.StartExecution();
+            return succeeded;
         }
     }
 }

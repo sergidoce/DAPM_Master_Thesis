@@ -74,9 +74,9 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         private void RetrieveResourceFromOperatorMs()
         {
-            var getResourceFilesProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetResourceFilesFromOperatorMessage>>();
+            var getResourceFilesProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetExecutionOutputMessage>>();
 
-            var message = new GetResourceFilesFromOperatorMessage()
+            var message = new GetExecutionOutputMessage()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
@@ -88,7 +88,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             getResourceFilesProducer.PublishMessage(message);
         }
 
-        public override void OnGetResourceFilesFromOperatorResult(GetResourceFilesFromOperatorResultMessage message) 
+        public override void OnGetResourceFilesFromOperatorResult(GetExecutionOutputResultMessage message) 
         {
             _resourceFile = message.Files.First();
 
@@ -157,9 +157,9 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             }
             else
             {
-                var postResourceToOperatorMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostResourceToOperatorMessage>>();
+                var postResourceToOperatorMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostInputResourceMessage>>();
 
-                var message = new PostResourceToOperatorMessage()
+                var message = new PostInputResourceMessage()
                 {
                     TicketId = _ticketId,
                     TimeToLive = TimeSpan.FromMinutes(1),
@@ -172,7 +172,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         }
 
-        public override void OnPostResourceToOperatorResult(PostResourceToOperatorResultMessage message)
+        public override void OnPostResourceToOperatorResult(PostInputResourceResultMessage message)
         {
             SendActionResult();
         }

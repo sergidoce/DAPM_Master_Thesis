@@ -4,9 +4,8 @@ namespace DAPM.OperatorMS.Api
 {
     public interface IOperatorEngine
     {
-        public void DeleteProcess(Guid processId);
-        public OperatorProcess GetProcess(Guid processId);
-        public void StartStoreFilesProcess(StoreFilesForExecutionMessage message);
-        public void StartExecuteMinerProcess(ExecuteMinerMessage message);
+        public void DeleteExecution(Guid processId);
+        public OperatorExecution GetExecution(Guid processId);
+        public Task<bool> StartOperatorExecution(ExecuteOperatorMessage message);
     }
 }
