@@ -12,5 +12,6 @@ namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
+        public bool Succeeded { get; set; }
     }
 }
