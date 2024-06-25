@@ -85,6 +85,7 @@ builder.Services.AddQueueMessageConsumer<GetPipelinesFromRepoResultConsumer, Get
 builder.Services.AddQueueMessageConsumer<PostPipelineToRegistryResultConsumer, PostPipelineToRegistryResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetPipelinesFromRegistryResultConsumer, GetPipelinesResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourceFilesFromRepoResultConsumer, GetResourceFilesFromRepoResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetOperatorFilesFromRepoResultConsumer, GetOperatorFilesFromRepoResultMessage>();
 builder.Services.AddQueueMessageConsumer<GetResourceFilesFromOperatorResultConsumer, GetExecutionOutputResultMessage>();
 builder.Services.AddQueueMessageConsumer<SendResourceToPeerResultConsumer, SendResourceToPeerResultMessage>();
 builder.Services.AddQueueMessageConsumer<ExecuteOperatorResultConsumer, ExecuteOperatorResultMessage>();

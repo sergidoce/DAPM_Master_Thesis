@@ -37,6 +37,8 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         private FileDTO _resourceFile;
         private ResourceDTO _resource;
 
+        private string? _destinationName;
+
         public TransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, TransferDataActionDTO data) 
             : base(engine, serviceProvider, ticketId)
         {
@@ -47,8 +49,13 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             _repositoryId = data.OriginRepositoryId;
             _resourceId = data.OriginResourceId;
 
+            _sourceStorageMode = data.SourceStorageMode;
+            _destinationStorageMode = data.DestinationStorageMode;
+
             _destinationOrganizationId = data.DestinationOrganizationId;
             _destinationRepositoryId = data.DestinationRepositoryId;
+
+            _destinationName = data.DestinationName;
 
 
             var identityService = _serviceScope.ServiceProvider.GetRequiredService<IIdentityService>();
@@ -80,8 +87,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
-                StepId = _stepId,
-                ExecutionId = _executionId,
+                PipelineExecutionId = _executionId,
                 ResourceId = _resourceId
             };
 
@@ -90,7 +96,8 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         public override void OnGetResourceFilesFromOperatorResult(GetExecutionOutputResultMessage message) 
         {
-            _resourceFile = message.Files.First();
+            _resource = message.OutputResource;
+            _resourceFile = message.OutputResource.File;
 
             if (_destinationStorageMode == 1)
             {
@@ -124,7 +131,8 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         public override void OnGetResourceFilesFromRepoResult(GetResourceFilesFromRepoResultMessage message)
         {
-            _resourceFile = message.Files.First();
+            _resource = message.Resource;
+            _resourceFile = message.Resource.File;
 
             if(_destinationStorageMode == 1)
             {
@@ -163,8 +171,8 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
                 {
                     TicketId = _ticketId,
                     TimeToLive = TimeSpan.FromMinutes(1),
-                    ResourceId = _resourceId,
-                    Files = new List<FileDTO>() { _resourceFile },
+                    PipelineExecutionId = _executionId,
+                    Resource =  _resource,
                 };
 
                 postResourceToOperatorMessageProducer.PublishMessage(message);
@@ -200,14 +208,22 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             {
                 var postResourceToRepoMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostResourceToRepoMessage>>();
 
+                var name = string.Empty;
+                if(_destinationName != null)
+                {
+                    name = _destinationName;
+                }
+                else
+                    name = _resource.Name;
+
                 var message = new PostResourceToRepoMessage()
                 {
                     TicketId = _ticketId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     OrganizationId = _organizationId,
                     RepositoryId = (Guid)_destinationRepositoryId,
-                    Name = "test",
-                    ResourceType = "test",
+                    Name = name,
+                    ResourceType = "pipeline result",
                     File = _resourceFile,
                 };
 

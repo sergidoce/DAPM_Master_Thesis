@@ -36,9 +36,9 @@ namespace DAPM.RepositoryMS.Api.Repositories
         }
 
   
-        public Task<Resource> GetResourceById(Guid repositoryId, Guid resourceId)
+        public async Task<Resource> GetResourceById(Guid repositoryId, Guid resourceId)
         {
-            throw new NotImplementedException();
+            return _repositoryDbContext.Resources.First(r => r.Id == resourceId && r.RepositoryId == repositoryId);
         }
     }
 }

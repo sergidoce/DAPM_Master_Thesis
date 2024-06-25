@@ -6,14 +6,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RabbitMQLibrary.Messages.Operator
+namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo
 {
-    public class PostInputResourceMessage : IQueueMessage
+    public class GetOperatorFilesFromRepoResultMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public Guid PipelineExecutionId { get; set; }
-        public ResourceDTO Resource { get; set; }
+        public ResourceDTO SourceCodeResource { get; set; }
+        public FileDTO DockerfileFile { get; set; }
     }
 }

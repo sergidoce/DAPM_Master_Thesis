@@ -28,7 +28,7 @@ namespace DAPM.OperatorMS.Api.Services
             {
                 Directory.CreateDirectory(inputFilesDirPath);
                 Directory.CreateDirectory(outputFilesDirPath);
-                var filePath = Path.Combine(inputFilesDirPath, $"{inputResource.RepositoryId}{inputResource.File.Extension}");
+                var filePath = Path.Combine(inputFilesDirPath, $"{inputResource.Id}{inputResource.File.Extension}");
                 File.WriteAllBytes(filePath, inputResource.File.Content);
             }
             catch (Exception ex)
@@ -81,11 +81,17 @@ namespace DAPM.OperatorMS.Api.Services
                 byte[] outputFileBytes = File.ReadAllBytes(outputFilePath);
                 string extension = Path.GetExtension(outputFilePath);
 
+                var fileDTO = new FileDTO()
+                {
+                    Name = outputResourceId.ToString(),
+                    Content = outputFileBytes,
+                    Extension = ".txt"
+                };
+
                 ResourceDTO outputResource = new ResourceDTO();
                 outputResource.Id = pipelineExecutionId;
-                outputResource.File.Content = outputFileBytes;
-                outputResource.File.Extension = extension;
-
+                outputResource.File = fileDTO;
+            
                 return outputResource;
             }
             catch (Exception ex)
@@ -101,7 +107,7 @@ namespace DAPM.OperatorMS.Api.Services
             string directory = Directory.GetCurrentDirectory();
             string registryPath = Path.Combine(directory, "registry");
 
-            Tuple<FileStream, string> sourceCode = GetFileFromVolume(algorithmFilesDirPath, $"{resourceId}");
+            Tuple<FileStream, string> sourceCode = GetFileFromVolume(algorithmFilesDirPath, $"{resourceId}.py");
             Tuple<FileStream, string> dockerFile = GetFileFromVolume(algorithmFilesDirPath, "Dockerfile");
 
             // Create the registry folder if it doesn't exist
@@ -166,7 +172,15 @@ namespace DAPM.OperatorMS.Api.Services
 
             IEnumerable<AuthConfig> authConfigs = Enumerable.Empty<AuthConfig>();
             IDictionary<string, string> headers = new Dictionary<string, string>();
-            IProgress<JSONMessage> progress = new Progress<JSONMessage>(_ => { });
+            IProgress<JSONMessage> progress = new Progress<JSONMessage>(e => {
+                Console.WriteLine($"From: {e.From}");
+                Console.WriteLine($"Status: {e.Status}");
+                Console.WriteLine($"Stream: {e.Stream}");
+                Console.WriteLine($"ID: {e.ID}");
+                Console.WriteLine($"Progress: {e.ProgressMessage}");
+                Console.WriteLine($"Error: {e.ErrorMessage}");
+            });
+           
 
             using (var tarFileStream = File.OpenRead(tarFilePath))
             {
@@ -259,38 +273,39 @@ namespace DAPM.OperatorMS.Api.Services
             return Tuple.Create(fileStream, fileNameWithExtension);
         }
 
-        public async Task ReplaceDockerfilePlaceholders(Guid pipelineExecutionId, Guid outputResourceId)
+        public async Task ReplaceDockerfilePlaceholders(Guid pipelineExecutionId, Guid outputResourceId, Guid operatorId)
         {
             string inputFilesPath = $"/app/shared/{pipelineExecutionId}/InputFiles";
             string outputFilePath = $"/app/shared/{pipelineExecutionId}/OutputFiles/{outputResourceId}.*";
-            string dockerfilePath = $"/app/shared/{pipelineExecutionId}/Algorithm/Dockerfile";
+            string dockerfilePath = $"/app/shared/{pipelineExecutionId}/Algorithm/{operatorId}/Dockerfile";
             string[] filePaths = Directory.GetFiles(inputFilesPath);
 
             string dockerfileContent = File.ReadAllText(dockerfilePath);
-            var newDockerfileContent = string.Empty;
 
             if (filePaths.Length == 1)
             {
                 var inputRegex = new Regex(@"\*input\*");
-                newDockerfileContent = inputRegex.Replace(dockerfileContent, filePaths[0]);
+                dockerfileContent = inputRegex.Replace(dockerfileContent, filePaths[0]);
             }
             else if (filePaths.Length == 2)
             {
                 var inputRegex1 = new Regex(@"\*input1\*");
                 var inputRegex2 = new Regex(@"\*input2\*");
-                newDockerfileContent = inputRegex1.Replace(dockerfileContent, filePaths[0]);
-                newDockerfileContent = inputRegex2.Replace(newDockerfileContent, filePaths[1]);
+                dockerfileContent = inputRegex1.Replace(dockerfileContent, filePaths[0]);
+                dockerfileContent = inputRegex2.Replace(dockerfileContent, filePaths[1]);
             }
             else
             {
                 throw new InvalidOperationException("There must be one or two input files.");
             }
 
-            string outputFile = Directory.GetFiles(Path.GetDirectoryName(outputFilePath), Path.GetFileNameWithoutExtension(outputFilePath) + ".*")[0];
             var outputRegex = new Regex(@"\*output\*");
-            newDockerfileContent = outputRegex.Replace(newDockerfileContent, outputFile);
+            dockerfileContent = outputRegex.Replace(dockerfileContent, outputFilePath);
 
-            await File.WriteAllTextAsync(dockerfilePath, newDockerfileContent);
+            var algorithmRegex = new Regex(@"operator\.py");
+            dockerfileContent = algorithmRegex.Replace(dockerfileContent, $"{operatorId}.py");
+
+            await File.WriteAllTextAsync(dockerfilePath, dockerfileContent);
         }
     }
 }

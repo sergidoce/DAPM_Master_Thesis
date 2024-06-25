@@ -16,13 +16,13 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         private Guid _executionId;
 
         private Guid _operatorOrganizationId;
-        private Guid _operatorRepositoryId;
+        private Guid? _operatorRepositoryId;
         private Guid _operatorResourceId;
 
         private List<ResourceDTO> _inputResources;
-        private List<ResourceDTO> _outputResources;
+        private Guid _outputResourceId;
 
-
+        private ResourceDTO _operatorResource;
         private FileDTO _operatorSourceCode;
         private FileDTO _operatorDockerFile;
 
@@ -38,33 +38,42 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             _operatorResourceId = data.OperatorResource.Id;
 
             _inputResources = data.InputResources;
-            _outputResources = data.OutputResources;
+            _outputResourceId = data.OutputResourceId;
         }
 
 
         public override void StartProcess()
         {
-            var getResourceFilesProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetResourceFilesFromRepoMessage>>();
+            var getResourceFilesProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetOperatorFilesFromRepoMessage>>();
 
-            var message = new GetResourceFilesFromRepoMessage()
+            var message = new GetOperatorFilesFromRepoMessage()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
-                RepositoryId = _operatorRepositoryId,
+                OrganizationId = _operatorOrganizationId,
+                RepositoryId = (Guid)_operatorRepositoryId,
                 ResourceId = _operatorResourceId,
             };
 
             getResourceFilesProducer.PublishMessage(message);
         }
 
-        public override void OnGetResourceFilesFromRepoResult(GetResourceFilesFromRepoResultMessage message)
+        public override void OnGetOperatorFilesFromRepoResult(GetOperatorFilesFromRepoResultMessage message)
         {
+            _operatorResource = message.SourceCodeResource;
+            _operatorSourceCode = message.SourceCodeResource.File;
+            _operatorDockerFile = message.DockerfileFile;
+
             var executeOperatorProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ExecuteOperatorMessage>>();
 
             var executeOperatorMessage = new ExecuteOperatorMessage()
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
+                PipelineExecutionId = _executionId,
+                OutputResourceId = _outputResourceId,
+                Dockerfile = _operatorDockerFile,
+                SourceCode = _operatorResource
             };
 
             executeOperatorProducer.PublishMessage(executeOperatorMessage);

@@ -20,5 +20,7 @@ namespace RabbitMQLibrary.Models
 
         public Guid DestinationOrganizationId { get; set; }
         public Guid? DestinationRepositoryId { get; set; }
+
+        public string? DestinationName { get; set; }
     }
 }

@@ -12,6 +12,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
         public Guid OrganizationId { get; set; }
         public Guid RepositoryId { get; set; }
         public Guid? ResourceId { get; set; }
+        public string? ResourceName { get; set; }
 
         private List<Guid> _associatedSteps { get; set; }
 
@@ -39,8 +40,12 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
 
             if (NodeType != "dataSink")
                 ResourceId = node.InstantiationData.Resource.ResourceId;
-            else 
+            else
+            {
                 ResourceId = null;
+                ResourceName = node.InstantiationData.Resource.Name;
+            }
+                
         }
         
         public void AddAssociatedStep(Guid id)

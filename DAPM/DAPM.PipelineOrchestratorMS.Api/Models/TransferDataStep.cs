@@ -24,11 +24,14 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
         private StorageMode _sourceStorageMode;
         private StorageMode _destinationStorageMode;
 
+        private string? _destinationName;
+
         public TransferDataStep(EngineResource resourceToTransfer,
             Guid destinationOrganization,
             Guid? destinationRepository,
             StorageMode sourceStorageMode,
             StorageMode destinationStorageMode,
+            string? destinationName,
             Guid executionId,
             IServiceProvider serviceProvider) : base(executionId, serviceProvider)
         {
@@ -37,6 +40,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
             _destinationRepository = destinationRepository;
             _sourceStorageMode = sourceStorageMode;
             _destinationStorageMode = destinationStorageMode;
+            _destinationName = destinationName;
         }
 
         public EngineResource GetResourceToTransfer()
@@ -58,6 +62,8 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
 
                 SourceStorageMode = (int)_sourceStorageMode,
                 DestinationStorageMode = (int)_destinationStorageMode,
+
+                DestinationName = _destinationName,
 
                 DestinationOrganizationId = _destinationOrganization,
                 DestinationRepositoryId = _destinationRepository,

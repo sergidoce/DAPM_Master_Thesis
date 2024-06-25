@@ -1,22 +1,21 @@
-﻿using DAPM.Orchestrator.Processes;
-using RabbitMQLibrary.Interfaces;
+﻿using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 
 namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromRepo
 {
-    public class GetResourceFilesFromRepoResultConsumer : IQueueConsumer<GetResourceFilesFromRepoResultMessage>
+    public class GetOperatorFilesFromRepoResultConsumer : IQueueConsumer<GetOperatorFilesFromRepoResultMessage>
     {
         private IOrchestratorEngine _orchestratorEngine;
 
-        public GetResourceFilesFromRepoResultConsumer(IOrchestratorEngine orchestratorEngine)
+        public GetOperatorFilesFromRepoResultConsumer(IOrchestratorEngine orchestratorEngine)
         {
             _orchestratorEngine = orchestratorEngine;
         }
 
-        public Task ConsumeAsync(GetResourceFilesFromRepoResultMessage message)
+        public Task ConsumeAsync(GetOperatorFilesFromRepoResultMessage message)
         {
             OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
-            process.OnGetResourceFilesFromRepoResult(message);
+            process.OnGetOperatorFilesFromRepoResult(message);
 
             return Task.CompletedTask;
         }

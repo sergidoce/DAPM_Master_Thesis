@@ -22,14 +22,19 @@ namespace DAPM.RepositoryMS.Api.Repositories
             return op;
         }
 
-        public Task<Operator> GetOperatorById(Guid repositoryId, Guid resourceId)
+        public async Task<Operator> GetOperatorById(Guid repositoryId, Guid resourceId)
         {
-            throw new NotImplementedException();
+            return _repositoryDbContext.Operators.First(r => r.Id == resourceId && r.RepositoryId == repositoryId);
         }
 
-        public Task<Models.PostgreSQL.File> GetOperatorFiles(Guid repositoryId, Guid resourceId)
+        public async Task<(Models.PostgreSQL.File, Models.PostgreSQL.File)> GetOperatorFiles(Guid repositoryId, Guid resourceId)
         {
-            throw new NotImplementedException();
+            var resource = _repositoryDbContext.Operators.First(r => r.Id == resourceId && r.RepositoryId == repositoryId);
+
+            var sourceCodeFile = _repositoryDbContext.Files.First(f => f.Id == resource.SourceCodeFileId);
+            var dockerFileFile = _repositoryDbContext.Files.First(f => f.Id == resource.DockerfileFileId);
+
+            return (sourceCodeFile, dockerFileFile);
         }
     }
 }

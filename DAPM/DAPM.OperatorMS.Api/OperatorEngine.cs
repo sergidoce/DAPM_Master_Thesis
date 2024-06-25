@@ -1,4 +1,5 @@
 ﻿using DAPM.OperatorMS.Api.Services;
+using DAPM.OperatorMS.Api.Services.Interfaces;
 using RabbitMQLibrary.Messages.Operator;
 
 namespace DAPM.OperatorMS.Api
@@ -7,9 +8,9 @@ namespace DAPM.OperatorMS.Api
     {
         private Dictionary<Guid, OperatorExecution> _executions;
         private IServiceProvider _serviceProvider;
-        private DockerService _dockerService;
+        private IDockerService _dockerService;
 
-        public OperatorEngine(IServiceProvider serviceProvider, DockerService dockerService) 
+        public OperatorEngine(IServiceProvider serviceProvider, IDockerService dockerService) 
         {
             _executions = new Dictionary<Guid, OperatorExecution>();
             _serviceProvider = serviceProvider;

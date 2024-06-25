@@ -29,6 +29,8 @@ namespace DAPM.RepositoryMS.Api.Consumers
         {
             _logger.LogInformation("GetResourceFilesFromRepoMessage received");
 
+            var resourceWithoutFile = await _resourceService.GetResourceById(message.RepositoryId, message.ResourceId);
+
             var fileWithoutContent = await _resourceService.GetResourceFiles(message.RepositoryId, message.ResourceId);
             var filesDtos = new List<FileDTO>();
 
@@ -43,13 +45,23 @@ namespace DAPM.RepositoryMS.Api.Consumers
             };
 
             filesDtos.Add(fileDto);
+
+            var resourceDTO = new ResourceDTO()
+            {
+                Id = resourceWithoutFile.Id,
+                Name = resourceWithoutFile.Name,
+                OrganizationId = message.OrganizationId,
+                RepositoryId = resourceWithoutFile.RepositoryId,
+                Type = resourceWithoutFile.Type,
+                File = fileDto,
+            };
          
 
             var resultMessage = new GetResourceFilesFromRepoResultMessage()
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TicketId = message.TicketId,
-                Files = filesDtos
+                Resource = resourceDTO
             };
 
             _resultMessageProducer.PublishMessage(resultMessage);

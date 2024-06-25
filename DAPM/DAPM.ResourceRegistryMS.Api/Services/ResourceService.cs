@@ -37,7 +37,7 @@ namespace DAPM.ResourceRegistryMS.Api.Services
             {
                 Id = resourceDto.Id,
                 Name = resourceDto.Name,
-                RepositoryId = repositoryId,
+                RepositoryId = (Guid)repositoryId,
                 PeerId = resourceDto.OrganizationId,
                 ResourceType = resourceDto.Type,
             };

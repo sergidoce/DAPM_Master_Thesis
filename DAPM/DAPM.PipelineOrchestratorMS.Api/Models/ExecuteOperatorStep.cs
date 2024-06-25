@@ -8,12 +8,12 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
     {
         public EngineResource OperatorResource { get; set; }
         public List<EngineResource> InputResources { get; set; }
-        public List<EngineResource> OutputResources { get; set; }
+        public Guid OutputResourceId { get; set; }
 
         public ExecuteOperatorStep(Guid id, IServiceProvider serviceProvider) : base(id, serviceProvider)
         {
            InputResources = new List<EngineResource>();
-           OutputResources = new List<EngineResource>();    
+           OutputResourceId = Guid.NewGuid();    
         }
 
 
@@ -21,10 +21,35 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
         {
             var executeOperatorRequestProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ExecuteOperatorActionRequest>>();
 
+
+            var operatorResourceDto = new ResourceDTO()
+            {
+                Id = OperatorResource.ResourceId,
+                RepositoryId = (Guid)OperatorResource.RepositoryId,
+                OrganizationId = OperatorResource.OrganizationId,
+            };
+
+            var inputResourceDtos = new List<ResourceDTO>();
+
+            foreach(var resource in InputResources)
+            {
+                inputResourceDtos.Add(new ResourceDTO()
+                {
+                    Id = resource.ResourceId,
+                    RepositoryId = resource.RepositoryId,
+                    OrganizationId = resource.OrganizationId,
+                });
+            }
+
+
             var data = new ExecuteOperatorActionDTO()
             {
                 ExecutionId = ExecutionId,
-                StepId = Id
+                StepId = Id,
+                OperatorResource = operatorResourceDto,
+                InputResources = inputResourceDtos,
+                OutputResourceId = OutputResourceId,
+
             };
 
 

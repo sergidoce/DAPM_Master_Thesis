@@ -159,5 +159,10 @@ namespace DAPM.Orchestrator
         {
             return;
         }
+
+        public virtual void OnGetOperatorFilesFromRepoResult(GetOperatorFilesFromRepoResultMessage message)
+        {
+            return;
+        }
     }
 }
