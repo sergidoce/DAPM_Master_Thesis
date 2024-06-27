@@ -95,7 +95,7 @@ services:
     image: ${DOCKER_REGISTRY-}dapmoperatormsapi
     build:
        context: .
-       dockerfile: DAPM.OperatorMS.API/Dockerfile
+       dockerfile: DAPM.OperatorMS.Api/Dockerfile
     ports:
        - "5100:8080"
     volumes:
