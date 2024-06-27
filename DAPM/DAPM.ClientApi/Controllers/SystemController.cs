@@ -4,6 +4,7 @@ using DAPM.ClientApi.Services;
 using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DAPM.ClientApi.Controllers
 {
@@ -23,6 +24,8 @@ namespace DAPM.ClientApi.Controllers
 
 
         [HttpPost("collab-handshake")]
+        [SwaggerOperation(Description = "Performs a collaboration handshake with another peer in the platform. The domain provided must be valid and needs to correspond to an " +
+            "existing peer.")]
         public async Task<ActionResult<Guid>> StartCollabHandshake([FromBody] CollabHandshakeDto collabHandshakeDto)
         {
             Guid id = _systemService.StartCollabHandshake(collabHandshakeDto.TargetPeerDomain);
