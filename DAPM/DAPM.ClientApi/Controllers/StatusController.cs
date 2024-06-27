@@ -4,6 +4,7 @@ using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json.Linq;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DAPM.ClientApi.Controllers
 {
@@ -22,6 +23,7 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpGet(("{ticketId}"))]
+        [SwaggerOperation(Description = "Gets the status of a ticket defined by its id. If the ticket is resolved, it will return the resolution.")]
         public async Task<IActionResult> Get(Guid ticketId)
         {
 

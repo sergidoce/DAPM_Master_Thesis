@@ -7,6 +7,7 @@ using RabbitMQLibrary.Extensions;
 using DAPM.ClientApi.Consumers;
 using RabbitMQLibrary.Messages.ClientApi;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -41,6 +42,13 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
     RabbitMqPassword = "guest",
     RabbitMqUsername = "guest"
 });
+
+builder.Services.AddSwaggerGen(c =>
+{
+    c.EnableAnnotations();
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "DAPM Client API", Version = "v1" });
+});
+
 
 builder.Services.AddQueueMessageConsumer<GetOrganizationsProcessResultConsumer, GetOrganizationsProcessResult>();
 builder.Services.AddQueueMessageConsumer<PostItemResultConsumer, PostItemProcessResult>();
