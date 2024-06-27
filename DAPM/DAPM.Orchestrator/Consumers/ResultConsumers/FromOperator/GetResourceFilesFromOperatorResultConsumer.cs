@@ -5,7 +5,7 @@ using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 
 namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromOperator
 {
-    public class GetResourceFilesFromOperatorResultConsumer : IQueueConsumer<GetResourceFilesFromOperatorResultMessage>
+    public class GetResourceFilesFromOperatorResultConsumer : IQueueConsumer<GetExecutionOutputResultMessage>
     {
         private IOrchestratorEngine _orchestratorEngine;
 
@@ -14,7 +14,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromOperator
             _orchestratorEngine = orchestratorEngine;
         }
 
-        public Task ConsumeAsync(GetResourceFilesFromOperatorResultMessage message)
+        public Task ConsumeAsync(GetExecutionOutputResultMessage message)
         {
             OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
             process.OnGetResourceFilesFromOperatorResult(message);

@@ -13,6 +13,6 @@ namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public List<FileDTO> Files { get; set; }
+        public ResourceDTO Resource { get; set; }
     }
 }

@@ -8,13 +8,11 @@ using System.Threading.Tasks;
 
 namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator
 {
-    public class PostResourceToOperatorResultMessage : IQueueMessage
+    public class GetExecutionOutputResultMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
-        public bool Succeeded { get; set; }
-        public string Message { get; set; }
-        public ResourceDTO Resource { get; set; }
+        public ResourceDTO OutputResource { get; set; }
     }
 }

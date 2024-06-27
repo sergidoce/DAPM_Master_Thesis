@@ -6,6 +6,6 @@ namespace DAPM.RepositoryMS.Api.Repositories.Interfaces
     {
         Task<Operator> AddOperator(Operator resource);
         Task<Operator> GetOperatorById(Guid repositoryId, Guid resourceId);
-        Task<Models.PostgreSQL.File> GetOperatorFiles(Guid repositoryId, Guid resourceId);
+        Task<(Models.PostgreSQL.File, Models.PostgreSQL.File)> GetOperatorFiles(Guid repositoryId, Guid resourceId);
     }
 }

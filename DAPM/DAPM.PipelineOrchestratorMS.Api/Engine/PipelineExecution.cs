@@ -1,6 +1,7 @@
 ﻿using DAPM.PipelineOrchestratorMS.Api.Engine.Interfaces;
 using DAPM.PipelineOrchestratorMS.Api.Models;
 using RabbitMQLibrary.Models;
+using System.Runtime.Versioning;
 
 namespace DAPM.PipelineOrchestratorMS.Api.Engine
 {
@@ -132,11 +133,6 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
             GenerateEngineNodes();
             GenerateEngineEdges();
             _steps = GenerateSteps();
-
-            foreach (var step in _steps)
-            {
-                _stepsDictionary[step.Id] = step;
-            }
         }
 
         private void GenerateEngineNodes()
@@ -230,6 +226,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
                 result.Add(transferDataStep);
 
                 AssociateNodeWithStep(currentNode.Id, transferDataStep.Id);
+                _stepsDictionary[transferDataStep.Id] = transferDataStep;
 
                 if (currentNode.NodeType == "operator")
                 {
@@ -250,6 +247,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
 
                 result.Add(executeOperatorStep);
                 AssociateNodeWithStep(currentNode.Id, executeOperatorStep.Id);
+                _stepsDictionary[executeOperatorStep.Id] = executeOperatorStep;
             }
 
             visitedNodes.Add(currentNode.Id);
@@ -277,22 +275,38 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
             var sourceNode = _nodes[sourceNodeId];
             var targetNode = _nodes[targetNodeId];
 
-            var resourceToTransfer = new EngineResource()
+            var resourceToTransfer = new EngineResource();
+
+
+            if(sourceNode.NodeType == "operator")
             {
-                OrganizationId = sourceNode.OrganizationId,
-                RepositoryId = sourceNode.RepositoryId,
-                ResourceId = (Guid)sourceNode.ResourceId,
-            };
+                var operatorStep = (ExecuteOperatorStep)_stepsDictionary[sourceNode.GetLastAssociatedStep()];
+                resourceToTransfer.OrganizationId = operatorStep.OperatorResource.OrganizationId;
+                resourceToTransfer.ResourceId = operatorStep.OutputResourceId; 
+            }
+            else
+            {
+                resourceToTransfer.OrganizationId = sourceNode.OrganizationId;
+                resourceToTransfer.RepositoryId = sourceNode.RepositoryId;
+                resourceToTransfer.ResourceId = (Guid)sourceNode.ResourceId;
+            }
 
             Guid? destinationRepository = null;
+            string? destinationName = null; 
             
             if(targetNode.NodeType == "dataSink")
+            {
                 destinationRepository = targetNode.RepositoryId;
+                destinationName =  targetNode.ResourceName;
+            }
+                
+                
 
             var sourceStorageMode = GetStorageModeFromNode(sourceNode);
             var targetStorageMode = GetStorageModeFromNode(targetNode);
 
-            var step = new TransferDataStep(resourceToTransfer, targetNode.OrganizationId, destinationRepository, sourceStorageMode, targetStorageMode, _id, _serviceProvider);
+            var step = new TransferDataStep(resourceToTransfer, targetNode.OrganizationId, destinationRepository, 
+                sourceStorageMode, targetStorageMode, destinationName, _id, _serviceProvider);
 
             return step;
         }

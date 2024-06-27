@@ -140,12 +140,12 @@ namespace DAPM.Orchestrator
             return;
         }
 
-        public virtual void OnGetResourceFilesFromOperatorResult(GetResourceFilesFromOperatorResultMessage message)
+        public virtual void OnGetResourceFilesFromOperatorResult(GetExecutionOutputResultMessage message)
         {
             return;
         }
 
-        public virtual void OnPostResourceToOperatorResult(PostResourceToOperatorResultMessage message)
+        public virtual void OnPostResourceToOperatorResult(PostInputResourceResultMessage message)
         {
             return;
         }
@@ -156,6 +156,11 @@ namespace DAPM.Orchestrator
         }
 
         public virtual void OnExecuteOperatorResult(ExecuteOperatorResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnGetOperatorFilesFromRepoResult(GetOperatorFilesFromRepoResultMessage message)
         {
             return;
         }

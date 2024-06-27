@@ -13,7 +13,7 @@ namespace RabbitMQLibrary.Models
         
         public ResourceDTO OperatorResource { get; set; }
         public List<ResourceDTO> InputResources { get; set; }
-        public List<ResourceDTO> OutputResources { get; set; }
+        public Guid OutputResourceId { get; set; }
 
     }
 }

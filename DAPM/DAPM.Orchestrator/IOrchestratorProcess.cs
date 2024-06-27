@@ -20,13 +20,14 @@ namespace DAPM.Orchestrator
         public void OnGetPipelinesFromRegistryResult(GetPipelinesResultMessage message);
         public void OnGetPipelinesFromRepoResult(GetPipelinesFromRepoResultMessage message);
         public void OnPostResourceToRepoResult(PostResourceToRepoResultMessage message);
-        public void OnPostResourceToOperatorResult(PostResourceToOperatorResultMessage message);
+        public void OnPostResourceToOperatorResult(PostInputResourceResultMessage message);
         public void OnPostResourceToRegistryResult(PostResourceToRegistryResultMessage message);
         public void OnPostPipelineToRepoResult(PostPipelineToRepoResultMessage message);
         public void OnPostPipelineToRegistryResult(PostPipelineToRegistryResultMessage message);
         public void OnCreateRepoInRepoResult(PostRepoToRepoResultMessage message);
         public void OnGetResourceFilesFromRepoResult(GetResourceFilesFromRepoResultMessage message);
-        public void OnGetResourceFilesFromOperatorResult(GetResourceFilesFromOperatorResultMessage message);
+        public void OnGetOperatorFilesFromRepoResult(GetOperatorFilesFromRepoResultMessage message);
+        public void OnGetResourceFilesFromOperatorResult(GetExecutionOutputResultMessage message);
         public void OnSendResourceToPeerResult(SendResourceToPeerResultMessage message);
 
 

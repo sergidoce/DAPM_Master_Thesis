@@ -188,7 +188,7 @@ namespace DAPM.Orchestrator.Processes
             var itemsIds = new ItemIds()
             {
                 OrganizationId = _createdOperator.OrganizationId,
-                RepositoryId = _createdOperator.RepositoryId,
+                RepositoryId = (Guid)_createdOperator.RepositoryId,
                 ResourceId = _createdOperator.Id,
             };
 
