@@ -65,6 +65,11 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             _operatorDockerFile = message.DockerfileFile;
 
             var executeOperatorProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ExecuteOperatorMessage>>();
+            List<Guid> inputResourceIds = new List<Guid>();
+            foreach (ResourceDTO inputResource in _inputResources) 
+            {
+                inputResourceIds.Add(inputResource.Id);
+            }
 
             var executeOperatorMessage = new ExecuteOperatorMessage()
             {
@@ -73,7 +78,8 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
                 PipelineExecutionId = _executionId,
                 OutputResourceId = _outputResourceId,
                 Dockerfile = _operatorDockerFile,
-                SourceCode = _operatorResource
+                SourceCode = _operatorResource,
+                InputResourceIds = inputResourceIds,
             };
 
             executeOperatorProducer.PublishMessage(executeOperatorMessage);
