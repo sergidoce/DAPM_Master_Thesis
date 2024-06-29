@@ -306,5 +306,11 @@ namespace DAPM.OperatorMS.Api.Services
 
             await File.WriteAllTextAsync(dockerfilePath, dockerfileContent);
         }
+
+        public void RemoveImageAndContainer(string imageName, string containerId) 
+        {
+            _dockerClient.Images.DeleteImageAsync(imageName, new ImageDeleteParameters{});
+            _dockerClient.Containers.RemoveContainerAsync(containerId, new ContainerRemoveParameters{});
+        }
     }
 }

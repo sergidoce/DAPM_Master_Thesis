@@ -11,5 +11,6 @@ namespace DAPM.OperatorMS.Api.Services.Interfaces
         public Task<string> CreateDockerContainerByImageName(string imageName);
         public Task<string> GetContainerStatus(string containerId);
         public Task ReplaceDockerfilePlaceholders(Guid pipelineExecutionId, Guid outputResourceId, Guid operatorId, List<Guid> inputResourceIds);
+        public void RemoveImageAndContainer(string imageName, string containerId);
     }
 }

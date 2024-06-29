@@ -55,6 +55,9 @@ namespace DAPM.OperatorMS.Api
             ResourceDTO outputFile = _dockerService.GetExecutionOutputResource(_pipelineExecutionId, _outputResourceId);
             bool succeeded = outputFile != null;
 
+            // Delete Docker Image and Container
+            _dockerService.RemoveImageAndContainer(imageName, containerId);
+
             return succeeded;
         }
 
