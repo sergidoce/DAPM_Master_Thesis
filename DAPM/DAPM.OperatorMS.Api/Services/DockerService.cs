@@ -273,26 +273,25 @@ namespace DAPM.OperatorMS.Api.Services
             return Tuple.Create(fileStream, fileNameWithExtension);
         }
 
-        public async Task ReplaceDockerfilePlaceholders(Guid pipelineExecutionId, Guid outputResourceId, Guid operatorId)
+        public async Task ReplaceDockerfilePlaceholders(Guid pipelineExecutionId, Guid outputResourceId, Guid operatorId, List<Guid> inputResourceIds)
         {
             string inputFilesPath = $"/app/shared/{pipelineExecutionId}/InputFiles";
             string outputFilePath = $"/app/shared/{pipelineExecutionId}/OutputFiles/{outputResourceId}.*";
             string dockerfilePath = $"/app/shared/{pipelineExecutionId}/Algorithm/{operatorId}/Dockerfile";
-            string[] filePaths = Directory.GetFiles(inputFilesPath);
 
             string dockerfileContent = File.ReadAllText(dockerfilePath);
 
-            if (filePaths.Length == 1)
+            if (inputResourceIds.Count == 1)
             {
                 var inputRegex = new Regex(@"\*input\*");
-                dockerfileContent = inputRegex.Replace(dockerfileContent, filePaths[0]);
+                dockerfileContent = inputRegex.Replace(dockerfileContent, Path.Combine(inputFilesPath, inputResourceIds[0].ToString()));
             }
-            else if (filePaths.Length == 2)
+            else if (inputResourceIds.Count == 2)
             {
                 var inputRegex1 = new Regex(@"\*input1\*");
                 var inputRegex2 = new Regex(@"\*input2\*");
-                dockerfileContent = inputRegex1.Replace(dockerfileContent, filePaths[0]);
-                dockerfileContent = inputRegex2.Replace(dockerfileContent, filePaths[1]);
+                dockerfileContent = inputRegex1.Replace(dockerfileContent, Path.Combine(inputFilesPath, inputResourceIds[0].ToString()));
+                dockerfileContent = inputRegex2.Replace(dockerfileContent, Path.Combine(inputFilesPath, inputResourceIds[1].ToString()));
             }
             else
             {

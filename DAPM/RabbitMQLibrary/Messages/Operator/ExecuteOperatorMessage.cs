@@ -10,6 +10,7 @@ namespace RabbitMQLibrary.Messages.Operator
         public TimeSpan TimeToLive { get; set; }
         public Guid PipelineExecutionId { get; set; }
         public Guid OutputResourceId { get; set; }
+        public List<Guid> InputResourceIds { get; set; }
         public ResourceDTO SourceCode { get; set; }
         public FileDTO Dockerfile { get; set; }
     }
