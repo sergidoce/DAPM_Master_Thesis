@@ -26,6 +26,7 @@ namespace DAPM.Orchestrator
         public void OnPostPipelineToRegistryResult(PostPipelineToRegistryResultMessage message);
         public void OnCreateRepoInRepoResult(PostRepoToRepoResultMessage message);
         public void OnGetResourceFilesFromRepoResult(GetResourceFilesFromRepoResultMessage message);
+        public void OnGetOperatorFilesFromRepoResult(GetOperatorFilesFromRepoResultMessage message);
         public void OnGetResourceFilesFromOperatorResult(GetExecutionOutputResultMessage message);
         public void OnSendResourceToPeerResult(SendResourceToPeerResultMessage message);
 
@@ -34,7 +35,7 @@ namespace DAPM.Orchestrator
         public void OnRegistryUpdate(RegistryUpdateMessage message);
         public void OnApplyRegistryUpdateResult(ApplyRegistryUpdateResult message);
         public void OnGetEntriesFromOrgResult(GetEntriesFromOrgResult message);
-        public void OnHandshakeAck(HandshakeAckMessage message);
+        public void OnRegistryUpdateAck(RegistryUpdateAckMessage message);
 
         public void OnCreatePipelineExecutionResult(CreatePipelineExecutionResultMessage message);
         public void OnCommandEnqueued(CommandEnqueuedMessage message);

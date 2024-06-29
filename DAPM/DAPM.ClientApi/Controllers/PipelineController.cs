@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DAPM.ClientApi.Controllers
 {
@@ -24,6 +25,8 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpGet("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}")]
+        [SwaggerOperation(Description = "Gets a pipeline by id. This endpoint includes the " +
+            "pipeline model in JSON. You need to have a collaboration agreement to retrieve this information.")]
         public async Task<ActionResult<Guid>> GetPipelineById(Guid organizationId, Guid repositoryId, Guid pipelineId)
         {
             Guid id = _pipelineService.GetPipelineById(organizationId, repositoryId, pipelineId);
@@ -31,6 +34,7 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/executions")]
+        [SwaggerOperation(Description = "Creates a new execution instance for a pipeline previously saved in the system. The execution is created but not started")]
         public async Task<ActionResult<Guid>> CreatePipelineExecutionInstance(Guid organizationId, Guid repositoryId, Guid pipelineId)
         {
             Guid id = _pipelineService.CreatePipelineExecution(organizationId, repositoryId, pipelineId);
@@ -38,6 +42,7 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/executions/{executionId}/commands/start")]
+        [SwaggerOperation(Description = "Posts a start command to the defined pipeline execution. The start command will start the pipeline execution.")]
         public async Task<ActionResult<Guid>> PostStartCommand(Guid organizationId, Guid repositoryId, Guid pipelineId, Guid executionId)
         {
             Guid id = _pipelineService.PostStartCommand(organizationId, repositoryId, pipelineId, executionId);

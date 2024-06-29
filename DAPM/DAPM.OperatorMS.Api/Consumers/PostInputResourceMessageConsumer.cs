@@ -25,10 +25,9 @@ namespace DAPM.OperatorMS.Api.Consumers
         {
             _logger.LogInformation("PostInputResourceMessage Received");
 
-            foreach (ResourceDTO resource in message.Files) 
-            {
-                _dockerService.PostInputResource(message.PipelineExecutionId, resource);
-            }
+            
+            _dockerService.PostInputResource(message.PipelineExecutionId, message.Resource);
+            
 
             // Publish PostInputResourceResultMessage to Orchestrator
             var postInputResourceResultMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<PostInputResourceResultMessage>>();

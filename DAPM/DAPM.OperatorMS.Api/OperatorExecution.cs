@@ -33,7 +33,7 @@ namespace DAPM.OperatorMS.Api
             _dockerService.PostOperator(_pipelineExecutionId, _sourceCode, _dockerfile);
 
             // Replace placeholders in Dockerfile with corresponding input file path and output file path
-            await _dockerService.ReplaceDockerfilePlaceholders(_pipelineExecutionId, _outputResourceId);
+            await _dockerService.ReplaceDockerfilePlaceholders(_pipelineExecutionId, _outputResourceId, _sourceCode.Id);
 
             // Create Docker image with source-code and Dockerfile
             string imageName = await _dockerService.CreateDockerImage(_pipelineExecutionId, _sourceCode.Id);

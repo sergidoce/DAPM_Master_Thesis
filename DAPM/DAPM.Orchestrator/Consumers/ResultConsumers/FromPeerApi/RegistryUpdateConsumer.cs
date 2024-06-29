@@ -15,9 +15,18 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromPeerApi
 
         public Task ConsumeAsync(RegistryUpdateMessage message)
         {
-            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
-            process.OnRegistryUpdate(message);
+            var isPartOfHandshake = message.IsPartOfHandshake;
 
+            if (isPartOfHandshake)
+            {
+                OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
+                process.OnRegistryUpdate(message);
+            }
+            else
+            {
+                _orchestratorEngine.StartRegistryUpdateProcess(message.TicketId, message.RegistryUpdate, message.SenderIdentity);
+            }
+            
             return Task.CompletedTask;
         }
     }

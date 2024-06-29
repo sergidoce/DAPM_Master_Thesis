@@ -14,6 +14,6 @@ namespace RabbitMQLibrary.Messages.Operator
         public Guid TicketId { get; set; }
         public TimeSpan TimeToLive { get; set; }
         public Guid PipelineExecutionId { get; set; }
-        public IEnumerable<ResourceDTO> Files { get; set; }
+        public ResourceDTO Resource { get; set; }
     }
 }

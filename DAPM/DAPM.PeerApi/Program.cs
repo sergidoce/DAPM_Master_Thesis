@@ -28,13 +28,14 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
     RabbitMqUsername = "guest"
 });
 
-builder.Services.AddQueueMessageConsumer<SendHandshakeAckConsumer, SendHandshakeAckMessage>();
+builder.Services.AddQueueMessageConsumer<SendRegistryUpdateAckConsumer, SendRegistryUpdateAckMessage>();
 builder.Services.AddQueueMessageConsumer<SendHandshakeRequestConsumer, SendHandshakeRequestMessage>();
 builder.Services.AddQueueMessageConsumer<SendHandshakeRequestResponseConsumer, SendHandshakeRequestResponseMessage>();
 builder.Services.AddQueueMessageConsumer<SendRegistryUpdateConsumer, SendRegistryUpdateMessage>();
 
 
 builder.Services.AddScoped<IActionService, ActionService>();
+builder.Services.AddScoped<IRegistryService, RegistryService>();
 builder.Services.AddScoped<IHandshakeService, HandshakeService>();
 builder.Services.AddScoped<IHttpService, HttpService>();
 

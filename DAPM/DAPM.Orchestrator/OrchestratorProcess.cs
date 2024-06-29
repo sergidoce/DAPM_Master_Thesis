@@ -1,4 +1,6 @@
 ﻿using DAPM.Orchestrator.Processes;
+using DAPM.Orchestrator.Services;
+using DAPM.Orchestrator.Services.Models;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPipelineOrchestrator;
@@ -13,6 +15,7 @@ namespace DAPM.Orchestrator
         protected IServiceScope _serviceScope;
         protected Guid _ticketId;
         protected OrchestratorEngine _engine;
+        protected Identity _localPeerIdentity;
 
         public OrchestratorProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId)
         {
@@ -20,6 +23,9 @@ namespace DAPM.Orchestrator
             _serviceProvider = serviceProvider;
             _ticketId = ticketId;
             _serviceScope = _serviceProvider.CreateScope();
+
+            var identityService = _serviceScope.ServiceProvider.GetRequiredService<IIdentityService>();
+            _localPeerIdentity = identityService.GetIdentity();
         }
 
         public abstract void StartProcess();
@@ -119,7 +125,7 @@ namespace DAPM.Orchestrator
             return;
         }
 
-        public virtual void OnHandshakeAck(HandshakeAckMessage message)
+        public virtual void OnRegistryUpdateAck(RegistryUpdateAckMessage message)
         {
             return;
         }
@@ -150,6 +156,11 @@ namespace DAPM.Orchestrator
         }
 
         public virtual void OnExecuteOperatorResult(ExecuteOperatorResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnGetOperatorFilesFromRepoResult(GetOperatorFilesFromRepoResultMessage message)
         {
             return;
         }

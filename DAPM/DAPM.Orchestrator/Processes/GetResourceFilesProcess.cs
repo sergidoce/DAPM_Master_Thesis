@@ -3,6 +3,7 @@ using RabbitMQLibrary.Messages.ClientApi;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
+using RabbitMQLibrary.Models;
 using System.Resources;
 
 namespace DAPM.Orchestrator.Processes
@@ -45,7 +46,7 @@ namespace DAPM.Orchestrator.Processes
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
-                Files = message.Files,
+                Files = new List<FileDTO>() { message.Resource.File},
             };
 
             getResourceFilesResultProducer.PublishMessage(resultMessage);

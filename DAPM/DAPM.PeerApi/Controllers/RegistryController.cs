@@ -1,4 +1,6 @@
-﻿using DAPM.PeerApi.Models.ActionsDtos;
+﻿using DAPM.PeerApi.Models;
+using DAPM.PeerApi.Models.ActionsDtos;
+using DAPM.PeerApi.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
@@ -11,35 +13,30 @@ namespace DAPM.PeerApi.Controllers
     public class RegistryController : ControllerBase
     {
         private readonly ILogger<RegistryController> _logger;
+        private IRegistryService _registryService;
         private IQueueProducer<RegistryUpdateMessage> _registryUpdateProducer;
 
-        public RegistryController(ILogger<RegistryController> logger, IQueueProducer<RegistryUpdateMessage> registryUpdateProducer)
+        public RegistryController(ILogger<RegistryController> logger, 
+            IQueueProducer<RegistryUpdateMessage> registryUpdateProducer,
+            IRegistryService registryService)
         {
             _logger = logger;
+            _registryService = registryService;
             _registryUpdateProducer = registryUpdateProducer;
         }
 
         [HttpPost("updates")]
         public async Task<ActionResult> PostRegistryUpdate([FromBody] RegistryUpdateDto registryUpdateDto)
         {
-            var registryUpdateDTO = new RegistryUpdateDTO()
-            {
-                Organizations = registryUpdateDto.Organizations,
-                Repositories = registryUpdateDto.Repositories,
-                Resources = registryUpdateDto.Resources,
-                Pipelines = registryUpdateDto.Pipelines,
-            };
+            _registryService.OnRegistryUpdate(registryUpdateDto);
+            return Ok("Registry update received");
+        }
 
-            var message = new RegistryUpdateMessage()
-            {
-                TicketId = (Guid)registryUpdateDto.HandshakeId,
-                TimeToLive = TimeSpan.FromMinutes(1),
-                RegistryUpdate = registryUpdateDTO,
-            };
-
-            _registryUpdateProducer.PublishMessage(message);
-
-            return Ok();
+        [HttpPost("update-ack")]
+        public async Task<ActionResult> PostRegistryUpdateAck([FromBody] RegistryUpdateAckDto registryUpdateAckDto)
+        {
+            _registryService.OnRegistryUpdateAck(registryUpdateAckDto);
+            return Ok("RegistryUpdate ack received");
         }
     }
 }

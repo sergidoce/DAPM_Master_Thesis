@@ -8,36 +8,17 @@ namespace DAPM.PeerApi.Services
 {
     public class HandshakeService : IHandshakeService
     {
-        private IQueueProducer<HandshakeAckMessage> _handshakeAckProducer;
         private IQueueProducer<HandshakeRequestMessage> _handshakeRequestProducer;
         private IQueueProducer<HandshakeRequestResponseMessage> _handshakeRequestResponseProducer;
 
 
-        public HandshakeService(IQueueProducer<HandshakeAckMessage> handshakeAckProducer, 
-            IQueueProducer<HandshakeRequestMessage> handshakeRequestProducer,
+        public HandshakeService(IQueueProducer<HandshakeRequestMessage> handshakeRequestProducer,
             IQueueProducer<HandshakeRequestResponseMessage> handshakeRequestResponseProducer) 
         {
-            _handshakeAckProducer = handshakeAckProducer;
             _handshakeRequestProducer = handshakeRequestProducer;
             _handshakeRequestResponseProducer = handshakeRequestResponseProducer; 
         }
-        public void OnHandshakeAck(Guid handshakeId, IdentityDTO senderIdentity, HandshakeAckDto handshakeAck)
-        {
-            var rabbitMQDto = new HandshakeAckDTO()
-            {
-                IsCompleted = handshakeAck.IsDone
-            };
-
-            var message = new HandshakeAckMessage()
-            {
-                TicketId = handshakeId,
-                TimeToLive = TimeSpan.FromMinutes(1),
-                PeerSenderIdentity = senderIdentity,
-                HandshakeAck = rabbitMQDto
-            };
-
-            _handshakeAckProducer.PublishMessage(message);
-        }
+        
 
         public void OnHandshakeRequest(Guid handshakeId, IdentityDTO senderIdentity)
         {

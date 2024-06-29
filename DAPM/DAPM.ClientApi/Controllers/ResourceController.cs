@@ -3,6 +3,7 @@ using DAPM.ClientApi.Models.DTOs;
 using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace DAPM.ClientApi.Controllers
 {
@@ -23,6 +24,8 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpGet("{organizationId}/repositories/{repositoryId}/resources/{resourceId}")]
+        [SwaggerOperation(Description = "Gets a resource by id from a specific repository. The result of this endpoint does not include the resource file. There needs to be " +
+            "a collaboration agreement to retrieve this information.")]
         public async Task<ActionResult<Guid>> GetResourceById(Guid organizationId, Guid repositoryId, Guid resourceId)
         {
             Guid id = _resourceService.GetResourceById(organizationId, repositoryId, resourceId);
@@ -30,6 +33,8 @@ namespace DAPM.ClientApi.Controllers
         }
 
         [HttpGet("{organizationId}/repositories/{repositoryId}/resources/{resourceId}/file")]
+        [SwaggerOperation(Description = "Gets a resource file by id from a specific repository. There needs to be " +
+            "a collaboration agreement to retrieve this information.")]
         public async Task<ActionResult<Guid>> GetResourceFileById(Guid organizationId, Guid repositoryId, Guid resourceId)
         {
             Guid id = _resourceService.GetResourceFileById(organizationId, repositoryId, resourceId);
