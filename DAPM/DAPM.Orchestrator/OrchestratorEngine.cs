@@ -144,5 +144,12 @@ namespace DAPM.Orchestrator
             _processes[ticketId] = registryUpdateProcess;
             registryUpdateProcess.StartProcess();
         }
+
+        public void StartPostResourceFromPeerProcess(Guid ticketId, ResourceDTO resource, int storageMode, Guid executionId, IdentityDTO senderIdentity)
+        {
+            var postResourceProcess = new PostResourceFromPeerProcess(this, _serviceProvider, ticketId, resource, storageMode, executionId, senderIdentity);
+            _processes[ticketId] = postResourceProcess;
+            postResourceProcess.StartProcess();
+        }
     }
 }
