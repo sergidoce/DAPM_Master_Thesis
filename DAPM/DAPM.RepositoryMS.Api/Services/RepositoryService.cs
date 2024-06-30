@@ -51,6 +51,7 @@ namespace DAPM.RepositoryMS.Api.Services
 
         public async Task<Models.PostgreSQL.Resource> CreateNewResource(Guid repositoryId, string name, string resourceType, FileDTO fileDto)
         {
+            _logger.LogInformation($"THE REPO ID IS {repositoryId}");
             var repository = await _repositoryRepository.GetRepositoryById(repositoryId);
 
             if(repository != null)
