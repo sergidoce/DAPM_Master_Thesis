@@ -27,5 +27,6 @@ namespace DAPM.Orchestrator
         public void StartTransferDataActionProcess(Guid ticketId, TransferDataActionDTO data);
         public void StartExecuteOperatorActionProcess(Guid ticketId, ExecuteOperatorActionDTO data);
         public void StartPipelineStartCommandProcess(Guid ticketId, Guid executionId);
+        public void StartPostResourceFromPeerProcess(Guid ticketId, ResourceDTO resource, int storageMode, Guid executionId, IdentityDTO senderIdentity);
     }
 }

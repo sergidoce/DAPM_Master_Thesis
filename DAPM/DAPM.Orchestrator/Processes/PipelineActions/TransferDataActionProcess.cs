@@ -1,5 +1,4 @@
-﻿
-using DAPM.Orchestrator.Services;
+﻿using DAPM.Orchestrator.Services;
 using DAPM.Orchestrator.Services.Models;
 using DAPM.PipelineOrchestratorMS.Api.Models;
 using RabbitMQLibrary.Interfaces;
@@ -152,16 +151,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         {
             if(_destinationOrganizationId != _localNodeIdentity.Id)
             {
-                var sendResourceToPeerMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendResourceToPeerMessage>>();
-
-                var message = new SendResourceToPeerMessage()
-                {
-                    TicketId = _ticketId,
-                    TimeToLive = TimeSpan.FromMinutes(1),
-              
-                };
-
-                sendResourceToPeerMessageProducer.PublishMessage(message);
+                SendResourceToPeer();
             }
             else
             {
@@ -193,16 +183,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         {
             if (_destinationOrganizationId != _localNodeIdentity.Id)
             {
-                var sendResourceToPeerMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendResourceToPeerMessage>>();
-
-                var message = new SendResourceToPeerMessage()
-                {
-                    TicketId = _ticketId,
-                    TimeToLive = TimeSpan.FromMinutes(1),
-
-                };
-
-                sendResourceToPeerMessageProducer.PublishMessage(message);
+                SendResourceToPeer();
             }
             else
             {
@@ -254,9 +235,54 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         #endregion
 
 
+
+
+        private void SendResourceToPeer()
+        {
+            var getOrganizationsProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetOrganizationsMessage>>();
+
+
+            var getOrganizationsMessage = new GetOrganizationsMessage()
+            {
+                TicketId = _ticketId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                OrganizationId = _destinationOrganizationId
+            };
+
+            getOrganizationsProducer.PublishMessage(getOrganizationsMessage);
+        }
+
+        public override void OnGetOrganizationsFromRegistryResult(GetOrganizationsResultMessage message)
+        {
+            var sendResourceToPeerMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendResourceToPeerMessage>>();
+
+            var identityDTO = new IdentityDTO()
+            {
+                Name = _localPeerIdentity.Name,
+                Id = _localPeerIdentity.Id,
+                Domain = _localPeerIdentity.Domain,
+            };
+
+            var sendResourceMessage = new SendResourceToPeerMessage()
+            {
+                TicketId = _ticketId,
+                ExecutionId = _executionId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                SenderPeerIdentity = identityDTO,
+                TargetPeerDomain = message.Organizations.First().Domain,
+                StorageMode = _destinationStorageMode,
+                RepositoryId = _destinationRepositoryId,
+                Resource = _resource,
+            };
+
+            sendResourceToPeerMessageProducer.PublishMessage(sendResourceMessage);
+        }
+
+
+
         public override void OnSendResourceToPeerResult(SendResourceToPeerResultMessage message)
         {
-
+            SendActionResult();
         }
 
 
