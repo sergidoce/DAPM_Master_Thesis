@@ -12,6 +12,7 @@ using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
+using System.Xml.Linq;
 
 namespace DAPM.Orchestrator.Processes.PipelineActions
 {
@@ -183,6 +184,14 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         {
             if (_destinationOrganizationId != _localNodeIdentity.Id)
             {
+                _resource.RepositoryId = _destinationOrganizationId;
+                if (_destinationName != null)
+                {
+                    _resource.Name = _destinationName;
+                }
+                _resource.Type = "pipeline result";
+                _resource.OrganizationId = _destinationOrganizationId;
+                
                 SendResourceToPeer();
             }
             else
