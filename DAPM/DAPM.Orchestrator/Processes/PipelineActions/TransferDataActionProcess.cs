@@ -184,7 +184,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         {
             if (_destinationOrganizationId != _localNodeIdentity.Id)
             {
-                _resource.RepositoryId = _destinationOrganizationId;
+                _resource.RepositoryId = _destinationRepositoryId;
                 if (_destinationName != null)
                 {
                     _resource.Name = _destinationName;
