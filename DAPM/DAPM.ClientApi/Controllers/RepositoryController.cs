@@ -63,7 +63,7 @@ namespace DAPM.ClientApi.Controllers
         [HttpPost("{organizationId}/repositories/{repositoryId}/resources/operators")]
         [SwaggerOperation(Description = "Posts a new operator resource into a repository by id. In this endpoint you have to provide the source code for the operator and a " +
             "Dockerfile to build it and execute it.")]
-        public async Task<ActionResult<Guid>> PostResourceToRepository(Guid organizationId, Guid repositoryId, [FromForm] OperatorForm resourceForm)
+        public async Task<ActionResult<Guid>> PostOperatorToRepository(Guid organizationId, Guid repositoryId, [FromForm] OperatorForm resourceForm)
         {
             if (resourceForm.Name == null || resourceForm.SourceCodeFile == null)
                 return BadRequest();

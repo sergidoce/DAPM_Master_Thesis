@@ -23,7 +23,7 @@ namespace DAPM.ClientApi.Consumers
         {
             _logger.LogInformation("GetResourceFilesProcessResult received");
 
-
+            _logger.LogInformation($"FILE NAME {message.Files.First().Name}");
             IEnumerable<FileDTO> filesDTOs = message.Files;
 
             if(filesDTOs.Any())

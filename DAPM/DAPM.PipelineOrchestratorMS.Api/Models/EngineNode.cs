@@ -25,25 +25,25 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
 
             NodeType = node.Type;
 
-            foreach(var sourceHandle in node.TemplateData.SourceHandles)
+            foreach(var sourceHandle in node.Data.TemplateData.SourceHandles)
             {
-                SourceHandles.Add(sourceHandle.HandleData.Id);
+                SourceHandles.Add(sourceHandle.Id);
             }
 
-            foreach (var targetHandle in node.TemplateData.TargetHandles)
+            foreach (var targetHandle in node.Data.TemplateData.TargetHandles)
             {
-                TargetHandles.Add(targetHandle.HandleData.Id);
+                TargetHandles.Add(targetHandle.Id);
             }
 
-            OrganizationId = node.InstantiationData.Resource.OrganizationId;
-            RepositoryId = node.InstantiationData.Resource.RepositoryId;
+            OrganizationId = node.Data.InstantiationData.Resource.OrganizationId;
+            RepositoryId = node.Data.InstantiationData.Resource.RepositoryId;
 
             if (NodeType != "dataSink")
-                ResourceId = node.InstantiationData.Resource.ResourceId;
+                ResourceId = node.Data.InstantiationData.Resource.ResourceId;
             else
             {
                 ResourceId = null;
-                ResourceName = node.InstantiationData.Resource.Name;
+                ResourceName = node.Data.InstantiationData.Resource.Name;
             }
                 
         }
