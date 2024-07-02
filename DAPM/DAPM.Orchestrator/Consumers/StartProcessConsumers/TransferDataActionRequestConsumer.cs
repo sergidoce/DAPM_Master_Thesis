@@ -9,12 +9,14 @@ namespace DAPM.Orchestrator.Consumers.StartProcessConsumers
     {
         private IOrchestratorEngine _engine;
         private IServiceScope _serviceScope;
-
+        private ILogger<TransferDataActionRequestConsumer> _logger;
         public TransferDataActionRequestConsumer(IOrchestratorEngine engine,
-            IServiceProvider serviceProvider)
+            IServiceProvider serviceProvider,
+            ILogger<TransferDataActionRequestConsumer> logger)
         {
             _engine = engine;
             _serviceScope = serviceProvider.CreateScope();
+            _logger = logger;
         }
 
         public Task ConsumeAsync(TransferDataActionRequest message)
@@ -35,6 +37,8 @@ namespace DAPM.Orchestrator.Consumers.StartProcessConsumers
             {
                 orchestratorIdentity = message.OrchestratorIdentity;
             }
+
+            _logger.LogInformation("Ticket id / step id in TransferDataRequestConsumer is " + message.TicketId.ToString());
 
             if(identity.Id != originOrganizationId)
             {

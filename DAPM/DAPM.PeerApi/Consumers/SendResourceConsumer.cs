@@ -10,15 +10,19 @@ namespace DAPM.PeerApi.Consumers
     public class SendResourceConsumer : IQueueConsumer<SendResourceToPeerMessage>
     {
         private IHttpService _httpService;
-        public SendResourceConsumer(IHttpService httpService)
+        private ILogger<SendResourceConsumer> _logger;
+        public SendResourceConsumer(IHttpService httpService, ILogger<SendResourceConsumer> logger)
         {
             _httpService = httpService;
+            _logger = logger;
         }
 
         public async Task ConsumeAsync(SendResourceToPeerMessage message)
         {
             var targetDomain = message.TargetPeerDomain;
             var senderIdentity = message.SenderPeerIdentity;
+
+            _logger.LogInformation("Ticket id / step id in SendResourceConsumer is " + message.TicketId.ToString());
 
             var dto = new SendResourceToPeerDto()
             {

@@ -272,7 +272,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var sendResourceMessage = new SendResourceToPeerMessage()
             {
-                TicketId = _ticketId,
+                TicketId = _stepId,
                 ExecutionId = _executionId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = identityDTO,
