@@ -29,10 +29,12 @@ namespace DAPM.PeerApi.Consumers
                 ExecutionId = message.ExecutionId,
             };
 
-            _logger.LogInformation(transferDataActionDto.ToString());
+            
 
             var url = "http://" + targetDomain + PeerApiEndpoints.ExecuteOperatorActionEndpoint;
             var body = JsonSerializer.Serialize(transferDataActionDto);
+
+            _logger.LogInformation(body.ToString());
 
             var response = await _httpService.SendPostRequestAsync(url, body);
 
