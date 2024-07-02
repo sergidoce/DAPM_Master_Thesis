@@ -2,6 +2,7 @@
 using DAPM.PeerApi.Services.Interfaces;
 using DAPM.PipelineOrchestratorMS.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
 
 namespace DAPM.PeerApi.Controllers
 {
@@ -19,21 +20,21 @@ namespace DAPM.PeerApi.Controllers
         }
 
         [HttpPost("transfer-data")]
-        public async Task<ActionResult<Guid>> PostSendDataAction([FromBody] TransferDataActionDto actionDto)
+        public async Task<ActionResult> PostSendDataAction([FromBody] TransferDataActionDto actionDto)
         {
             _actionService.OnTransferDataActionReceived(actionDto.SenderIdentity, actionDto.StepId, actionDto.Data);
             return Ok();
         }
 
         [HttpPost("execute-operator")]
-        public async Task<ActionResult<Guid>> PostExecuteOperatorAction([FromBody] ExecuteOperatorActionDto actionDto)
+        public async Task<ActionResult> PostExecuteOperatorAction([FromBody] ExecuteOperatorActionDto actionDto)
         {
             _actionService.OnExecuteOperatorActionReceived(actionDto.SenderIdentity, actionDto.StepId, actionDto.Data);
             return Ok();
         }
 
         [HttpPost("action-result")]
-        public async Task<Microsoft.AspNetCore.Mvc.ActionResult> PostActionResult([FromBody] ActionResultDto actionResultDto)
+        public async Task<ActionResult> PostActionResult([FromBody] ActionResultDto actionResultDto)
         {
             var actionResultDTO = new ActionResultDTO()
             {

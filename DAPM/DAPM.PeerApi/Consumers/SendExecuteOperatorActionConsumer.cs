@@ -8,10 +8,12 @@ namespace DAPM.PeerApi.Consumers
 {
     public class SendExecuteOperatorActionConsumer : IQueueConsumer<SendExecuteOperatorActionMessage>
     {
+        ILogger<SendExecuteOperatorActionConsumer> _logger;
         private IHttpService _httpService;
-        public SendExecuteOperatorActionConsumer(IHttpService httpService)
+        public SendExecuteOperatorActionConsumer(IHttpService httpService, ILogger<SendExecuteOperatorActionConsumer> logger)
         {
             _httpService = httpService;
+            _logger = logger;
         }
 
         public async Task ConsumeAsync(SendExecuteOperatorActionMessage message)
@@ -26,6 +28,8 @@ namespace DAPM.PeerApi.Consumers
                 StepId = message.StepId,
                 ExecutionId = message.ExecutionId,
             };
+
+            _logger.LogInformation(transferDataActionDto.ToString());
 
             var url = "http://" + targetDomain + PeerApiEndpoints.ExecuteOperatorActionEndpoint;
             var body = JsonSerializer.Serialize(transferDataActionDto);
