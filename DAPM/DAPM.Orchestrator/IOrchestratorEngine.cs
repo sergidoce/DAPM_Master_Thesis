@@ -24,8 +24,10 @@ namespace DAPM.Orchestrator
         public void StartPostPipelineProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Pipeline pipeline, string name);
         public void StartGetPipelinesProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid? pipelineId);
         public void StartCreatePipelineExecutionProcess(Guid ticketId, Guid organizationId, Guid repositoryId, Guid pipelineId);
-        public void StartTransferDataActionProcess(Guid ticketId, TransferDataActionDTO data);
-        public void StartExecuteOperatorActionProcess(Guid ticketId, ExecuteOperatorActionDTO data);
+        public void StartTransferDataActionProcess(Guid ticketId, IdentityDTO orchestratorIdentity, TransferDataActionDTO data);
+        public void StartSendTransferDataActionProcess(Guid ticketId, TransferDataActionDTO data);
+        public void StartExecuteOperatorActionProcess(Guid ticketId, IdentityDTO orchestratorIdentity, ExecuteOperatorActionDTO data);
+        public void StartSendExecuteOperatorActionProcess(Guid ticketId, ExecuteOperatorActionDTO data);
         public void StartPipelineStartCommandProcess(Guid ticketId, Guid executionId);
         public void StartPostResourceFromPeerProcess(Guid ticketId, ResourceDTO resource, int storageMode, Guid executionId, IdentityDTO senderIdentity);
     }

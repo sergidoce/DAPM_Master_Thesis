@@ -12,14 +12,11 @@ using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
-using System.Xml.Linq;
 
 namespace DAPM.Orchestrator.Processes.PipelineActions
 {
     public class TransferDataActionProcess : OrchestratorProcess
     {
-        private Identity _localNodeIdentity;
-
         private Guid _executionId;
         private Guid _stepId;
 
@@ -39,7 +36,10 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         private string? _destinationName;
 
-        public TransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, TransferDataActionDTO data) 
+        private IdentityDTO _orchestratorIdentity;
+
+        public TransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId,
+            TransferDataActionDTO data, IdentityDTO orchestratorIdentity) 
             : base(engine, serviceProvider, ticketId)
         {
             _executionId = data.ExecutionId;
@@ -57,9 +57,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             _destinationName = data.DestinationName;
 
-
-            var identityService = _serviceScope.ServiceProvider.GetRequiredService<IIdentityService>();
-            _localNodeIdentity = identityService.GetIdentity();
+            _orchestratorIdentity = orchestratorIdentity;
         }
 
 
@@ -150,7 +148,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         #region Resource sending to operator
         private void SendResourceToOperatorMs()
         {
-            if(_destinationOrganizationId != _localNodeIdentity.Id)
+            if(_destinationOrganizationId != _localPeerIdentity.Id)
             {
                 SendResourceToPeer();
             }
@@ -182,7 +180,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         #region Resource sending to repository
         private void SendResourceToRepositoryMs()
         {
-            if (_destinationOrganizationId != _localNodeIdentity.Id)
+            if (_destinationOrganizationId != _localPeerIdentity.Id)
             {
                 _resource.RepositoryId = _destinationRepositoryId;
                 if (_destinationName != null)
@@ -297,8 +295,6 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         private void SendActionResult()
         {
-            var actionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ActionResultMessage>>();
-
             var actionResultDto = new ActionResultDTO()
             {
                 ActionResult = ActionResult.Completed,
@@ -307,15 +303,34 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
                 Message = "Step completed"
             };
 
-
-            var message = new ActionResultMessage()
+            if (_localPeerIdentity.Id != _orchestratorIdentity.Id)
             {
-                TicketId = _ticketId,
-                TimeToLive = TimeSpan.FromMinutes(1),
-                ActionResult = actionResultDto
-            };
+                var sendActionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendActionResultMessage>>();
 
-            actionResultProducer.PublishMessage(message);
+                var message = new SendActionResultMessage()
+                {
+                    TicketId = _ticketId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    TargetPeerDomain = _orchestratorIdentity.Domain,
+                    ActionResult = actionResultDto
+                };
+
+                sendActionResultProducer.PublishMessage(message);
+            }
+            else
+            {
+                var actionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ActionResultMessage>>();
+
+                var message = new ActionResultMessage()
+                {
+                    TicketId = _ticketId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    ActionResult = actionResultDto
+                };
+
+                actionResultProducer.PublishMessage(message);
+            }
+
 
             EndProcess();
         }

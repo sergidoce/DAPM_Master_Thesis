@@ -3,6 +3,7 @@ using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Operator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
+using RabbitMQLibrary.Messages.PeerApi.PipelineExecution;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
@@ -26,8 +27,10 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         private FileDTO _operatorSourceCode;
         private FileDTO _operatorDockerFile;
 
+        private IdentityDTO _orchestratorIdentity;
+
         public ExecuteOperatorActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, ExecuteOperatorActionDTO data) 
+            Guid ticketId, ExecuteOperatorActionDTO data, IdentityDTO orchestratorIdentity) 
             : base(engine, serviceProvider, ticketId)
         {
             _stepId = data.StepId;
@@ -39,6 +42,8 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             _inputResources = data.InputResources;
             _outputResourceId = data.OutputResourceId;
+
+            _orchestratorIdentity = orchestratorIdentity;
         }
 
 
@@ -81,9 +86,6 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         public override void OnExecuteOperatorResult(ExecuteOperatorResultMessage message)
         {
-            var actionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ActionResultMessage>>();
-
-
             var actionResultDto = new ActionResultDTO()
             {
                 ActionResult = ActionResult.Completed,
@@ -92,15 +94,34 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
                 Message = "Step completed"
             };
 
-
-            var resultMessage = new ActionResultMessage()
+            if (_localPeerIdentity.Id != _orchestratorIdentity.Id)
             {
-                TicketId = _ticketId,
-                TimeToLive = TimeSpan.FromMinutes(1),
-                ActionResult = actionResultDto
-            };
+                var sendActionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendActionResultMessage>>();
 
-            actionResultProducer.PublishMessage(resultMessage);
+                var actionResultMessage = new SendActionResultMessage()
+                {
+                    TicketId = _ticketId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    TargetPeerDomain = _orchestratorIdentity.Domain,
+                    ActionResult = actionResultDto
+                };
+
+                sendActionResultProducer.PublishMessage(actionResultMessage);
+            }
+            else
+            {
+                var actionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ActionResultMessage>>();
+
+                var actionResultMessage = new ActionResultMessage()
+                {
+                    TicketId = _ticketId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    ActionResult = actionResultDto
+                };
+
+                actionResultProducer.PublishMessage(actionResultMessage);
+            }
+
 
             EndProcess();
         }

@@ -1,8 +1,65 @@
 ﻿using DAPM.PeerApi.Services.Interfaces;
+using DAPM.PipelineOrchestratorMS.Api.Models;
+using RabbitMQLibrary.Interfaces;
+using RabbitMQLibrary.Messages.Orchestrator.Other;
+using RabbitMQLibrary.Messages.Orchestrator.ProcessRequests;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.PeerApi.Services
 {
     public class ActionService : IActionService
     {
+        private IQueueProducer<ExecuteOperatorActionRequest> _executeOperatorRequestProducer;
+        private IQueueProducer<TransferDataActionRequest> _transferDataRequestProducer;
+        private IQueueProducer<ActionResultReceivedMessage> _actionResultReceivedMessageProducer;
+
+        public ActionService(IQueueProducer<ExecuteOperatorActionRequest> executeOperatorRequestProducer,
+            IQueueProducer<TransferDataActionRequest> transferDataRequestProducer,
+            IQueueProducer<ActionResultReceivedMessage> actionResultReceivedMessageProducer)
+        {
+            _executeOperatorRequestProducer = executeOperatorRequestProducer;
+            _transferDataRequestProducer = transferDataRequestProducer;
+            _actionResultReceivedMessageProducer = actionResultReceivedMessageProducer;
+        }
+
+        public void OnActionResultReceived(ActionResultDTO actionResult)
+        {
+            var message = new ActionResultReceivedMessage()
+            {
+                ExecutionId = actionResult.ExecutionId,
+                StepId = actionResult.StepId,
+                TicketId = actionResult.StepId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                Succeeded = true,
+            };
+
+            _actionResultReceivedMessageProducer.PublishMessage(message);
+        }
+
+        public void OnExecuteOperatorActionReceived(IdentityDTO senderIdentity, Guid stepId, ExecuteOperatorActionDTO data)
+        {
+            var message = new ExecuteOperatorActionRequest()
+            {
+                TicketId = stepId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                OrchestratorIdentity = senderIdentity,
+                Data = data
+            };
+
+            _executeOperatorRequestProducer.PublishMessage(message);
+        }
+
+        public void OnTransferDataActionReceived(IdentityDTO senderIdentity, Guid stepId, TransferDataActionDTO data)
+        {
+            var message = new TransferDataActionRequest()
+            {
+                TicketId = stepId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                OrchestratorIdentity = senderIdentity,
+                Data = data
+            };
+
+            _transferDataRequestProducer.PublishMessage(message);
+        }
     }
 }

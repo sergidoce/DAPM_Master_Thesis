@@ -1,6 +1,7 @@
 ﻿using DAPM.Orchestrator.Processes;
 using DAPM.Orchestrator.Services;
 using DAPM.Orchestrator.Services.Models;
+using RabbitMQLibrary.Messages.Orchestrator.Other;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPipelineOrchestrator;
@@ -161,6 +162,11 @@ namespace DAPM.Orchestrator
         }
 
         public virtual void OnGetOperatorFilesFromRepoResult(GetOperatorFilesFromRepoResultMessage message)
+        {
+            return;
+        }
+
+        public virtual void OnActionResultFromPeer(ActionResultReceivedMessage message)
         {
             return;
         }

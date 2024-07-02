@@ -59,9 +59,9 @@ namespace DAPM.Orchestrator
             createRepositoryProcess.StartProcess();
         }
 
-        public void StartExecuteOperatorActionProcess(Guid ticketId, ExecuteOperatorActionDTO data)
+        public void StartExecuteOperatorActionProcess(Guid ticketId, IdentityDTO orchestratorIdentity, ExecuteOperatorActionDTO data)
         {
-            var executeOperatorActionProcess = new ExecuteOperatorActionProcess(this, _serviceProvider, ticketId, data);
+            var executeOperatorActionProcess = new ExecuteOperatorActionProcess(this, _serviceProvider, ticketId, data, orchestratorIdentity);
             _processes[ticketId] = executeOperatorActionProcess;
             executeOperatorActionProcess.StartProcess();
         }
@@ -131,9 +131,9 @@ namespace DAPM.Orchestrator
             postOperatorProcess.StartProcess();
         }
 
-        public void StartTransferDataActionProcess(Guid ticketId, TransferDataActionDTO data)
+        public void StartTransferDataActionProcess(Guid ticketId, IdentityDTO orchestratorIdentity, TransferDataActionDTO data)
         {
-            var transferDataActionProcess = new TransferDataActionProcess(this, _serviceProvider, ticketId, data);
+            var transferDataActionProcess = new TransferDataActionProcess(this, _serviceProvider, ticketId, data, orchestratorIdentity);
             _processes[ticketId] = transferDataActionProcess;
             transferDataActionProcess.StartProcess();
         }
@@ -150,6 +150,20 @@ namespace DAPM.Orchestrator
             var postResourceProcess = new PostResourceFromPeerProcess(this, _serviceProvider, ticketId, resource, storageMode, executionId, senderIdentity);
             _processes[ticketId] = postResourceProcess;
             postResourceProcess.StartProcess();
+        }
+
+        public void StartSendTransferDataActionProcess(Guid ticketId, TransferDataActionDTO data)
+        {
+            var sendTransferDataActionProcess = new SendTransferDataActionProcess(this, _serviceProvider, ticketId, data);
+            _processes[ticketId] = sendTransferDataActionProcess;
+            sendTransferDataActionProcess.StartProcess();
+        }
+
+        public void StartSendExecuteOperatorActionProcess(Guid ticketId, ExecuteOperatorActionDTO data)
+        {
+            var sendExecuteOperatorActionProcess = new SendExecuteOperatorActionProcess(this, _serviceProvider, ticketId, data);
+            _processes[ticketId] = sendExecuteOperatorActionProcess;
+            sendExecuteOperatorActionProcess.StartProcess();
         }
     }
 }
