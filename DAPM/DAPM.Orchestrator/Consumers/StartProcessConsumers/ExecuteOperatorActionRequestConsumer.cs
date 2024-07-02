@@ -1,6 +1,7 @@
 ﻿using DAPM.Orchestrator.Services;
 using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Orchestrator.ProcessRequests;
+using RabbitMQLibrary.Models;
 
 namespace DAPM.Orchestrator.Consumers.StartProcessConsumers
 {
@@ -22,13 +23,26 @@ namespace DAPM.Orchestrator.Consumers.StartProcessConsumers
             var identity = identityService.GetIdentity();
             var destinationOrganizationId = message.Data.OperatorResource.OrganizationId;
 
-            if(identity.Id != destinationOrganizationId)
+            var orchestratorIdentity = new IdentityDTO();
+
+            if (message.OrchestratorIdentity == null)
+            {
+                orchestratorIdentity.Id = identity.Id;
+                orchestratorIdentity.Name = identity.Name;
+                orchestratorIdentity.Domain = identity.Domain;
+            }
+            else
+            {
+                orchestratorIdentity = message.OrchestratorIdentity;
+            }
+
+            if (identity.Id != destinationOrganizationId)
             {
                 _engine.StartSendExecuteOperatorActionProcess(message.TicketId, message.Data);
             }
             else
             {
-                _engine.StartExecuteOperatorActionProcess(message.TicketId, message.OrchestratorIdentity, message.Data);
+                _engine.StartExecuteOperatorActionProcess(message.TicketId, orchestratorIdentity, message.Data);
             }
             
             return Task.CompletedTask;
