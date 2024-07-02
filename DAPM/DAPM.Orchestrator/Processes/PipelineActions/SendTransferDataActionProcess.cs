@@ -17,13 +17,13 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         private Guid _stepId;
 
         private TransferDataActionDTO _data;
-        private Guid _destinationOrganizationId;
+        private Guid _originOrganizationId;
 
         public SendTransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, TransferDataActionDTO data)
             : base(engine, serviceProvider, ticketId)
         {
             _data = data;
-            _destinationOrganizationId = _data.DestinationOrganizationId;
+            _originOrganizationId = _data.OriginOrganizationId;
 
             _executionId = data.ExecutionId;
             _stepId = data.StepId;
@@ -38,7 +38,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             {
                 TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
-                OrganizationId = _destinationOrganizationId
+                OrganizationId = _originOrganizationId
             };
 
             getOrganizationsProducer.PublishMessage(getOrganizationsMessage);

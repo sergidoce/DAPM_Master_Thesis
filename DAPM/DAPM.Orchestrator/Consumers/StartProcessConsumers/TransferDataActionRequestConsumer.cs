@@ -20,9 +20,9 @@ namespace DAPM.Orchestrator.Consumers.StartProcessConsumers
         {
             var identityService = _serviceScope.ServiceProvider.GetRequiredService<IIdentityService>();
             var identity = identityService.GetIdentity();
-            var destinationOrganizationId = message.Data.DestinationOrganizationId;
+            var originOrganizationId = message.Data.OriginOrganizationId;
 
-            if(identity.Id != destinationOrganizationId)
+            if(identity.Id != originOrganizationId)
             {
                 _engine.StartSendTransferDataActionProcess(message.TicketId, message.Data);
             }
