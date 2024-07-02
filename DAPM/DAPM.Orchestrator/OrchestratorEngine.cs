@@ -11,18 +11,20 @@ namespace DAPM.Orchestrator
 {
     public class OrchestratorEngine : IOrchestratorEngine
     {
-
+        private ILogger<OrchestratorEngine> _logger;
         private Dictionary<Guid, OrchestratorProcess> _processes;
         private IServiceProvider _serviceProvider;
 
-        public OrchestratorEngine(IServiceProvider serviceProvider)
+        public OrchestratorEngine(IServiceProvider serviceProvider, ILogger<OrchestratorEngine> logger)
         {
             _processes = new Dictionary<Guid, OrchestratorProcess>();
             _serviceProvider = serviceProvider;
+            _logger = logger;
         }
 
         public void DeleteProcess(Guid processId)
         {
+            _logger.LogInformation("ORCHESTRATOR ENGINE removing process with id " + processId.ToString());
             _processes.Remove(processId);
         }
 
@@ -133,6 +135,7 @@ namespace DAPM.Orchestrator
 
         public void StartTransferDataActionProcess(Guid ticketId, IdentityDTO orchestratorIdentity, TransferDataActionDTO data)
         {
+            _logger.LogInformation("ORCHESTRATOR ENGINE adding process with id " + ticketId.ToString());
             var transferDataActionProcess = new TransferDataActionProcess(this, _serviceProvider, ticketId, data, orchestratorIdentity);
             _processes[ticketId] = transferDataActionProcess;
             transferDataActionProcess.StartProcess();
