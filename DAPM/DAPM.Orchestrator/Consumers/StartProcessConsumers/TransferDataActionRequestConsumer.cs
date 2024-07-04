@@ -38,15 +38,15 @@ namespace DAPM.Orchestrator.Consumers.StartProcessConsumers
                 orchestratorIdentity = message.OrchestratorIdentity;
             }
 
-            _logger.LogInformation("Ticket id / step id in TransferDataRequestConsumer is " + message.TicketId.ToString());
+            _logger.LogInformation("Ticket id / step id in TransferDataRequestConsumer is " + message.SenderProcessId.ToString());
 
             if(identity.Id != originOrganizationId)
             {
-                _engine.StartSendTransferDataActionProcess(message.TicketId, message.Data);
+                _engine.StartSendTransferDataActionProcess(message.Data);
             }
             else
             {
-                _engine.StartTransferDataActionProcess(message.TicketId, orchestratorIdentity, message.Data);
+                _engine.StartTransferDataActionProcess(message.SenderProcessId, orchestratorIdentity, message.Data);
             }
 
             return Task.CompletedTask;

@@ -38,11 +38,11 @@ namespace DAPM.Orchestrator.Consumers.StartProcessConsumers
 
             if (identity.Id != destinationOrganizationId)
             {
-                _engine.StartSendExecuteOperatorActionProcess(message.TicketId, message.Data);
+                _engine.StartSendExecuteOperatorActionProcess(message.Data);
             }
             else
             {
-                _engine.StartExecuteOperatorActionProcess(message.TicketId, orchestratorIdentity, message.Data);
+                _engine.StartExecuteOperatorActionProcess(message.SenderProcessId, orchestratorIdentity, message.Data);
             }
             
             return Task.CompletedTask;

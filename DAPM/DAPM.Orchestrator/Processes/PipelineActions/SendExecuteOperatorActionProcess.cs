@@ -18,8 +18,9 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         private ExecuteOperatorActionDTO _data;
         private Guid _destinationOrganizationId;
 
-        public SendExecuteOperatorActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, ExecuteOperatorActionDTO data)
-            : base(engine, serviceProvider, ticketId)
+        public SendExecuteOperatorActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid processId,
+            ExecuteOperatorActionDTO data)
+            : base(engine, serviceProvider, processId)
         {
             _data = data;
             _destinationOrganizationId = _data.OperatorResource.OrganizationId;
@@ -36,7 +37,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var getOrganizationsMessage = new GetOrganizationsMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = _destinationOrganizationId
             };
@@ -58,7 +59,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var executeOperatorActionMessage = new SendExecuteOperatorActionMessage()
             {
-                TicketId = _ticketId,
+                SenderProcessId = _processId,
                 ExecutionId = _executionId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderIdentity = identityDto,
@@ -85,7 +86,6 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var actionResultMessage = new ActionResultMessage()
             {
-                TicketId = _ticketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 ActionResult = actionResultDto
             };

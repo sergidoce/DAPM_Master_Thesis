@@ -30,14 +30,14 @@ namespace DAPM.OperatorMS.Api.Consumers
 
             var executeOperatorResultMessage = new ExecuteOperatorResultMessage
             {
-                TicketId = message.TicketId,
+                ProcessId = message.ProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Succeeded = succeeded,
             };
 
             executeOperatorResultMessageProducer.PublishMessage(executeOperatorResultMessage);
 
-            _operatorEngine.DeleteExecution(message.TicketId);
+            _operatorEngine.DeleteExecution(message.ProcessId);
         }
     }
 }

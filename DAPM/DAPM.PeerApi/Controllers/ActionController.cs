@@ -22,14 +22,14 @@ namespace DAPM.PeerApi.Controllers
         [HttpPost("transfer-data")]
         public async Task<ActionResult> PostSendDataAction([FromBody] TransferDataActionDto actionDto)
         {
-            _actionService.OnTransferDataActionReceived(actionDto.SenderIdentity, actionDto.StepId, actionDto.Data);
+            _actionService.OnTransferDataActionReceived(actionDto.SenderProcessId, actionDto.SenderIdentity, actionDto.StepId, actionDto.Data);
             return Ok();
         }
 
         [HttpPost("execute-operator")]
         public async Task<ActionResult> PostExecuteOperatorAction([FromBody] ExecuteOperatorActionDto actionDto)
         {
-            _actionService.OnExecuteOperatorActionReceived(actionDto.SenderIdentity, actionDto.StepId, actionDto.Data);
+            _actionService.OnExecuteOperatorActionReceived(actionDto.SenderProcessId, actionDto.SenderIdentity, actionDto.StepId, actionDto.Data);
             return Ok();
         }
 

@@ -10,7 +10,7 @@ namespace RabbitMQLibrary.Messages.PipelineOrchestrator
     public class PipelineStartCommand : IQueueMessage
     {
         public Guid MessageId { get; set; }
-        public Guid TicketId { get; set; }
+        public Guid ProcessId { get; set; }
         public TimeSpan TimeToLive { get; set; }
         public Guid ExecutionId { get; set; }
     }

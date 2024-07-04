@@ -34,7 +34,7 @@ namespace DAPM.OperatorMS.Api.Consumers
 
             var postInputResourceResultMessage = new PostInputResourceResultMessage
             {
-                TicketId = message.TicketId,
+                ProcessId = message.ProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Succeeded = true,
             };

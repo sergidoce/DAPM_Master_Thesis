@@ -11,7 +11,7 @@ namespace RabbitMQLibrary.Messages.PeerApi.PipelineExecution
     public class SendExecuteOperatorActionMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
-        public Guid TicketId { get; set; }
+        public Guid SenderProcessId { get; set; }
         public TimeSpan TimeToLive { get; set; }
         public string TargetPeerDomain { get; set; }
         public IdentityDTO SenderIdentity { get; set; }

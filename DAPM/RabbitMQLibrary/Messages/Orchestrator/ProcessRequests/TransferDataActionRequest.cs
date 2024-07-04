@@ -11,7 +11,7 @@ namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
     public class TransferDataActionRequest : IQueueMessage
     {
         public Guid MessageId { get; set; }
-        public Guid TicketId { get; set; }
+        public Guid? SenderProcessId { get; set; }
         public TimeSpan TimeToLive { get; set; }
         public IdentityDTO OrchestratorIdentity { get; set; }
         public TransferDataActionDTO Data { get; set; }

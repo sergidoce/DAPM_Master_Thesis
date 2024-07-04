@@ -29,9 +29,9 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         private IdentityDTO _orchestratorIdentity;
 
-        public ExecuteOperatorActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, ExecuteOperatorActionDTO data, IdentityDTO orchestratorIdentity) 
-            : base(engine, serviceProvider, ticketId)
+        public ExecuteOperatorActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, 
+            Guid processId, ExecuteOperatorActionDTO data, IdentityDTO orchestratorIdentity) 
+            : base(engine, serviceProvider, processId)
         {
             _stepId = data.StepId;
             _executionId = data.ExecutionId;
@@ -53,7 +53,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var message = new GetOperatorFilesFromRepoMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = _operatorOrganizationId,
                 RepositoryId = (Guid)_operatorRepositoryId,
@@ -73,7 +73,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var executeOperatorMessage = new ExecuteOperatorMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 PipelineExecutionId = _executionId,
                 OutputResourceId = _outputResourceId,
@@ -100,7 +100,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var actionResultMessage = new SendActionResultMessage()
                 {
-                    TicketId = _ticketId,
+                    SenderProcessId = _processId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     TargetPeerDomain = _orchestratorIdentity.Domain,
                     ActionResult = actionResultDto
@@ -114,7 +114,6 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var actionResultMessage = new ActionResultMessage()
                 {
-                    TicketId = _ticketId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     ActionResult = actionResultDto
                 };

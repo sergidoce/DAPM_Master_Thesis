@@ -28,7 +28,7 @@ namespace DAPM.PeerApi.Services
             {
                 ExecutionId = actionResult.ExecutionId,
                 StepId = actionResult.StepId,
-                TicketId = actionResult.StepId,
+                ProcessId = actionResult.StepId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Succeeded = true,
             };
@@ -36,11 +36,11 @@ namespace DAPM.PeerApi.Services
             _actionResultReceivedMessageProducer.PublishMessage(message);
         }
 
-        public void OnExecuteOperatorActionReceived(IdentityDTO senderIdentity, Guid stepId, ExecuteOperatorActionDTO data)
+        public void OnExecuteOperatorActionReceived(Guid senderProcessId, IdentityDTO senderIdentity, Guid stepId, ExecuteOperatorActionDTO data)
         {
             var message = new ExecuteOperatorActionRequest()
             {
-                TicketId = stepId,
+                SenderProcessId = senderProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrchestratorIdentity = senderIdentity,
                 Data = data
@@ -49,11 +49,11 @@ namespace DAPM.PeerApi.Services
             _executeOperatorRequestProducer.PublishMessage(message);
         }
 
-        public void OnTransferDataActionReceived(IdentityDTO senderIdentity, Guid stepId, TransferDataActionDTO data)
+        public void OnTransferDataActionReceived(Guid senderProcessId, IdentityDTO senderIdentity, Guid stepId, TransferDataActionDTO data)
         {
             var message = new TransferDataActionRequest()
             {
-                TicketId = stepId,
+                SenderProcessId = senderProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrchestratorIdentity = senderIdentity,
                 Data = data

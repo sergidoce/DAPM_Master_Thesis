@@ -59,7 +59,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
             var resultMessage = new GetResourcesResultMessage
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
-                TicketId = message.TicketId,
+                ProcessId = message.ProcessId,
                 Resources = resourcesDTOs
             };
 

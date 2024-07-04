@@ -5,8 +5,8 @@ namespace DAPM.PeerApi.Services.Interfaces
 {
     public interface IActionService
     {
-        public void OnTransferDataActionReceived(IdentityDTO senderIdentity, Guid stepId, TransferDataActionDTO data);
-        public void OnExecuteOperatorActionReceived(IdentityDTO senderIdentity, Guid stepId, ExecuteOperatorActionDTO data);
+        public void OnTransferDataActionReceived(Guid senderProcessId, IdentityDTO senderIdentity, Guid stepId, TransferDataActionDTO data);
+        public void OnExecuteOperatorActionReceived(Guid senderProcessId, IdentityDTO senderIdentity, Guid stepId, ExecuteOperatorActionDTO data);
         public void OnActionResultReceived(ActionResultDTO actionResult);
 
     }

@@ -23,7 +23,7 @@ namespace DAPM.PeerApi.Consumers
             var registryUpdateDto = new RegistryUpdateDto()
             {
                 SenderIdentity = senderIdentity,
-                RegistryUpdateId = message.TicketId,
+                SenderProcessId = message.SenderProcessId,
                 IsPartOfHandshake = message.IsPartOfHandshake,
                 Organizations = message.RegistryUpdate.Organizations,
                 Repositories = message.RegistryUpdate.Repositories,

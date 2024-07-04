@@ -22,11 +22,11 @@ namespace DAPM.PeerApi.Consumers
             var targetDomain = message.TargetPeerDomain;
             var senderIdentity = message.SenderPeerIdentity;
 
-            _logger.LogInformation("Ticket id / step id in SendResourceConsumer is " + message.TicketId.ToString());
+            _logger.LogInformation("Ticket id / step id in SendResourceConsumer is " + message.SenderProcessId.ToString());
 
             var dto = new SendResourceToPeerDto()
             {
-                StepId = message.TicketId,
+                StepId = message.SenderProcessId,
                 ExecutionId = message.ExecutionId,
                 SenderPeerIdentity = senderIdentity,
                 StorageMode = message.StorageMode,

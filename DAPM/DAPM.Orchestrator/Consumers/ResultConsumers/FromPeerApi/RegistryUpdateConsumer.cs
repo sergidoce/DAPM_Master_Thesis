@@ -19,12 +19,12 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromPeerApi
 
             if (isPartOfHandshake)
             {
-                OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
+                OrchestratorProcess process = _orchestratorEngine.GetProcess(message.SenderProcessId);
                 process.OnRegistryUpdate(message);
             }
             else
             {
-                _orchestratorEngine.StartRegistryUpdateProcess(message.TicketId, message.RegistryUpdate, message.SenderIdentity);
+                _orchestratorEngine.StartRegistryUpdateProcess(message.SenderProcessId, message.RegistryUpdate, message.SenderIdentity);
             }
             
             return Task.CompletedTask;

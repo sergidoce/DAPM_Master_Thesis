@@ -38,9 +38,9 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         private IdentityDTO _orchestratorIdentity;
 
-        public TransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId,
+        public TransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid processId,
             TransferDataActionDTO data, IdentityDTO orchestratorIdentity) 
-            : base(engine, serviceProvider, ticketId)
+            : base(engine, serviceProvider, processId)
         {
             _executionId = data.ExecutionId;
             _stepId = data.StepId;
@@ -83,7 +83,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var message = new GetExecutionOutputMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 PipelineExecutionId = _executionId,
                 ResourceId = _resourceId
@@ -117,7 +117,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var message = new GetResourceFilesFromRepoMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 RepositoryId = (Guid)_repositoryId,
                 ResourceId = _resourceId
@@ -158,7 +158,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var message = new PostInputResourceMessage()
                 {
-                    TicketId = _ticketId,
+                    ProcessId = _processId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     PipelineExecutionId = _executionId,
                     Resource =  _resource,
@@ -206,7 +206,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var message = new PostResourceToRepoMessage()
                 {
-                    TicketId = _ticketId,
+                    ProcessId = _processId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     OrganizationId = _organizationId,
                     RepositoryId = (Guid)_destinationRepositoryId,
@@ -226,7 +226,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var postResourceToRegistryMessage = new PostResourceToRegistryMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Resource = message.Resource
             };
@@ -251,7 +251,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var getOrganizationsMessage = new GetOrganizationsMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = _destinationOrganizationId
             };
@@ -272,7 +272,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var sendResourceMessage = new SendResourceToPeerMessage()
             {
-                TicketId = _stepId,
+                SenderProcessId = _processId,
                 ExecutionId = _executionId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = identityDTO,
@@ -309,7 +309,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var message = new SendActionResultMessage()
                 {
-                    TicketId = _ticketId,
+                    SenderProcessId = _processId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     TargetPeerDomain = _orchestratorIdentity.Domain,
                     ActionResult = actionResultDto
@@ -323,7 +323,6 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var message = new ActionResultMessage()
                 {
-                    TicketId = _ticketId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     ActionResult = actionResultDto
                 };

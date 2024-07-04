@@ -6,7 +6,7 @@ namespace DAPM.PeerApi.Models
     {
         public IdentityDTO SenderIdentity { get; set; }
         public bool IsPartOfHandshake { get; set; }
-        public Guid RegistryUpdateId { get; set; }
+        public Guid ProcessId { get; set; }
         public bool IsDone { get; set; }
     }
 }

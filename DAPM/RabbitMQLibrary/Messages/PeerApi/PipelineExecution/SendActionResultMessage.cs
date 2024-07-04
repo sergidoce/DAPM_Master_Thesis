@@ -12,7 +12,7 @@ namespace RabbitMQLibrary.Messages.PeerApi.PipelineExecution
     public class SendActionResultMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
-        public Guid TicketId { get; set; }
+        public Guid SenderProcessId { get; set; }
         public TimeSpan TimeToLive { get; set; }
         public string TargetPeerDomain { get; set; }
         public ActionResultDTO ActionResult { get; set; }
