@@ -7,7 +7,7 @@ namespace DAPM.PeerApi.Services.Interfaces
     {
         public void OnTransferDataActionReceived(Guid senderProcessId, IdentityDTO senderIdentity, Guid stepId, TransferDataActionDTO data);
         public void OnExecuteOperatorActionReceived(Guid senderProcessId, IdentityDTO senderIdentity, Guid stepId, ExecuteOperatorActionDTO data);
-        public void OnActionResultReceived(ActionResultDTO actionResult);
+        public void OnActionResultReceived(Guid processId, ActionResultDTO actionResult);
 
     }
 }

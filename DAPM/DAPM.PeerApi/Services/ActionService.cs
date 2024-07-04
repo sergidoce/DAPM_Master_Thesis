@@ -22,13 +22,14 @@ namespace DAPM.PeerApi.Services
             _actionResultReceivedMessageProducer = actionResultReceivedMessageProducer;
         }
 
-        public void OnActionResultReceived(ActionResultDTO actionResult)
+        public void OnActionResultReceived(Guid processId, ActionResultDTO actionResult)
         {
+
             var message = new ActionResultReceivedMessage()
             {
                 ExecutionId = actionResult.ExecutionId,
                 StepId = actionResult.StepId,
-                ProcessId = actionResult.StepId,
+                ProcessId = processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Succeeded = true,
             };

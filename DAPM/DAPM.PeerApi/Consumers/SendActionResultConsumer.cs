@@ -20,6 +20,7 @@ namespace DAPM.PeerApi.Consumers
 
             var actionResultDto = new ActionResultDto()
             {
+                ProcessId = message.SenderProcessId,
                 StepId = message.ActionResult.StepId,
                 ExecutionId = message.ActionResult.ExecutionId,
                 ActionResult = (int)message.ActionResult.ActionResult,

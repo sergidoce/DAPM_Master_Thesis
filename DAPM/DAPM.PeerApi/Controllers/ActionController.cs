@@ -44,7 +44,7 @@ namespace DAPM.PeerApi.Controllers
                 Message = actionResultDto.Message,
             };
 
-            _actionService.OnActionResultReceived(actionResultDTO);
+            _actionService.OnActionResultReceived(actionResultDto.ProcessId, actionResultDTO);
             return Ok();
         }
 
