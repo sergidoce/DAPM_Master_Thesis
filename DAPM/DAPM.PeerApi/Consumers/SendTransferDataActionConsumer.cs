@@ -22,6 +22,7 @@ namespace DAPM.PeerApi.Consumers
 
             var transferDataActionDto = new TransferDataActionDto()
             {
+                SenderProcessId = message.SenderProcessId,
                 SenderIdentity = senderIdentity,
                 Data = message.Data,
                 StepId = message.StepId,
