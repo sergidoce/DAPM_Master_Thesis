@@ -38,8 +38,10 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         private IdentityDTO _orchestratorIdentity;
 
+        private Guid? _senderProcessId;
+
         public TransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid processId,
-            TransferDataActionDTO data, IdentityDTO orchestratorIdentity) 
+            Guid? senderProcessId, TransferDataActionDTO data, IdentityDTO orchestratorIdentity) 
             : base(engine, serviceProvider, processId)
         {
             _executionId = data.ExecutionId;
@@ -58,6 +60,8 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             _destinationName = data.DestinationName;
 
             _orchestratorIdentity = orchestratorIdentity;
+
+            _senderProcessId = senderProcessId;
         }
 
 
@@ -309,7 +313,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var message = new SendActionResultMessage()
                 {
-                    SenderProcessId = _processId,
+                    SenderProcessId = (Guid)_senderProcessId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     TargetPeerDomain = _orchestratorIdentity.Domain,
                     ActionResult = actionResultDto

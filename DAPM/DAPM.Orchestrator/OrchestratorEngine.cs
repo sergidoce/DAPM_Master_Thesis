@@ -146,27 +146,21 @@ namespace DAPM.Orchestrator
 
         
 
-        public void StartExecuteOperatorActionProcess(Guid? processId, IdentityDTO orchestratorIdentity, ExecuteOperatorActionDTO data)
+        public void StartExecuteOperatorActionProcess(Guid? senderProcessId, IdentityDTO orchestratorIdentity, ExecuteOperatorActionDTO data)
         {
-            if(processId == null)
-            {
-                processId = Guid.NewGuid();
-            }
-            var executeOperatorActionProcess = new ExecuteOperatorActionProcess(this, _serviceProvider, (Guid)processId, data, orchestratorIdentity);
-            _processes[(Guid)processId] = executeOperatorActionProcess;
+            var processId = Guid.NewGuid();
+            var executeOperatorActionProcess = new ExecuteOperatorActionProcess(this, _serviceProvider, processId, senderProcessId, data, orchestratorIdentity);
+            _processes[processId] = executeOperatorActionProcess;
             executeOperatorActionProcess.StartProcess();
         }
 
         
 
-        public void StartTransferDataActionProcess(Guid? processId, IdentityDTO orchestratorIdentity, TransferDataActionDTO data)
+        public void StartTransferDataActionProcess(Guid? senderProcessId, IdentityDTO orchestratorIdentity, TransferDataActionDTO data)
         {
-            if (processId == null)
-            {
-                processId = Guid.NewGuid();
-            }
-            var transferDataActionProcess = new TransferDataActionProcess(this, _serviceProvider, (Guid)processId, data, orchestratorIdentity);
-            _processes[(Guid)processId] = transferDataActionProcess;
+            var processId = Guid.NewGuid();
+            var transferDataActionProcess = new TransferDataActionProcess(this, _serviceProvider, processId, senderProcessId, data, orchestratorIdentity);
+            _processes[processId] = transferDataActionProcess;
             transferDataActionProcess.StartProcess();
         }
 
@@ -178,9 +172,10 @@ namespace DAPM.Orchestrator
             registryUpdateProcess.StartProcess();
         }
 
-        public void StartPostResourceFromPeerProcess(Guid processId, ResourceDTO resource, int storageMode, Guid executionId, IdentityDTO senderIdentity)
+        public void StartPostResourceFromPeerProcess(Guid senderProcessId, ResourceDTO resource, int storageMode, Guid executionId, IdentityDTO senderIdentity)
         {
-            var postResourceProcess = new PostResourceFromPeerProcess(this, _serviceProvider, processId, resource, storageMode, executionId, senderIdentity);
+            var processId = Guid.NewGuid(); 
+            var postResourceProcess = new PostResourceFromPeerProcess(this, _serviceProvider, processId, senderProcessId, resource, storageMode, executionId, senderIdentity);
             _processes[processId] = postResourceProcess;
             postResourceProcess.StartProcess();
         }

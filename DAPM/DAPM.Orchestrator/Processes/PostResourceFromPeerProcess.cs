@@ -27,12 +27,14 @@ namespace DAPM.Orchestrator.Processes
         private int _storageMode;
         private Guid _executionId;
 
+        private Guid _senderProcessId;
+
 
         public PostResourceFromPeerProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-             Guid processId, ResourceDTO resource, int storageMode, Guid executionId, IdentityDTO senderIdentity)
+             Guid processId, Guid senderProcessId, ResourceDTO resource, int storageMode, Guid executionId, IdentityDTO senderIdentity)
             : base(engine, serviceProvider, processId)
         {
-            
+            _senderProcessId = senderProcessId;
             _resource = resource;
             _executionId = executionId;
             _storageMode = storageMode;
@@ -224,7 +226,7 @@ namespace DAPM.Orchestrator.Processes
 
             var postResourceFromPeerResultMessage = new PostResourceFromPeerResultMessage()
             {
-                SenderProcessId = _processId,
+                SenderProcessId = _senderProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TargetPeerDomain = _senderIdentity.Domain,
                 Succeeded = true

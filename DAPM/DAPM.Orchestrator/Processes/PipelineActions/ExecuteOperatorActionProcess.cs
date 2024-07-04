@@ -29,8 +29,10 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         private IdentityDTO _orchestratorIdentity;
 
+        private Guid? _senderProcessId;
+
         public ExecuteOperatorActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, 
-            Guid processId, ExecuteOperatorActionDTO data, IdentityDTO orchestratorIdentity) 
+            Guid processId, Guid? senderProcessId, ExecuteOperatorActionDTO data, IdentityDTO orchestratorIdentity) 
             : base(engine, serviceProvider, processId)
         {
             _stepId = data.StepId;
@@ -44,6 +46,8 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             _outputResourceId = data.OutputResourceId;
 
             _orchestratorIdentity = orchestratorIdentity;
+
+            _senderProcessId = senderProcessId;
         }
 
 
@@ -100,7 +104,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var actionResultMessage = new SendActionResultMessage()
                 {
-                    SenderProcessId = _processId,
+                    SenderProcessId = (Guid)_senderProcessId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     TargetPeerDomain = _orchestratorIdentity.Domain,
                     ActionResult = actionResultDto
