@@ -7,6 +7,7 @@ using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
+using RabbitMQLibrary.Messages.PeerApi;
 using RabbitMQLibrary.Messages.PeerApi.PipelineExecution;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Messages.Repository;
@@ -34,11 +35,17 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         private FileDTO _resourceFile;
         private ResourceDTO _resource;
 
+        private IEnumerable<OrganizationDTO> _organizationsInRegistry;
+
         private string? _destinationName;
 
         private IdentityDTO _orchestratorIdentity;
 
         private Guid? _senderProcessId;
+
+        private ResourceDTO _createdResource;
+        private Dictionary<Guid, bool> _isRegistryUpdateCompleted;
+        private int _registryUpdatesNotCompletedCounter;
 
         public TransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid processId,
             Guid? senderProcessId, TransferDataActionDTO data, IdentityDTO orchestratorIdentity) 
@@ -62,13 +69,28 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
             _orchestratorIdentity = orchestratorIdentity;
 
             _senderProcessId = senderProcessId;
-        }
+
+            _registryUpdatesNotCompletedCounter = 0;
+            _isRegistryUpdateCompleted = new Dictionary<Guid, bool>();
+
+            _organizationsInRegistry = Enumerable.Empty<OrganizationDTO>();
+    }
 
 
         public override void StartProcess()
         {
+            var getOrganizationsProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetOrganizationsMessage>>();
 
-            if(_sourceStorageMode == 1)
+            var getOrganizationsMessage = new GetOrganizationsMessage()
+            {
+                ProcessId = _processId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                OrganizationId = null
+            };
+
+            getOrganizationsProducer.PublishMessage(getOrganizationsMessage);
+
+            if (_sourceStorageMode == 1)
             {
                 RetrieveResourceFromOperatorMs();
             }
@@ -77,6 +99,11 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
                 RetrieveResourceFromRepositoryMs();
             }
 
+        }
+
+        public override void OnGetOrganizationsFromRegistryResult(GetOrganizationsResultMessage message)
+        {
+            _organizationsInRegistry = message.Organizations;
         }
 
         #region Resource retrieval from operator
@@ -240,6 +267,100 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         public override void OnPostResourceToRegistryResult(PostResourceToRegistryResultMessage message)
         {
+            _createdResource = message.Resource;
+
+
+            while (!_organizationsInRegistry.Any())
+            {
+                continue;
+            } ;
+
+            var targetOrganizations = _organizationsInRegistry;
+            var resourcesList = new List<ResourceDTO>() { _createdResource };
+
+
+            SendRegistryUpdates(targetOrganizations,
+                Enumerable.Empty<OrganizationDTO>(),
+                Enumerable.Empty<RepositoryDTO>(),
+                resourcesList,
+                Enumerable.Empty<PipelineDTO>());
+        }
+
+
+        private void SendRegistryUpdates(IEnumerable<OrganizationDTO> targetOrganizations, IEnumerable<OrganizationDTO> organizations,
+            IEnumerable<RepositoryDTO> repositories, IEnumerable<ResourceDTO> resources, IEnumerable<PipelineDTO> pipelines)
+        {
+
+            var sendRegistryUpdateProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendRegistryUpdateMessage>>();
+            var identityDTO = new IdentityDTO()
+            {
+                Domain = _localPeerIdentity.Domain,
+                Id = _localPeerIdentity.Id,
+                Name = _localPeerIdentity.Name,
+            };
+
+            var registryUpdate = new RegistryUpdateDTO()
+            {
+                Organizations = organizations,
+                Repositories = repositories,
+                Pipelines = pipelines,
+                Resources = resources,
+            };
+
+
+            var registryUpdateMessages = new List<SendRegistryUpdateMessage>();
+
+            foreach (var organization in targetOrganizations)
+            {
+
+                if (organization.Id == _localPeerIdentity.Id)
+                    continue;
+
+                var domain = organization.Domain;
+                var registryUpdateMessage = new SendRegistryUpdateMessage()
+                {
+                    TargetPeerDomain = domain,
+                    SenderPeerIdentity = identityDTO,
+                    SenderProcessId = _processId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    RegistryUpdate = registryUpdate,
+                    IsPartOfHandshake = false,
+                };
+
+                registryUpdateMessages.Add(registryUpdateMessage);
+                _isRegistryUpdateCompleted[organization.Id] = false;
+                _registryUpdatesNotCompletedCounter++;
+            }
+
+            if (registryUpdateMessages.Count() == 0)
+            {
+                FinishProcess();
+            }
+            else
+            {
+                foreach (var message in registryUpdateMessages)
+                    sendRegistryUpdateProducer.PublishMessage(message);
+            }
+
+        }
+
+        public override void OnRegistryUpdateAck(RegistryUpdateAckMessage message)
+        {
+            var organizationId = message.PeerSenderIdentity.Id;
+            if (message.RegistryUpdateAck.IsCompleted)
+            {
+                _isRegistryUpdateCompleted[(Guid)organizationId] = true;
+                _registryUpdatesNotCompletedCounter--;
+            }
+
+            if (_registryUpdatesNotCompletedCounter == 0)
+            {
+                FinishProcess();
+            }
+        }
+
+        private void FinishProcess()
+        {
             SendActionResult();
         }
 
@@ -250,21 +371,14 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         private void SendResourceToPeer()
         {
-            var getOrganizationsProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetOrganizationsMessage>>();
 
-
-            var getOrganizationsMessage = new GetOrganizationsMessage()
+            while (!_organizationsInRegistry.Any())
             {
-                ProcessId = _processId,
-                TimeToLive = TimeSpan.FromMinutes(1),
-                OrganizationId = _destinationOrganizationId
+                continue;
             };
 
-            getOrganizationsProducer.PublishMessage(getOrganizationsMessage);
-        }
+            var organization = _organizationsInRegistry.First(o => o.Id == _destinationOrganizationId);
 
-        public override void OnGetOrganizationsFromRegistryResult(GetOrganizationsResultMessage message)
-        {
             var sendResourceToPeerMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendResourceToPeerMessage>>();
 
             var identityDTO = new IdentityDTO()
@@ -280,7 +394,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
                 ExecutionId = _executionId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = identityDTO,
-                TargetPeerDomain = message.Organizations.First().Domain,
+                TargetPeerDomain = organization.Domain,
                 StorageMode = _destinationStorageMode,
                 RepositoryId = _destinationRepositoryId,
                 Resource = _resource,
@@ -288,8 +402,6 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             sendResourceToPeerMessageProducer.PublishMessage(sendResourceMessage);
         }
-
-
 
         public override void OnSendResourceToPeerResult(SendResourceToPeerResultMessage message)
         {
