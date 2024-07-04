@@ -15,7 +15,7 @@ namespace DAPM.Orchestrator.Consumers
 
         public Task ConsumeAsync(ActionResultReceivedMessage message)
         {
-            OrchestratorProcess process = _engine.GetProcess(message.StepId);
+            OrchestratorProcess process = _engine.GetProcess(message.ProcessId);
             process.OnActionResultFromPeer(message);
             return Task.CompletedTask;
         }
