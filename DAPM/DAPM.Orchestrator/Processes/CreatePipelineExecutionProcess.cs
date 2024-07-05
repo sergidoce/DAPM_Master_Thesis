@@ -18,13 +18,15 @@ namespace DAPM.Orchestrator.Processes
         //Pipeline to execute
         private PipelineDTO? _pipelineDTO;
 
+        private Guid _ticketId;
         public CreatePipelineExecutionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, Guid organizationId, Guid repositoryId, Guid pipelineId) 
-            : base(engine, serviceProvider, ticketId)
+            Guid ticketId, Guid processId, Guid organizationId, Guid repositoryId, Guid pipelineId) 
+            : base(engine, serviceProvider, processId)
         {
             _organizationId = organizationId;
             _repositoryId = repositoryId;
             _pipelineId = pipelineId;
+            _ticketId = ticketId;
         }
 
         public override void StartProcess()
@@ -33,7 +35,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new GetPipelinesFromRepoMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 RepositoryId = _repositoryId,
                 PipelineId = _pipelineId,
@@ -51,7 +53,7 @@ namespace DAPM.Orchestrator.Processes
 
             var createInstanceExecutionMessage = new CreateInstanceExecutionMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Pipeline = _pipelineDTO
             };

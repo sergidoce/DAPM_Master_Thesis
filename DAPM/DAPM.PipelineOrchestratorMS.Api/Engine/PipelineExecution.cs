@@ -133,6 +133,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
             GenerateEngineNodes();
             GenerateEngineEdges();
             _steps = GenerateSteps();
+            var x = 0;
         }
 
         private void GenerateEngineNodes()

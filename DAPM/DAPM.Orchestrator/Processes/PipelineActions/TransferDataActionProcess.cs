@@ -1,5 +1,4 @@
-﻿
-using DAPM.Orchestrator.Services;
+﻿using DAPM.Orchestrator.Services;
 using DAPM.Orchestrator.Services.Models;
 using DAPM.PipelineOrchestratorMS.Api.Models;
 using RabbitMQLibrary.Interfaces;
@@ -8,6 +7,7 @@ using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPeerApi;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
+using RabbitMQLibrary.Messages.PeerApi;
 using RabbitMQLibrary.Messages.PeerApi.PipelineExecution;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Messages.Repository;
@@ -18,8 +18,6 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 {
     public class TransferDataActionProcess : OrchestratorProcess
     {
-        private Identity _localNodeIdentity;
-
         private Guid _executionId;
         private Guid _stepId;
 
@@ -37,10 +35,21 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         private FileDTO _resourceFile;
         private ResourceDTO _resource;
 
+        private IEnumerable<OrganizationDTO> _organizationsInRegistry;
+
         private string? _destinationName;
 
-        public TransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, TransferDataActionDTO data) 
-            : base(engine, serviceProvider, ticketId)
+        private IdentityDTO _orchestratorIdentity;
+
+        private Guid? _senderProcessId;
+
+        private ResourceDTO _createdResource;
+        private Dictionary<Guid, bool> _isRegistryUpdateCompleted;
+        private int _registryUpdatesNotCompletedCounter;
+
+        public TransferDataActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid processId,
+            Guid? senderProcessId, TransferDataActionDTO data, IdentityDTO orchestratorIdentity) 
+            : base(engine, serviceProvider, processId)
         {
             _executionId = data.ExecutionId;
             _stepId = data.StepId;
@@ -57,16 +66,31 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             _destinationName = data.DestinationName;
 
+            _orchestratorIdentity = orchestratorIdentity;
 
-            var identityService = _serviceScope.ServiceProvider.GetRequiredService<IIdentityService>();
-            _localNodeIdentity = identityService.GetIdentity();
-        }
+            _senderProcessId = senderProcessId;
+
+            _registryUpdatesNotCompletedCounter = 0;
+            _isRegistryUpdateCompleted = new Dictionary<Guid, bool>();
+
+            _organizationsInRegistry = Enumerable.Empty<OrganizationDTO>();
+    }
 
 
         public override void StartProcess()
         {
+            var getOrganizationsProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<GetOrganizationsMessage>>();
 
-            if(_sourceStorageMode == 1)
+            var getOrganizationsMessage = new GetOrganizationsMessage()
+            {
+                ProcessId = _processId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                OrganizationId = null
+            };
+
+            getOrganizationsProducer.PublishMessage(getOrganizationsMessage);
+
+            if (_sourceStorageMode == 1)
             {
                 RetrieveResourceFromOperatorMs();
             }
@@ -77,6 +101,11 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         }
 
+        public override void OnGetOrganizationsFromRegistryResult(GetOrganizationsResultMessage message)
+        {
+            _organizationsInRegistry = message.Organizations;
+        }
+
         #region Resource retrieval from operator
 
         private void RetrieveResourceFromOperatorMs()
@@ -85,7 +114,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var message = new GetExecutionOutputMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 PipelineExecutionId = _executionId,
                 ResourceId = _resourceId
@@ -119,7 +148,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var message = new GetResourceFilesFromRepoMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 RepositoryId = (Guid)_repositoryId,
                 ResourceId = _resourceId
@@ -150,18 +179,9 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         #region Resource sending to operator
         private void SendResourceToOperatorMs()
         {
-            if(_destinationOrganizationId != _localNodeIdentity.Id)
+            if(_destinationOrganizationId != _localPeerIdentity.Id)
             {
-                var sendResourceToPeerMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendResourceToPeerMessage>>();
-
-                var message = new SendResourceToPeerMessage()
-                {
-                    TicketId = _ticketId,
-                    TimeToLive = TimeSpan.FromMinutes(1),
-              
-                };
-
-                sendResourceToPeerMessageProducer.PublishMessage(message);
+                SendResourceToPeer();
             }
             else
             {
@@ -169,7 +189,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var message = new PostInputResourceMessage()
                 {
-                    TicketId = _ticketId,
+                    ProcessId = _processId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     PipelineExecutionId = _executionId,
                     Resource =  _resource,
@@ -191,18 +211,17 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         #region Resource sending to repository
         private void SendResourceToRepositoryMs()
         {
-            if (_destinationOrganizationId != _localNodeIdentity.Id)
+            if (_destinationOrganizationId != _localPeerIdentity.Id)
             {
-                var sendResourceToPeerMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendResourceToPeerMessage>>();
-
-                var message = new SendResourceToPeerMessage()
+                _resource.RepositoryId = _destinationRepositoryId;
+                if (_destinationName != null)
                 {
-                    TicketId = _ticketId,
-                    TimeToLive = TimeSpan.FromMinutes(1),
-
-                };
-
-                sendResourceToPeerMessageProducer.PublishMessage(message);
+                    _resource.Name = _destinationName;
+                }
+                _resource.Type = "pipeline result";
+                _resource.OrganizationId = _destinationOrganizationId;
+                
+                SendResourceToPeer();
             }
             else
             {
@@ -218,7 +237,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
                 var message = new PostResourceToRepoMessage()
                 {
-                    TicketId = _ticketId,
+                    ProcessId = _processId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     OrganizationId = _organizationId,
                     RepositoryId = (Guid)_destinationRepositoryId,
@@ -238,7 +257,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var postResourceToRegistryMessage = new PostResourceToRegistryMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Resource = message.Resource
             };
@@ -248,22 +267,150 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         public override void OnPostResourceToRegistryResult(PostResourceToRegistryResultMessage message)
         {
+            _createdResource = message.Resource;
+
+
+            while (!_organizationsInRegistry.Any())
+            {
+                continue;
+            } ;
+
+            var targetOrganizations = _organizationsInRegistry;
+            var resourcesList = new List<ResourceDTO>() { _createdResource };
+
+
+            SendRegistryUpdates(targetOrganizations,
+                Enumerable.Empty<OrganizationDTO>(),
+                Enumerable.Empty<RepositoryDTO>(),
+                resourcesList,
+                Enumerable.Empty<PipelineDTO>());
+        }
+
+
+        private void SendRegistryUpdates(IEnumerable<OrganizationDTO> targetOrganizations, IEnumerable<OrganizationDTO> organizations,
+            IEnumerable<RepositoryDTO> repositories, IEnumerable<ResourceDTO> resources, IEnumerable<PipelineDTO> pipelines)
+        {
+
+            var sendRegistryUpdateProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendRegistryUpdateMessage>>();
+            var identityDTO = new IdentityDTO()
+            {
+                Domain = _localPeerIdentity.Domain,
+                Id = _localPeerIdentity.Id,
+                Name = _localPeerIdentity.Name,
+            };
+
+            var registryUpdate = new RegistryUpdateDTO()
+            {
+                Organizations = organizations,
+                Repositories = repositories,
+                Pipelines = pipelines,
+                Resources = resources,
+            };
+
+
+            var registryUpdateMessages = new List<SendRegistryUpdateMessage>();
+
+            foreach (var organization in targetOrganizations)
+            {
+
+                if (organization.Id == _localPeerIdentity.Id)
+                    continue;
+
+                var domain = organization.Domain;
+                var registryUpdateMessage = new SendRegistryUpdateMessage()
+                {
+                    TargetPeerDomain = domain,
+                    SenderPeerIdentity = identityDTO,
+                    SenderProcessId = _processId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    RegistryUpdate = registryUpdate,
+                    IsPartOfHandshake = false,
+                };
+
+                registryUpdateMessages.Add(registryUpdateMessage);
+                _isRegistryUpdateCompleted[organization.Id] = false;
+                _registryUpdatesNotCompletedCounter++;
+            }
+
+            if (registryUpdateMessages.Count() == 0)
+            {
+                FinishProcess();
+            }
+            else
+            {
+                foreach (var message in registryUpdateMessages)
+                    sendRegistryUpdateProducer.PublishMessage(message);
+            }
+
+        }
+
+        public override void OnRegistryUpdateAck(RegistryUpdateAckMessage message)
+        {
+            var organizationId = message.PeerSenderIdentity.Id;
+            if (message.RegistryUpdateAck.IsCompleted)
+            {
+                _isRegistryUpdateCompleted[(Guid)organizationId] = true;
+                _registryUpdatesNotCompletedCounter--;
+            }
+
+            if (_registryUpdatesNotCompletedCounter == 0)
+            {
+                FinishProcess();
+            }
+        }
+
+        private void FinishProcess()
+        {
             SendActionResult();
         }
 
         #endregion
 
 
-        public override void OnSendResourceToPeerResult(SendResourceToPeerResultMessage message)
+
+
+        private void SendResourceToPeer()
         {
 
+            while (!_organizationsInRegistry.Any())
+            {
+                continue;
+            };
+
+            var organization = _organizationsInRegistry.First(o => o.Id == _destinationOrganizationId);
+
+            var sendResourceToPeerMessageProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendResourceToPeerMessage>>();
+
+            var identityDTO = new IdentityDTO()
+            {
+                Name = _localPeerIdentity.Name,
+                Id = _localPeerIdentity.Id,
+                Domain = _localPeerIdentity.Domain,
+            };
+
+            var sendResourceMessage = new SendResourceToPeerMessage()
+            {
+                SenderProcessId = _processId,
+                ExecutionId = _executionId,
+                TimeToLive = TimeSpan.FromMinutes(1),
+                SenderPeerIdentity = identityDTO,
+                TargetPeerDomain = organization.Domain,
+                StorageMode = _destinationStorageMode,
+                RepositoryId = _destinationRepositoryId,
+                Resource = _resource,
+            };
+
+            sendResourceToPeerMessageProducer.PublishMessage(sendResourceMessage);
+        }
+
+        public override void OnSendResourceToPeerResult(SendResourceToPeerResultMessage message)
+        {
+            SendActionResult();
         }
 
 
         private void SendActionResult()
         {
-            var actionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ActionResultMessage>>();
-
             var actionResultDto = new ActionResultDTO()
             {
                 ActionResult = ActionResult.Completed,
@@ -272,15 +419,33 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
                 Message = "Step completed"
             };
 
-
-            var message = new ActionResultMessage()
+            if (_localPeerIdentity.Id != _orchestratorIdentity.Id)
             {
-                TicketId = _ticketId,
-                TimeToLive = TimeSpan.FromMinutes(1),
-                ActionResult = actionResultDto
-            };
+                var sendActionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendActionResultMessage>>();
 
-            actionResultProducer.PublishMessage(message);
+                var message = new SendActionResultMessage()
+                {
+                    SenderProcessId = (Guid)_senderProcessId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    TargetPeerDomain = _orchestratorIdentity.Domain,
+                    ActionResult = actionResultDto
+                };
+
+                sendActionResultProducer.PublishMessage(message);
+            }
+            else
+            {
+                var actionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ActionResultMessage>>();
+
+                var message = new ActionResultMessage()
+                {
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    ActionResult = actionResultDto
+                };
+
+                actionResultProducer.PublishMessage(message);
+            }
+
 
             EndProcess();
         }

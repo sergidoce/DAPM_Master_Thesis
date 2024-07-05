@@ -11,7 +11,7 @@ namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRegistry
     public class GetPipelinesResultMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
-        public Guid TicketId { get; set; }
+        public Guid ProcessId { get; set; }
         public TimeSpan TimeToLive { get; set; }
         public IEnumerable<PipelineDTO> Pipelines { get; set; }
     }

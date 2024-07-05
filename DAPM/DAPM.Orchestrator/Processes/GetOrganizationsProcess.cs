@@ -9,11 +9,13 @@ namespace DAPM.Orchestrator.Processes
     public class GetOrganizationsProcess : OrchestratorProcess
     {
         private Guid? _organizationId;
+        private Guid _ticketId;
 
-
-        public GetOrganizationsProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid? organizationId) : base(engine, serviceProvider, ticketId)
+        public GetOrganizationsProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
+            Guid ticketId, Guid processId, Guid? organizationId) : base(engine, serviceProvider, processId)
         {
             _organizationId = organizationId;
+            _ticketId = ticketId;
         }
 
         public override void StartProcess()
@@ -22,7 +24,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new GetOrganizationsMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = _organizationId
             };

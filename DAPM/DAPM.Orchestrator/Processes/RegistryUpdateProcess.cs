@@ -13,12 +13,15 @@ namespace DAPM.Orchestrator.Processes
     {
         private RegistryUpdateDTO _registryUpdateDTO;
         private IdentityDTO _senderIdentityDTO;
+        private Guid _senderProcessId;
 
-        public RegistryUpdateProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, RegistryUpdateDTO registryUpdateDTO, IdentityDTO senderIdentity)
-            : base(engine, serviceProvider, ticketId)
+        public RegistryUpdateProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid processId, Guid senderProcessId,
+            RegistryUpdateDTO registryUpdateDTO, IdentityDTO senderIdentity)
+            : base(engine, serviceProvider, processId)
         {
             _registryUpdateDTO = registryUpdateDTO;
             _senderIdentityDTO = senderIdentity;
+            _senderProcessId = senderProcessId;
         }
 
         public override void StartProcess()
@@ -27,7 +30,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new ApplyRegistryUpdateMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 RegistryUpdate = _registryUpdateDTO
                
@@ -49,7 +52,7 @@ namespace DAPM.Orchestrator.Processes
 
             var ackMessage = new SendRegistryUpdateAckMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _senderProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = identityDTO,
                 TargetPeerDomain = _senderIdentityDTO.Domain,

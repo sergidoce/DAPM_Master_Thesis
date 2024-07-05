@@ -23,7 +23,7 @@ namespace DAPM.PeerApi.Consumers
 
             var registryUpdateAckDto = new RegistryUpdateAckDto()
             {
-                RegistryUpdateId = message.TicketId,
+                ProcessId = message.ProcessId,
                 IsDone = message.RegistryUpdateAck.IsCompleted,
                 SenderIdentity = senderIdentity,
             };

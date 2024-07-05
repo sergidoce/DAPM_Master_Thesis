@@ -24,7 +24,7 @@ namespace DAPM.PeerApi.Services
         {
             var message = new HandshakeRequestMessage()
             {
-                TicketId = handshakeId,
+                SenderProcessId = handshakeId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = senderIdentity,
             };
@@ -36,7 +36,7 @@ namespace DAPM.PeerApi.Services
         {
             var message = new HandshakeRequestResponseMessage()
             {
-                TicketId = handshakeId,
+                SenderProcessId = handshakeId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = senderIdentity,
                 IsRequestAccepted = IsAccepted

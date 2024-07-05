@@ -6,6 +6,7 @@ using RabbitMQLibrary.Messages.PeerApi;
 using DAPM.PeerApi.Services.Interfaces;
 using DAPM.PeerApi.Services;
 using RabbitMQLibrary.Messages.PeerApi.Handshake;
+using RabbitMQLibrary.Messages.PeerApi.PipelineExecution;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +33,12 @@ builder.Services.AddQueueMessageConsumer<SendRegistryUpdateAckConsumer, SendRegi
 builder.Services.AddQueueMessageConsumer<SendHandshakeRequestConsumer, SendHandshakeRequestMessage>();
 builder.Services.AddQueueMessageConsumer<SendHandshakeRequestResponseConsumer, SendHandshakeRequestResponseMessage>();
 builder.Services.AddQueueMessageConsumer<SendRegistryUpdateConsumer, SendRegistryUpdateMessage>();
+builder.Services.AddQueueMessageConsumer<SendResourceConsumer, SendResourceToPeerMessage>();
+builder.Services.AddQueueMessageConsumer<PostResourceFromPeerResultConsumer, PostResourceFromPeerResultMessage>();
+
+builder.Services.AddQueueMessageConsumer<SendExecuteOperatorActionConsumer, SendExecuteOperatorActionMessage>();
+builder.Services.AddQueueMessageConsumer<SendTransferDataActionConsumer, SendTransferDataActionMessage>();
+builder.Services.AddQueueMessageConsumer<SendActionResultConsumer, SendActionResultMessage>();
 
 
 builder.Services.AddScoped<IActionService, ActionService>();

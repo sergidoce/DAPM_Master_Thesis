@@ -14,7 +14,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromRepo
 
         public Task ConsumeAsync(GetOperatorFilesFromRepoResultMessage message)
         {
-            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
+            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.ProcessId);
             process.OnGetOperatorFilesFromRepoResult(message);
 
             return Task.CompletedTask;

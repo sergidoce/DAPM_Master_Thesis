@@ -15,7 +15,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromPipelineOrchestrator
 
         public Task ConsumeAsync(CreatePipelineExecutionResultMessage message)
         {
-            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
+            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.ProcessId);
             process.OnCreatePipelineExecutionResult(message);
 
             return Task.CompletedTask;

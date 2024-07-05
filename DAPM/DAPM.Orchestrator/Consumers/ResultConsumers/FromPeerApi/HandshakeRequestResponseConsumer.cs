@@ -15,7 +15,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromPeerApi
 
         public Task ConsumeAsync(HandshakeRequestResponseMessage message)
         {
-            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
+            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.SenderProcessId);
             process.OnHandshakeRequestResponse(message);
 
             return Task.CompletedTask;

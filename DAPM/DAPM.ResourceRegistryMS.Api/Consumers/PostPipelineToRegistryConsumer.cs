@@ -30,7 +30,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
                 {
                     var resultMessage = new PostPipelineToRegistryResultMessage
                     {
-                        TicketId = message.TicketId,
+                        ProcessId = message.ProcessId,
                         TimeToLive = TimeSpan.FromMinutes(1),
                         Message = "Item created successfully",
                         Succeeded = true,

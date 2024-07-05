@@ -43,7 +43,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
 
                 var postResourceToRepoResult = new PostResourceToRepoResultMessage
                 {
-                    TicketId = message.TicketId,
+                    ProcessId = message.ProcessId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     Resource = resourceDto
                 };

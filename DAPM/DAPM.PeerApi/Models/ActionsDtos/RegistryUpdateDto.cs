@@ -4,6 +4,7 @@ namespace DAPM.PeerApi.Models.ActionsDtos
 {
     public class RegistryUpdateDto
     {
+        public Guid SenderProcessId { get; set; }
         public IdentityDTO SenderIdentity { get; set; }
         public Guid RegistryUpdateId { get; set; }
         public bool IsPartOfHandshake { get; set; }

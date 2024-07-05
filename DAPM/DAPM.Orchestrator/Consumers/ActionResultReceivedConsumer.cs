@@ -5,9 +5,19 @@ namespace DAPM.Orchestrator.Consumers
 {
     public class ActionResultReceivedConsumer : IQueueConsumer<ActionResultReceivedMessage>
     {
+        IOrchestratorEngine _engine;
+
+        public ActionResultReceivedConsumer(IOrchestratorEngine engine)
+        {
+            _engine = engine;
+        }
+
+
         public Task ConsumeAsync(ActionResultReceivedMessage message)
         {
-            throw new NotImplementedException();
+            OrchestratorProcess process = _engine.GetProcess(message.ProcessId);
+            process.OnActionResultFromPeer(message);
+            return Task.CompletedTask;
         }
     }
 }

@@ -14,7 +14,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromPeerApi
 
         public Task ConsumeAsync(SendResourceToPeerResultMessage message)
         {
-            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
+            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.SenderProcessId);
             process.OnSendResourceToPeerResult(message);
 
             return Task.CompletedTask;
