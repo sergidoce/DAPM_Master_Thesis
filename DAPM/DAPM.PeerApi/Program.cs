@@ -36,7 +36,9 @@ builder.Services.AddQueueMessageConsumer<SendRegistryUpdateConsumer, SendRegistr
 builder.Services.AddQueueMessageConsumer<SendResourceConsumer, SendResourceToPeerMessage>();
 builder.Services.AddQueueMessageConsumer<PostResourceFromPeerResultConsumer, PostResourceFromPeerResultMessage>();
 
-
+builder.Services.AddQueueMessageConsumer<SendExecuteOperatorActionConsumer, SendExecuteOperatorActionMessage>();
+builder.Services.AddQueueMessageConsumer<SendTransferDataActionConsumer, SendTransferDataActionMessage>();
+builder.Services.AddQueueMessageConsumer<SendActionResultConsumer, SendActionResultMessage>();
 
 
 builder.Services.AddScoped<IActionService, ActionService>();

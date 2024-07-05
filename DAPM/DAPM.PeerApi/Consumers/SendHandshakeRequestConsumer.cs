@@ -22,7 +22,7 @@ namespace DAPM.PeerApi.Consumers
             var handshakeRequestDto = new HandshakeRequestDto()
             {
                 SenderIdentity = senderIdentity,
-                HandshakeId = message.TicketId,
+                HandshakeId = message.SenderProcessId,
             };
 
             var url = "http://" + targetDomain + PeerApiEndpoints.HandshakeRequestEndpoint;

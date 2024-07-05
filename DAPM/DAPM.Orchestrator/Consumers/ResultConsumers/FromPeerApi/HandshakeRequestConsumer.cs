@@ -21,7 +21,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromPeerApi
                 Domain = message.SenderPeerIdentity.Domain,
             };
 
-            _engine.StartCollabHandshakeResponseProcess(message.TicketId, senderIdentity);
+            _engine.StartCollabHandshakeResponseProcess(message.SenderProcessId, senderIdentity);
             return Task.CompletedTask;
         }
     }

@@ -38,7 +38,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
 
                 var resultMessage = new PostRepoToRegistryResultMessage
                 {
-                    TicketId = message.TicketId,
+                    ProcessId = message.ProcessId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     Message = "Repository entry created successfully",
                     Succeeded = true,

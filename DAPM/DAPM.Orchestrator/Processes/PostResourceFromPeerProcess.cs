@@ -27,12 +27,14 @@ namespace DAPM.Orchestrator.Processes
         private int _storageMode;
         private Guid _executionId;
 
+        private Guid _senderProcessId;
+
 
         public PostResourceFromPeerProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, ResourceDTO resource, int storageMode, Guid executionId, IdentityDTO senderIdentity)
-            : base(engine, serviceProvider, ticketId)
+             Guid processId, Guid senderProcessId, ResourceDTO resource, int storageMode, Guid executionId, IdentityDTO senderIdentity)
+            : base(engine, serviceProvider, processId)
         {
-            
+            _senderProcessId = senderProcessId;
             _resource = resource;
             _executionId = executionId;
             _storageMode = storageMode;
@@ -61,7 +63,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new PostResourceToRepoMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = _resource.OrganizationId,
                 RepositoryId = (Guid)_resource.RepositoryId,
@@ -79,7 +81,7 @@ namespace DAPM.Orchestrator.Processes
 
             var postResourceToRegistryMessage = new PostResourceToRegistryMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Resource = message.Resource
             };
@@ -95,7 +97,7 @@ namespace DAPM.Orchestrator.Processes
 
             var getOrganizationsMessage = new GetOrganizationsMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = null
             };
@@ -153,7 +155,7 @@ namespace DAPM.Orchestrator.Processes
                 {
                     TargetPeerDomain = domain,
                     SenderPeerIdentity = identityDTO,
-                    TicketId = _ticketId,
+                    SenderProcessId = _processId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     RegistryUpdate = registryUpdate,
                     IsPartOfHandshake = false,
@@ -201,7 +203,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new PostInputResourceMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 PipelineExecutionId = _executionId,
                 Resource = _resource,
@@ -224,7 +226,7 @@ namespace DAPM.Orchestrator.Processes
 
             var postResourceFromPeerResultMessage = new PostResourceFromPeerResultMessage()
             {
-                TicketId = _ticketId,
+                SenderProcessId = _senderProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 TargetPeerDomain = _senderIdentity.Domain,
                 Succeeded = true

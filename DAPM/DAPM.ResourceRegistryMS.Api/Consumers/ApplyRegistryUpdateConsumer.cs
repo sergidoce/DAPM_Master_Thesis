@@ -55,7 +55,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
 
             var resultMessage = new ApplyRegistryUpdateResult()
             {
-                TicketId = message.TicketId,
+                ProcessId = message.ProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Succeeded = true,
                 Message = "Succeeded",

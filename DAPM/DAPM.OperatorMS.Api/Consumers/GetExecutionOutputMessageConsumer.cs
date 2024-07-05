@@ -32,7 +32,7 @@ namespace DAPM.OperatorMS.Api.Consumers
 
             var getExecutionOutputResultMessage = new GetExecutionOutputResultMessage
             {
-                TicketId = message.TicketId,
+                ProcessId = message.ProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OutputResource = outputResource
             };

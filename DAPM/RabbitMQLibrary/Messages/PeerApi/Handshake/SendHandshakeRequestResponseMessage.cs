@@ -11,7 +11,7 @@ namespace RabbitMQLibrary.Messages.PeerApi.Handshake
     public class SendHandshakeRequestResponseMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
-        public Guid TicketId { get; set; }
+        public Guid SenderProcessId { get; set; }
         public TimeSpan TimeToLive { get; set; }
 
         public string TargetDomain { get; set; }

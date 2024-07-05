@@ -11,7 +11,7 @@ namespace RabbitMQLibrary.Messages.Orchestrator.ProcessRequests
     public class PostResourceFromPeerRequest : IQueueMessage
     {
         public Guid MessageId { get; set; }
-        public Guid TicketId { get; set; }
+        public Guid SenderProcessId { get; set; }
         public TimeSpan TimeToLive { get; set; }
 
         public IdentityDTO SenderPeerIdentity { get; set; }

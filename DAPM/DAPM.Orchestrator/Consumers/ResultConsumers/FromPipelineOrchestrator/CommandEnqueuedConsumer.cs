@@ -14,7 +14,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromPipelineOrchestrator
 
         public Task ConsumeAsync(CommandEnqueuedMessage message)
         {
-            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.TicketId);
+            OrchestratorProcess process = _orchestratorEngine.GetProcess(message.ProcessId);
             process.OnCommandEnqueued(message);
 
             return Task.CompletedTask;

@@ -58,7 +58,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
             var resultMessage = new GetOrganizationsResultMessage
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
-                TicketId = message.TicketId,
+                ProcessId = message.ProcessId,
                 Organizations = organizations
             };
 

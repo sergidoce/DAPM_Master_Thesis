@@ -20,7 +20,7 @@ namespace DAPM.PeerApi.Consumers
 
             var dto = new SendResourceToPeerResultDto()
             {
-                StepId = message.TicketId,
+                StepId = message.SenderProcessId,
                 Succeeded = true,
             };
 

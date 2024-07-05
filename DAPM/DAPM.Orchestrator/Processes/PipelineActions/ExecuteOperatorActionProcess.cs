@@ -3,6 +3,7 @@ using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Operator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromOperator;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo;
+using RabbitMQLibrary.Messages.PeerApi.PipelineExecution;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
@@ -26,9 +27,13 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
         private FileDTO _operatorSourceCode;
         private FileDTO _operatorDockerFile;
 
-        public ExecuteOperatorActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, ExecuteOperatorActionDTO data) 
-            : base(engine, serviceProvider, ticketId)
+        private IdentityDTO _orchestratorIdentity;
+
+        private Guid? _senderProcessId;
+
+        public ExecuteOperatorActionProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, 
+            Guid processId, Guid? senderProcessId, ExecuteOperatorActionDTO data, IdentityDTO orchestratorIdentity) 
+            : base(engine, serviceProvider, processId)
         {
             _stepId = data.StepId;
             _executionId = data.ExecutionId;
@@ -39,6 +44,10 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             _inputResources = data.InputResources;
             _outputResourceId = data.OutputResourceId;
+
+            _orchestratorIdentity = orchestratorIdentity;
+
+            _senderProcessId = senderProcessId;
         }
 
 
@@ -48,7 +57,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var message = new GetOperatorFilesFromRepoMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = _operatorOrganizationId,
                 RepositoryId = (Guid)_operatorRepositoryId,
@@ -68,7 +77,7 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
             var executeOperatorMessage = new ExecuteOperatorMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 PipelineExecutionId = _executionId,
                 OutputResourceId = _outputResourceId,
@@ -81,9 +90,6 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
 
         public override void OnExecuteOperatorResult(ExecuteOperatorResultMessage message)
         {
-            var actionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ActionResultMessage>>();
-
-
             var actionResultDto = new ActionResultDTO()
             {
                 ActionResult = ActionResult.Completed,
@@ -92,15 +98,33 @@ namespace DAPM.Orchestrator.Processes.PipelineActions
                 Message = "Step completed"
             };
 
-
-            var resultMessage = new ActionResultMessage()
+            if (_localPeerIdentity.Id != _orchestratorIdentity.Id)
             {
-                TicketId = _ticketId,
-                TimeToLive = TimeSpan.FromMinutes(1),
-                ActionResult = actionResultDto
-            };
+                var sendActionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<SendActionResultMessage>>();
 
-            actionResultProducer.PublishMessage(resultMessage);
+                var actionResultMessage = new SendActionResultMessage()
+                {
+                    SenderProcessId = (Guid)_senderProcessId,
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    TargetPeerDomain = _orchestratorIdentity.Domain,
+                    ActionResult = actionResultDto
+                };
+
+                sendActionResultProducer.PublishMessage(actionResultMessage);
+            }
+            else
+            {
+                var actionResultProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ActionResultMessage>>();
+
+                var actionResultMessage = new ActionResultMessage()
+                {
+                    TimeToLive = TimeSpan.FromMinutes(1),
+                    ActionResult = actionResultDto
+                };
+
+                actionResultProducer.PublishMessage(actionResultMessage);
+            }
+
 
             EndProcess();
         }

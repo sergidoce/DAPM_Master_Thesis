@@ -1,6 +1,8 @@
 ﻿using DAPM.PeerApi.Models.ActionsDtos;
 using DAPM.PeerApi.Services.Interfaces;
+using DAPM.PipelineOrchestratorMS.Api.Models;
 using Microsoft.AspNetCore.Mvc;
+using ActionResult = Microsoft.AspNetCore.Mvc.ActionResult;
 
 namespace DAPM.PeerApi.Controllers
 {
@@ -17,21 +19,32 @@ namespace DAPM.PeerApi.Controllers
             _actionService = actionService;
         }
 
-        [HttpPost("send-data")]
-        public async Task<ActionResult<Guid>> PostSendDataAction([FromBody] SendDataActionDto actionDto)
+        [HttpPost("transfer-data")]
+        public async Task<ActionResult> PostSendDataAction([FromBody] TransferDataActionDto actionDto)
         {
-            throw new NotImplementedException();
+            _actionService.OnTransferDataActionReceived(actionDto.SenderProcessId, actionDto.SenderIdentity, actionDto.StepId, actionDto.Data);
+            return Ok();
         }
 
-        [HttpPost("execute-algorithm")]
-        public async Task<ActionResult<Guid>> PostExecuteAlgorithmAction([FromBody] string name)
+        [HttpPost("execute-operator")]
+        public async Task<ActionResult> PostExecuteOperatorAction([FromBody] ExecuteOperatorActionDto actionDto)
         {
-            throw new NotImplementedException();
+            _actionService.OnExecuteOperatorActionReceived(actionDto.SenderProcessId, actionDto.SenderIdentity, actionDto.StepId, actionDto.Data);
+            return Ok();
         }
 
         [HttpPost("action-result")]
-        public async Task<ActionResult> PostActionResult()
+        public async Task<ActionResult> PostActionResult([FromBody] ActionResultDto actionResultDto)
         {
+            var actionResultDTO = new ActionResultDTO()
+            {
+                ActionResult = (PipelineOrchestratorMS.Api.Models.ActionResult)actionResultDto.ActionResult,
+                ExecutionId = actionResultDto.ExecutionId,
+                StepId = actionResultDto.StepId,
+                Message = actionResultDto.Message,
+            };
+
+            _actionService.OnActionResultReceived(actionResultDto.ProcessId, actionResultDTO);
             return Ok();
         }
 

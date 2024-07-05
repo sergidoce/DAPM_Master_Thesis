@@ -55,7 +55,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
 
             var message = new ExecuteOperatorActionRequest()
             {
-                TicketId = Id,
+                SenderProcessId = null,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Data = data
             };

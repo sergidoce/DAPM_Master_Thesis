@@ -10,11 +10,15 @@ namespace DAPM.Orchestrator.Processes
     {
         private Guid _organizationId;
         private Guid? _repositoryId;
-        public GetRepositoriesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid organizationId, Guid? repositoryId) 
-            : base(engine, serviceProvider, ticketId)
+        private Guid _ticketId;
+        public GetRepositoriesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid processId, Guid organizationId,
+            Guid? repositoryId) 
+            : base(engine, serviceProvider, processId)
         {
             _organizationId = organizationId;
             _repositoryId = repositoryId;
+
+            _ticketId = ticketId;
         }
 
         public override void StartProcess()
@@ -23,7 +27,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new GetRepositoriesMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = _organizationId,
                 RepositoryId = _repositoryId

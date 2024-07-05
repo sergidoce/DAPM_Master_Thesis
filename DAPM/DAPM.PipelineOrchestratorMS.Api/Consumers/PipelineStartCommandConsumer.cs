@@ -23,7 +23,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Consumers
 
             var commandEnqueuedMessage = new CommandEnqueuedMessage()
             {
-                TicketId = message.TicketId,
+                ProcessId = message.ProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Succeeded = true,
                 Command = "start",

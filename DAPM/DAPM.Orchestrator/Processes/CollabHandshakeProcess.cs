@@ -21,15 +21,16 @@ namespace DAPM.Orchestrator.Processes
         private Identity _requestedPeerIdentity;
         private IIdentityService _identityService;
         private string _requestedPeerDomain;
-
+        private Guid _ticketId;
         public CollabHandshakeProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, 
-            Guid ticketId, string requestedPeerDomain)
-            : base(engine, serviceProvider, ticketId)
+            Guid ticketId, Guid processId, string requestedPeerDomain)
+            : base(engine, serviceProvider, processId)
         {
             _requestedPeerDomain = requestedPeerDomain;
             _identityService = serviceProvider.GetRequiredService<IIdentityService>();
             _localPeerIdentity = _identityService.GetIdentity();
             _logger = serviceProvider.GetRequiredService<ILogger<CollabHandshakeProcess>>();
+            _ticketId = ticketId;
         }
 
         public override void StartProcess()
@@ -48,7 +49,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new SendHandshakeRequestMessage()
             {
-                TicketId = _ticketId,
+                SenderProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = identityDto,
                 RequestedPeerDomain = _requestedPeerDomain
@@ -76,7 +77,7 @@ namespace DAPM.Orchestrator.Processes
 
             var getEntriesFromOrgMessage = new GetEntriesFromOrgMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = (Guid)_localPeerIdentity.Id
             };
@@ -105,7 +106,7 @@ namespace DAPM.Orchestrator.Processes
 
             var sendRegistryUpdateMessage = new SendRegistryUpdateMessage()
             {
-                TicketId = _ticketId,
+                SenderProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = senderIdentityDto,
                 TargetPeerDomain = _requestedPeerDomain,
@@ -126,7 +127,7 @@ namespace DAPM.Orchestrator.Processes
 
             var applyRegistryUpdateMessage = new ApplyRegistryUpdateMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 RegistryUpdate = message.RegistryUpdate
 
@@ -148,7 +149,7 @@ namespace DAPM.Orchestrator.Processes
 
             var sendRegistryUpdateAckMessage = new SendRegistryUpdateAckMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 SenderPeerIdentity = senderIdentityDto,
                 TargetPeerDomain = _requestedPeerDomain,
