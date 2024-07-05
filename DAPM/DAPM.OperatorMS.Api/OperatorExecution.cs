@@ -11,10 +11,11 @@ namespace DAPM.OperatorMS.Api
         private IDockerService _dockerService;
         private Guid _pipelineExecutionId;
         private Guid _outputResourceId;
+        private List<Guid> _inputResourceIds;
         private ResourceDTO _sourceCode;
         private FileDTO _dockerfile;
 
-        public OperatorExecution(IOperatorEngine engine, Guid ticketId, Guid pipelineExecutionId, Guid outputResourceId,
+        public OperatorExecution(IOperatorEngine engine, Guid ticketId, Guid pipelineExecutionId, Guid outputResourceId, List<Guid> inputResourceIds,
             ResourceDTO sourceCode, FileDTO dockerfile, IDockerService dockerService)
         {
             _engine = engine;
@@ -22,6 +23,7 @@ namespace DAPM.OperatorMS.Api
             _dockerService = dockerService;
             _pipelineExecutionId = pipelineExecutionId;
             _outputResourceId = outputResourceId;
+            _inputResourceIds = inputResourceIds;
             _sourceCode = sourceCode;
             _dockerfile = dockerfile;
 
@@ -33,7 +35,7 @@ namespace DAPM.OperatorMS.Api
             _dockerService.PostOperator(_pipelineExecutionId, _sourceCode, _dockerfile);
 
             // Replace placeholders in Dockerfile with corresponding input file path and output file path
-            await _dockerService.ReplaceDockerfilePlaceholders(_pipelineExecutionId, _outputResourceId, _sourceCode.Id);
+            await _dockerService.ReplaceDockerfilePlaceholders(_pipelineExecutionId, _outputResourceId, _sourceCode.Id, _inputResourceIds);
 
             // Create Docker image with source-code and Dockerfile
             string imageName = await _dockerService.CreateDockerImage(_pipelineExecutionId, _sourceCode.Id);
@@ -52,6 +54,9 @@ namespace DAPM.OperatorMS.Api
             // Check whether the expected output file is placed in the Docker volume
             ResourceDTO outputFile = _dockerService.GetExecutionOutputResource(_pipelineExecutionId, _outputResourceId);
             bool succeeded = outputFile != null;
+
+            // Delete Docker Image and Container
+            _dockerService.RemoveImageAndContainer(imageName, containerId);
 
             return succeeded;
         }

@@ -29,8 +29,9 @@ namespace DAPM.OperatorMS.Api
 
         public async Task<bool> StartOperatorExecution(ExecuteOperatorMessage message)
         {
-            var operatorExecution = new OperatorExecution(this, message.ProcessId, message.PipelineExecutionId, message.OutputResourceId, message.SourceCode, message.Dockerfile, _dockerService);
-            _executions[message.ProcessId] = operatorExecution;
+            var operatorExecution = new OperatorExecution(this, message.ProcessId, message.PipelineExecutionId, message.OutputResourceId, message.InputResourceIds, message.SourceCode, message.Dockerfile, _dockerService);
+            _executions[message.TicketId] = operatorExecution;
+
             bool succeeded = await operatorExecution.StartExecution();
             return succeeded;
         }
