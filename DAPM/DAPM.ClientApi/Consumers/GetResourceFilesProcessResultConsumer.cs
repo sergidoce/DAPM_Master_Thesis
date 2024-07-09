@@ -29,8 +29,9 @@ namespace DAPM.ClientApi.Consumers
             if(filesDTOs.Any())
             {
                 var firstFile = filesDTOs.First();
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "TemporaryFiles");
-                path = Path.Combine(path, Path.GetRandomFileName());
+                //var path = Path.Combine(Directory.GetCurrentDirectory(), "TemporaryFiles");
+                //path = Path.Combine(path, Path.GetRandomFileName());
+                var path = "/TemporaryFiles/" + Path.GetRandomFileName();
                 File.WriteAllBytes(path, firstFile.Content);
 
                 JToken result = new JObject();
