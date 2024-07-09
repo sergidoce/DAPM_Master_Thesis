@@ -15,7 +15,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromRegistry
 
         public Task ConsumeAsync(GetResourcesResultMessage message)
         {
-            GetResourcesProcess process = (GetResourcesProcess)_orchestratorEngine.GetProcess(message.TicketId);
+            GetResourcesProcess process = (GetResourcesProcess)_orchestratorEngine.GetProcess(message.ProcessId);
             process.OnGetResourcesFromRegistryResult(message);
 
             return Task.CompletedTask;

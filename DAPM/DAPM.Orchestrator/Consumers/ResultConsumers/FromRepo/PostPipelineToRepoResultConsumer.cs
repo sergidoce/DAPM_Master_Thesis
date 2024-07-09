@@ -15,7 +15,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromRepo
 
         public Task ConsumeAsync(PostPipelineToRepoResultMessage message)
         {
-            PostPipelineProcess process = (PostPipelineProcess)_orchestratorEngine.GetProcess(message.TicketId);
+            PostPipelineProcess process = (PostPipelineProcess)_orchestratorEngine.GetProcess(message.ProcessId);
             process.OnPostPipelineToRepoResult(message);
 
             return Task.CompletedTask;

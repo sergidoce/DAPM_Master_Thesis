@@ -22,7 +22,7 @@ namespace DAPM.PeerApi.Consumers
             var handshakeRequestResponseDto = new HandshakeRequestResponseDto()
             {
                 SenderIdentity = senderIdentity,
-                HandshakeId = message.TicketId,
+                HandshakeId = message.SenderProcessId,
                 IsAccepted = message.IsRequestAccepted,
             };
 

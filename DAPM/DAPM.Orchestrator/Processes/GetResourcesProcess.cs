@@ -11,13 +11,18 @@ namespace DAPM.Orchestrator.Processes
         private Guid _organizationId;
         private Guid _repositoryId;
         private Guid? _resourceId;
-        public GetResourcesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid organizationId,
+
+        private Guid _ticketId;
+        public GetResourcesProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
+            Guid ticketId, Guid processId, Guid organizationId,
             Guid repositoryId, Guid? resourceId) 
-            : base(engine, serviceProvider, ticketId)
+            : base(engine, serviceProvider, processId)
         {
             _organizationId = organizationId;
             _repositoryId = repositoryId;
             _resourceId = resourceId;
+
+            _ticketId = ticketId;
         }
 
         public override void StartProcess()
@@ -26,7 +31,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new GetResourcesMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = _organizationId,
                 RepositoryId = _repositoryId,

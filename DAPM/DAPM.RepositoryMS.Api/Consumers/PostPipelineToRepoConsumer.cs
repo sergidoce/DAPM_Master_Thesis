@@ -41,7 +41,7 @@ namespace DAPM.RepositoryMS.Api.Consumers
 
                 var resultMessage = new PostPipelineToRepoResultMessage
                 {
-                    TicketId = message.TicketId,
+                    ProcessId = message.ProcessId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     Message = "Item created successfully",
                     Succeeded = true,

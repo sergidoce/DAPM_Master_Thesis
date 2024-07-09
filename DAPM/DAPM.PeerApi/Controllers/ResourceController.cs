@@ -27,10 +27,11 @@ namespace DAPM.PeerApi.Controllers
         [HttpPost]
         public async Task<ActionResult> PostResource([FromBody] SendResourceToPeerDto sendResourceToPeerDto)
         {
+            _logger.LogInformation("Ticket id / step id in post resource endpoint is " + sendResourceToPeerDto.StepId.ToString());
             var message = new PostResourceFromPeerRequest()
             {
                 ExecutionId = sendResourceToPeerDto.ExecutionId,
-                TicketId = sendResourceToPeerDto.StepId,
+                SenderProcessId = sendResourceToPeerDto.StepId,
                 RepositoryId = sendResourceToPeerDto.RepositoryId,
                 Resource = sendResourceToPeerDto.Resource,
                 SenderPeerIdentity = sendResourceToPeerDto.SenderPeerIdentity,
@@ -45,9 +46,10 @@ namespace DAPM.PeerApi.Controllers
         [HttpPost("result")]
         public async Task<ActionResult> PostResourceResult([FromBody] SendResourceToPeerResultDto sendResourceToPeerResultDto)
         {
+            _logger.LogInformation("Ticket id / step id in post resource result endpoint is " + sendResourceToPeerResultDto.StepId.ToString());
             var message = new SendResourceToPeerResultMessage()
             {
-                TicketId = sendResourceToPeerResultDto.StepId,
+                SenderProcessId = sendResourceToPeerResultDto.StepId,
                 Succeeded = sendResourceToPeerResultDto.Succeeded,
                 TimeToLive = TimeSpan.FromMinutes(1),
             };

@@ -15,7 +15,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromRegistry
 
         public Task ConsumeAsync(PostRepoToRegistryResultMessage message)
         {
-            CreateRepositoryProcess process = (CreateRepositoryProcess)_orchestratorEngine.GetProcess(message.TicketId);
+            CreateRepositoryProcess process = (CreateRepositoryProcess)_orchestratorEngine.GetProcess(message.ProcessId);
             process.OnPostRepoToRegistryResult(message);
 
             return Task.CompletedTask;

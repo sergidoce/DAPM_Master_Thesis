@@ -15,7 +15,7 @@ namespace DAPM.Orchestrator.Consumers.ResultConsumers.FromRegistry
 
         public Task ConsumeAsync(GetRepositoriesResultMessage message)
         {
-            GetRepositoriesProcess process = (GetRepositoriesProcess)_orchestratorEngine.GetProcess(message.TicketId);
+            GetRepositoriesProcess process = (GetRepositoriesProcess)_orchestratorEngine.GetProcess(message.ProcessId);
             process.OnGetRepositoriesFromRegistryResult(message);
 
             return Task.CompletedTask;

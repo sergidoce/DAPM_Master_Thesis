@@ -31,7 +31,7 @@ namespace DAPM.PeerApi.Services
 
             var message = new RegistryUpdateMessage()
             {
-                TicketId = (Guid)registryUpdateDto.RegistryUpdateId,
+                SenderProcessId = (Guid)registryUpdateDto.SenderProcessId,
                 SenderIdentity = registryUpdateDto.SenderIdentity,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 RegistryUpdate = registryUpdateDTO,
@@ -51,7 +51,7 @@ namespace DAPM.PeerApi.Services
 
             var message = new RegistryUpdateAckMessage()
             {
-                TicketId = registryUpdateAck.RegistryUpdateId,
+                ProcessId = registryUpdateAck.ProcessId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 PeerSenderIdentity = registryUpdateAck.SenderIdentity,
                 RegistryUpdateAck = rabbitMQDto

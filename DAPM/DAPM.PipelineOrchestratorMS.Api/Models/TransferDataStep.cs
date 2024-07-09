@@ -3,6 +3,7 @@ using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Orchestrator.ProcessRequests;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Models;
+using System.Diagnostics;
 
 namespace DAPM.PipelineOrchestratorMS.Api.Models
 {
@@ -48,8 +49,20 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
             return _resourceToTransfer;
         }
 
+        public override StepStatus GetStatus()
+        {
+            return new StepStatus()
+            {
+                StepId = Id,
+                StepType = this.GetType().Name,
+                ExecutionerPeer = _resourceToTransfer.OrganizationId,
+                ExecutionTime = _executionTimer.Elapsed,
+            };
+        }
+
         public override void Execute()
         {
+            _executionTimer = Stopwatch.StartNew();
             var transferDataRequestProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<TransferDataActionRequest>>();
 
             var data = new TransferDataActionDTO()
@@ -72,7 +85,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
 
             var message = new TransferDataActionRequest()
             {
-                TicketId = Id,
+                SenderProcessId = null,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Data = data
             };

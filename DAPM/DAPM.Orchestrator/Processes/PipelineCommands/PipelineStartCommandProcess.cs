@@ -9,12 +9,14 @@ namespace DAPM.Orchestrator.Processes.PipelineCommands
     public class PipelineStartCommandProcess : OrchestratorProcess
     {
         private Guid _executionId;
+        private Guid _ticketId;
 
         public PipelineStartCommandProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, Guid executionId)
-            : base(engine, serviceProvider, ticketId)
+            Guid ticketId, Guid processId, Guid executionId)
+            : base(engine, serviceProvider, processId)
         {
             _executionId = executionId;
+            _ticketId = ticketId;
         }
 
         public override void StartProcess()
@@ -24,7 +26,7 @@ namespace DAPM.Orchestrator.Processes.PipelineCommands
             var commandMessage = new PipelineStartCommand()
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
-                TicketId = _ticketId,
+                ProcessId = _ticketId,
                 ExecutionId = _executionId,
             };
 

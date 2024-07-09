@@ -10,7 +10,7 @@ namespace RabbitMQLibrary.Models
     {
         public Guid OrganizationId { get; set; }
         public Guid RepositoryId { get; set; }
-        public Guid ResourceId { get; set; }
+        public Guid? ResourceId { get; set; }
         public string? Name { get; set; }
     }
    
@@ -37,13 +37,13 @@ namespace RabbitMQLibrary.Models
 
     public class NodePosition
     {
-        public float X { get; set; }
-        public float Y { get; set; }
+        public float? X { get; set; }
+        public float? Y { get; set; }
     }
 
     public class NodeData
     {
-        public string Label { get; set; }
+        public string? Label { get; set; }
         public TemplateData TemplateData { get; set; }
         public InstantiationData InstantiationData { get; set; }
     }
@@ -52,10 +52,10 @@ namespace RabbitMQLibrary.Models
     {
         public string Id { get; set;}
         public string Type { get; set; }
-        public NodePosition Position { get; set; }
+        public NodePosition? Position { get; set; }
         public NodeData Data { get; set; }
-        public float Width { get; set; }
-        public float Height { get; set; }
+        public float? Width { get; set; }
+        public float? Height { get; set; }
     }
     public class Pipeline
     {

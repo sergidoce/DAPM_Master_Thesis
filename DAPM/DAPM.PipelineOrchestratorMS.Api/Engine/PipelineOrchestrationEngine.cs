@@ -48,5 +48,9 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
             return _pipelineExecutions[executionId];
         }
 
+        public PipelineExecutionStatus GetPipelineExecutionStatus(Guid executionId)
+        {
+            return _pipelineExecutions[executionId].GetStatus();
+        }
     }
 }

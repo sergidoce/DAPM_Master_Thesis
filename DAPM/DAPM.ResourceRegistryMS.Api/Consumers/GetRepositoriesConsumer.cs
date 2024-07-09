@@ -60,7 +60,7 @@ namespace DAPM.ResourceRegistryMS.Api.Consumers
             var resultMessage = new GetRepositoriesResultMessage
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
-                TicketId = message.TicketId,
+                ProcessId = message.ProcessId,
                 Repositories = repositoriesDTOs
             };
 

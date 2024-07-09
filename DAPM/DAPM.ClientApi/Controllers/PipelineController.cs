@@ -48,5 +48,13 @@ namespace DAPM.ClientApi.Controllers
             Guid id = _pipelineService.PostStartCommand(organizationId, repositoryId, pipelineId, executionId);
             return Ok(new ApiResponse { RequestName = "PostStartCommand", TicketId = id });
         }
+
+        [HttpGet("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/executions/{executionId}/status")]
+        [SwaggerOperation(Description = "Gets the status of a running execution")]
+        public async Task<ActionResult<Guid>> GetPipelineExecutionStatus(Guid organizationId, Guid repositoryId, Guid pipelineId, Guid executionId)
+        {
+            Guid id = _pipelineService.GetExecutionStatus(organizationId, repositoryId, pipelineId, executionId);
+            return Ok(new ApiResponse { RequestName = "GetExecutionStatus", TicketId = id });
+        }
     }
 }

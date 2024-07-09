@@ -23,13 +23,16 @@ namespace DAPM.Orchestrator.Processes
         private Dictionary<Guid, bool> _isRegistryUpdateCompleted;
         private int _registryUpdatesNotCompletedCounter;
 
-        public CreateRepositoryProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid organizationId, string name) 
-            : base(engine, serviceProvider, ticketId)
+        private Guid _ticketId;
+        public CreateRepositoryProcess(OrchestratorEngine engine, IServiceProvider serviceProvider, Guid ticketId, Guid processId,
+            Guid organizationId, string name) 
+            : base(engine, serviceProvider, processId)
         {
             _organizationId = organizationId;
             _repositoryName = name;
             _registryUpdatesNotCompletedCounter = 0;
             _isRegistryUpdateCompleted = new Dictionary<Guid, bool>();
+            _ticketId = ticketId;
         }
 
         public override void StartProcess()
@@ -38,7 +41,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new PostRepoToRepoMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Name = _repositoryName
             };
@@ -54,7 +57,7 @@ namespace DAPM.Orchestrator.Processes
 
             var postRepoToRegistryMessage = new PostRepositoryToRegistryMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Repository = message.Repository
             };
@@ -70,7 +73,7 @@ namespace DAPM.Orchestrator.Processes
 
             var getOrganizationsMessage = new GetOrganizationsMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = null
             };
@@ -128,7 +131,7 @@ namespace DAPM.Orchestrator.Processes
                 {
                     TargetPeerDomain = domain,
                     SenderPeerIdentity = identityDTO,
-                    TicketId = _ticketId,
+                    SenderProcessId = _processId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     RegistryUpdate = registryUpdate,
                     IsPartOfHandshake = false,

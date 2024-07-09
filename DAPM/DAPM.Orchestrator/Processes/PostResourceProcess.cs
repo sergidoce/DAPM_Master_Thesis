@@ -25,10 +25,12 @@ namespace DAPM.Orchestrator.Processes
 
         //Resource Files
         private FileDTO _file;
-       
+
+        private Guid _ticketId;
+
         public PostResourceProcess(OrchestratorEngine engine, IServiceProvider serviceProvider,
-            Guid ticketId, Guid organizationId, Guid repositoryId, string name, string resourceType, FileDTO file) 
-            : base(engine, serviceProvider, ticketId)
+            Guid ticketId, Guid processId, Guid organizationId, Guid repositoryId, string name, string resourceType, FileDTO file) 
+            : base(engine, serviceProvider, processId)
         {
             _organizationId = organizationId;
             _repositoryId = repositoryId;
@@ -38,6 +40,8 @@ namespace DAPM.Orchestrator.Processes
 
             _registryUpdatesNotCompletedCounter = 0;
             _isRegistryUpdateCompleted = new Dictionary<Guid, bool>();
+
+            _ticketId = ticketId;
         }
 
         public override void StartProcess()
@@ -46,7 +50,7 @@ namespace DAPM.Orchestrator.Processes
 
             var message = new PostResourceToRepoMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = _organizationId,
                 RepositoryId = _repositoryId,
@@ -64,7 +68,7 @@ namespace DAPM.Orchestrator.Processes
 
             var postResourceToRegistryMessage = new PostResourceToRegistryMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Resource = message.Resource
             };
@@ -80,7 +84,7 @@ namespace DAPM.Orchestrator.Processes
 
             var getOrganizationsMessage = new GetOrganizationsMessage()
             {
-                TicketId = _ticketId,
+                ProcessId = _processId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 OrganizationId = null
             };
@@ -138,7 +142,7 @@ namespace DAPM.Orchestrator.Processes
                 {
                     TargetPeerDomain = domain,
                     SenderPeerIdentity = identityDTO,
-                    TicketId = _ticketId,
+                    SenderProcessId = _processId,
                     TimeToLive = TimeSpan.FromMinutes(1),
                     RegistryUpdate = registryUpdate,
                     IsPartOfHandshake = false,

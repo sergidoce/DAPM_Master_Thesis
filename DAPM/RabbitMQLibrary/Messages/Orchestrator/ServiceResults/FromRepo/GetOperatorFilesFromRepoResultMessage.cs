@@ -11,7 +11,7 @@ namespace RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromRepo
     public class GetOperatorFilesFromRepoResultMessage : IQueueMessage
     {
         public Guid MessageId { get; set; }
-        public Guid TicketId { get; set; }
+        public Guid ProcessId { get; set; }
         public TimeSpan TimeToLive { get; set; }
         public ResourceDTO SourceCodeResource { get; set; }
         public FileDTO DockerfileFile { get; set; }

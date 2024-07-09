@@ -7,6 +7,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine.Interfaces
     {
         public Guid CreatePipelineExecutionInstance(Pipeline pipelineDTO);
         public void ExecutePipelineStartCommand(Guid executionId);
+        public PipelineExecutionStatus GetPipelineExecutionStatus(Guid executionId);
         public void ProcessActionResult(ActionResultDTO actionResultDto);
     }
 }
