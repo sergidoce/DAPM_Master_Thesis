@@ -22,7 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="TemporaryFiles\" />
+    <Content Include="TemporaryFiles\*">
+      <CopyToPublishDirectory>always</CopyToPublishDirectory>
+    </Content>
   </ItemGroup>
-
 </Project>
