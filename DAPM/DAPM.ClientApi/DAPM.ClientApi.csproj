@@ -24,5 +24,4 @@
   <ItemGroup>
     <Folder Include="TemporaryFiles\" />
   </ItemGroup>
-
 </Project>

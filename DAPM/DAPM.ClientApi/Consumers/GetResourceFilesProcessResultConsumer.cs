@@ -29,13 +29,19 @@ namespace DAPM.ClientApi.Consumers
             if(filesDTOs.Any())
             {
                 var firstFile = filesDTOs.First();
-                var path = Path.Combine(Directory.GetCurrentDirectory(), "TemporaryFiles");
-                path = Path.Combine(path, Path.GetRandomFileName());
-                File.WriteAllBytes(path, firstFile.Content);
+                var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), "TemporaryFiles");
+                var filePath = Path.Combine(directoryPath, Path.GetRandomFileName());
+
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+
+                File.WriteAllBytes(filePath, firstFile.Content);
 
                 JToken result = new JObject();
                 //Serialization
-                result["filePath"] = path;
+                result["filePath"] = filePath;
                 result["fileName"] = firstFile.Name;
                 result["fileFormat"] = firstFile.Extension;
 
