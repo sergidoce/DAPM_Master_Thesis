@@ -1,7 +1,8 @@
 ﻿using DAPM.PipelineOrchestratorMS.Api.Engine.Interfaces;
 using DAPM.PipelineOrchestratorMS.Api.Models;
 using RabbitMQLibrary.Models;
-using System.Runtime.Versioning;
+using System.Diagnostics;
+using ActionResult = DAPM.PipelineOrchestratorMS.Api.Models.ActionResult;
 
 namespace DAPM.PipelineOrchestratorMS.Api.Engine
 {
@@ -30,8 +31,13 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
         private List<Step> _steps;
         private Dictionary<Guid, Step> _stepsDictionary;
 
-
         private PipelineExecutionState _state;
+
+
+
+        //Status metrics
+        private Stopwatch _stopwatch;
+        private List<Guid> _currentSteps;
 
         public PipelineExecution(Guid id, Pipeline pipelineDto, IServiceProvider serviceProvider) 
         {
@@ -42,7 +48,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
             _dataSinkNodes = new List<Guid>();
             _stepsDictionary = new Dictionary<Guid, Step>();
             _steps = new List<Step>();
-
+            _currentSteps = new List<Guid>();
             _serviceProvider = serviceProvider;
             _logger = _serviceProvider.GetService<ILogger<PipelineExecution>>();
 
@@ -58,7 +64,26 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
         public void StartExecution()
         {
             _state = PipelineExecutionState.Running;
+            _stopwatch = Stopwatch.StartNew();
             ExecuteAvailableSteps();
+        }
+
+        public PipelineExecutionStatus GetStatus()
+        {
+            var currentStepsStatus = new List<StepStatus>();
+            foreach (var stepId in _currentSteps)
+            {
+                var step = _stepsDictionary[stepId];
+                currentStepsStatus.Add(step.GetStatus());
+            }
+
+
+            return new PipelineExecutionStatus()
+            {
+                ExecutionTime = _stopwatch.Elapsed,
+                CurrentSteps = currentStepsStatus,
+                State = _state
+            };
         }
 
         public void ProcessActionResult(ActionResultDTO actionResult)
@@ -67,7 +92,8 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
 
             if(result == ActionResult.Completed)
             {
-                _stepsDictionary[actionResult.StepId].Status = StepStatus.Completed;
+                _stepsDictionary[actionResult.StepId].Status = StepState.Completed;
+                _currentSteps.Remove(actionResult.StepId);
                 ExecuteAvailableSteps();
             }
             else
@@ -84,16 +110,28 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
         {
             var availableSteps = GetAvailableSteps();
 
-            if(availableSteps.Count() == 0)
+            if(availableSteps.Count() == 0 && AreAllStepsCompleted())
             {
                 _state = PipelineExecutionState.Completed;
+                _stopwatch.Stop();
                 return;
             }
 
             foreach (var step in availableSteps)
             {
                 _stepsDictionary[step].Execute();
+                _currentSteps.Add(step);
             }
+        }
+
+        private bool AreAllStepsCompleted()
+        {
+            foreach (var step in _stepsDictionary.Values)
+            {
+                if (step.Status != StepState.Completed)
+                    return false;
+            }
+            return true;
         }
 
         private List<Guid> GetAvailableSteps()
@@ -102,7 +140,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
 
             foreach (var step in _stepsDictionary.Values)
             {
-                if (step.Status == StepStatus.Completed)
+                if (step.Status == StepState.Completed)
                     continue;
 
                 var available = true;
@@ -110,7 +148,7 @@ namespace DAPM.PipelineOrchestratorMS.Api.Engine
                 foreach (var prerequisite in prerequisites)
                 {
                     var prerequisiteStep = _stepsDictionary[prerequisite];
-                    if (prerequisiteStep.Status != StepStatus.Completed)
+                    if (prerequisiteStep.Status != StepState.Completed)
                     {
                         available = false;
                         break;

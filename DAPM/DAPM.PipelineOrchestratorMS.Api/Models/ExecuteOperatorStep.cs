@@ -1,6 +1,7 @@
 ﻿using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Orchestrator.ProcessRequests;
 using RabbitMQLibrary.Models;
+using System.Diagnostics;
 
 namespace DAPM.PipelineOrchestratorMS.Api.Models
 {
@@ -16,9 +17,19 @@ namespace DAPM.PipelineOrchestratorMS.Api.Models
            OutputResourceId = Guid.NewGuid();    
         }
 
-
+        public override StepStatus GetStatus()
+        {
+            return new StepStatus()
+            {
+                StepId = Id,
+                StepType = this.GetType().Name,
+                ExecutionerPeer = OperatorResource.OrganizationId,
+                ExecutionTime = _executionTimer.Elapsed,
+            };
+        }
         public override void Execute()
         {
+            _executionTimer = Stopwatch.StartNew();
             var executeOperatorRequestProducer = _serviceScope.ServiceProvider.GetRequiredService<IQueueProducer<ExecuteOperatorActionRequest>>();
 
 

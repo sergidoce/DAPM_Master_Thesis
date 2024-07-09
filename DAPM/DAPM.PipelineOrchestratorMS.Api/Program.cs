@@ -39,6 +39,7 @@ builder.Services.AddQueueing(new QueueingConfigurationSettings
 builder.Services.AddQueueMessageConsumer<CreateInstanceExecutionConsumer, CreateInstanceExecutionMessage>();
 builder.Services.AddQueueMessageConsumer<ActionResultConsumer, ActionResultMessage>();
 builder.Services.AddQueueMessageConsumer<PipelineStartCommandConsumer, PipelineStartCommand>();
+builder.Services.AddQueueMessageConsumer<GetPipelineExecutionStatusConsumer, GetPipelineExecutionStatusMessage>();
 
 
 builder.Services.AddSingleton<IPipelineOrchestrationEngine, PipelineOrchestrationEngine>();

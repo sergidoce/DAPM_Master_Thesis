@@ -4,6 +4,7 @@ using DAPM.Orchestrator.Processes.PipelineCommands;
 using DAPM.Orchestrator.Services.Models;
 using RabbitMQLibrary.Messages.PipelineOrchestrator;
 using RabbitMQLibrary.Models;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace DAPM.Orchestrator
 {
@@ -132,6 +133,14 @@ namespace DAPM.Orchestrator
             postOperatorProcess.StartProcess();
         }
 
+        public void StartGetPipelineExecutionStatusProcess(Guid ticketId, Guid executionId)
+        {
+            var processId = Guid.NewGuid();
+            var getPipelineExecutionStatusProcess = new GetPipelineExecutionStatusProcess(this, _serviceProvider, ticketId, processId, executionId);
+            _processes[processId] = getPipelineExecutionStatusProcess;
+            getPipelineExecutionStatusProcess.StartProcess();
+        }
+
         #endregion
 
         #region PROCESSES TRIGGERED BY SYSTEM
@@ -195,6 +204,7 @@ namespace DAPM.Orchestrator
             _processes[processId] = sendExecuteOperatorActionProcess;
             sendExecuteOperatorActionProcess.StartProcess();
         }
+
 
         #endregion
     }

@@ -13,19 +13,21 @@ namespace DAPM.ClientApi.Services
         private readonly IQueueProducer<GetPipelinesRequest> _getPipelinesRequestProducer;
         private readonly IQueueProducer<CreatePipelineExecutionRequest> _createInstanceProducer;
         private readonly IQueueProducer<PipelineStartCommandRequest> _pipelineStartCommandProducer;
-
+        private readonly IQueueProducer<GetPipelineExecutionStatusRequest> _getPipelineExecutionStatusProducer;
         public PipelineService(
             ILogger<PipelineService> logger,
             ITicketService ticketService,
             IQueueProducer<GetPipelinesRequest> getPipelinesRequestProducer,
             IQueueProducer<CreatePipelineExecutionRequest> createInstanceProducer,
-            IQueueProducer<PipelineStartCommandRequest> pipelineStartCommandProducer)
+            IQueueProducer<PipelineStartCommandRequest> pipelineStartCommandProducer,
+            IQueueProducer<GetPipelineExecutionStatusRequest> getPipelineExecutionStatusProducer)
         {
             _logger = logger;
             _ticketService = ticketService;
             _getPipelinesRequestProducer = getPipelinesRequestProducer;
             _createInstanceProducer = createInstanceProducer;
             _pipelineStartCommandProducer = pipelineStartCommandProducer;
+            _getPipelineExecutionStatusProducer = getPipelineExecutionStatusProducer;
         }
 
         public Guid CreatePipelineExecution(Guid organizationId, Guid repositoryId, Guid pipelineId)
@@ -44,6 +46,24 @@ namespace DAPM.ClientApi.Services
 
             _createInstanceProducer.PublishMessage(message);
             _logger.LogDebug("CreatePipelineExecutionRequest Enqueued");
+
+            return ticketId;
+        }
+
+        public Guid GetExecutionStatus(Guid organizationId, Guid repositoryId, Guid pipelineId, Guid executionId)
+        {
+            Guid ticketId = _ticketService.CreateNewTicket(TicketResolutionType.Json);
+
+            var message = new GetPipelineExecutionStatusRequest
+            {
+                TimeToLive = TimeSpan.FromMinutes(1),
+                TicketId = ticketId,
+                ExecutionId = executionId
+            };
+
+            _getPipelineExecutionStatusProducer.PublishMessage(message);
+
+            _logger.LogDebug("GetPipelineExecutionStatus Enqueued");
 
             return ticketId;
         }

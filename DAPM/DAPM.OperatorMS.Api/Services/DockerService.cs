@@ -28,7 +28,7 @@ namespace DAPM.OperatorMS.Api.Services
             {
                 Directory.CreateDirectory(inputFilesDirPath);
                 Directory.CreateDirectory(outputFilesDirPath);
-                var filePath = Path.Combine(inputFilesDirPath, $"{inputResource.Id}{inputResource.File.Extension}");
+                var filePath = Path.Combine(inputFilesDirPath, $"{inputResource.Id}");
                 File.WriteAllBytes(filePath, inputResource.File.Content);
             }
             catch (Exception ex)

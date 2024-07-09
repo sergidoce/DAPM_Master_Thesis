@@ -170,5 +170,10 @@ namespace DAPM.Orchestrator
         {
             return;
         }
+
+        public virtual void OnGetPipelineExecutionStatusResult(GetPipelineExecutionStatusResultMessage message)
+        {
+            return;
+        }
     }
 }
