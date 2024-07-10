@@ -93,7 +93,7 @@ namespace DAPM.OperatorMS.Api.Services
                 };
 
                 ResourceDTO outputResource = new ResourceDTO();
-                outputResource.Id = pipelineExecutionId;
+                outputResource.Id = outputResourceId;
                 outputResource.File = fileDTO;
             
                 return outputResource;
