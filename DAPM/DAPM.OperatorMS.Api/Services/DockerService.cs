@@ -24,11 +24,15 @@ namespace DAPM.OperatorMS.Api.Services
             string inputFilesDirPath = $"/app/shared/{pipelineExecutionId}/InputFiles";
             string outputFilesDirPath = $"/app/shared/{pipelineExecutionId}/OutputFiles";
 
+         
+
             try
             {
                 Directory.CreateDirectory(inputFilesDirPath);
                 Directory.CreateDirectory(outputFilesDirPath);
                 var filePath = Path.Combine(inputFilesDirPath, $"{inputResource.Id}");
+                _logger.LogInformation($"INPUT RESOURCE POSTED {inputResource.Id} {inputResource.Name}" +
+                $" {inputResource.File.Content.Length} IN PATH {filePath}");
                 File.WriteAllBytes(filePath, inputResource.File.Content);
             }
             catch (Exception ex)
