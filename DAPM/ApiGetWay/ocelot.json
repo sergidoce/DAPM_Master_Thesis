@@ -1,0 +1,48 @@
+{
+  // Note that it used to be ReRoutes, now it is Routes
+  "Routes": [
+    {
+      // Upstream indicates the upstream request, i.e., the client's request to the API Gateway
+      "UpstreamPathTemplate": "/UserAuthorization/{url}", // Request path template
+      "UpstreamHttpMethod": [ "Get", "Post" ], // Array of request methods
+
+      "UseServiceDiscovery": true, // Enable service discovery
+
+      // Downstream indicates the downstream request, i.e., the target service address to which the API Gateway forwards the request
+      "DownstreamPathTemplate": "/UserAuthorization/{url}", // Downstream request address template
+      "DownstreamScheme": "http", // Request protocol, currently should support http and https
+      // A*************** Specify a single forwarding address
+      "DownstreamHostAndPorts": [ // Request service address, can be multiple
+        {
+          "Host": "localhost",
+          "Port": 5222
+        }
+      ]
+    },
+    {
+      // Upstream indicates the upstream request, i.e., the client's request to the API Gateway
+      "UpstreamPathTemplate": "/platform/{url}", // Request path template
+      "UpstreamHttpMethod": [ "Get", "Post" ], // Array of request methods
+
+      "UseServiceDiscovery": true, // Enable service discovery
+
+      // Downstream indicates the downstream request, i.e., the target service address to which the API Gateway forwards the request
+      "DownstreamPathTemplate": "/platform/{url}", // Downstream request address template
+      "DownstreamScheme": "http", // Request protocol, currently should support http and https
+      // A*************** Specify a single forwarding address
+      "DownstreamHostAndPorts": [ // Request service address, can be multiple
+        {
+          "Host": "localhost",
+          "Port": 5000
+        }
+      ]
+    }
+  ],
+  "GlobalConfiguration": {
+    // "ServiceDiscoveryProvider": {
+    //   "Host": "127.0.0.1",
+    //   "Port": 8500,
+    //   "Type": "PollConsul"
+    // }
+  }
+}

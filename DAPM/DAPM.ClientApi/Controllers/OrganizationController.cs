@@ -10,7 +10,7 @@ namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
     [EnableCors("AllowAll")]
-    [Route("organizations")]
+    [Route("platform/organizations")]
     public class OrganizationController : ControllerBase
     {
 
@@ -49,7 +49,7 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse {RequestName = "GetRepositoriesOfOrganization", TicketId = id });
         }
 
-        [HttpPost("{organizationId}/repositories")]
+        [HttpPost("{organizationId}/repositories/PostRepositoryToOrganization")]
         [SwaggerOperation(Description = "Creates a new repository for an organization by id. Right now you can create repositories for any organizations, but ideally you would " +
             "only be able to create repositories for your own organization.")]
         public async Task<ActionResult<Guid>> PostRepositoryToOrganization(Guid organizationId, [FromBody] RepositoryApiDto repositoryDto)

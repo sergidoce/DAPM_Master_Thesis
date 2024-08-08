@@ -10,7 +10,7 @@ namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
     [EnableCors("AllowAll")]
-    [Route("system")]
+    [Route("platform/system")]
     public class SystemController : ControllerBase
     {
         private readonly ILogger<SystemController> _logger;

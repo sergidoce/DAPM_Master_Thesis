@@ -11,7 +11,7 @@ namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
     [EnableCors("AllowAll")]
-    [Route("organizations/")]
+    [Route("platform/organizations/")]
     public class PipelineController : ControllerBase
     {
         private readonly ILogger<PipelineController> _logger;
@@ -24,7 +24,7 @@ namespace DAPM.ClientApi.Controllers
             _pipelineService = pipelineService;
         }
 
-        [HttpGet("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}")]
+        [HttpGet("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/GetPipelineById")]
         [SwaggerOperation(Description = "Gets a pipeline by id. This endpoint includes the " +
             "pipeline model in JSON. You need to have a collaboration agreement to retrieve this information.")]
         public async Task<ActionResult<Guid>> GetPipelineById(Guid organizationId, Guid repositoryId, Guid pipelineId)
@@ -33,7 +33,7 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse { RequestName = "GetPipelineById", TicketId = id });
         }
 
-        [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/executions")]
+        [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/executions/CreatePipelineExecutionInstance")]
         [SwaggerOperation(Description = "Creates a new execution instance for a pipeline previously saved in the system. The execution is created but not started")]
         public async Task<ActionResult<Guid>> CreatePipelineExecutionInstance(Guid organizationId, Guid repositoryId, Guid pipelineId)
         {
@@ -41,7 +41,7 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse { RequestName = "CreatePipelineExecutionInstance", TicketId = id });
         }
 
-        [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/executions/{executionId}/commands/start")]
+        [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines/{pipelineId}/executions/{executionId}/commands/start/PostStartCommand")]
         [SwaggerOperation(Description = "Posts a start command to the defined pipeline execution. The start command will start the pipeline execution.")]
         public async Task<ActionResult<Guid>> PostStartCommand(Guid organizationId, Guid repositoryId, Guid pipelineId, Guid executionId)
         {

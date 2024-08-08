@@ -10,7 +10,7 @@ namespace DAPM.ClientApi.Controllers
    
     [ApiController]
     [EnableCors("AllowAll")]
-    [Route("organizations/")]
+    [Route("platform/organizations/")]
     public class ResourceController : ControllerBase
     {
 
@@ -23,7 +23,7 @@ namespace DAPM.ClientApi.Controllers
             _resourceService = resourceService;
         }
 
-        [HttpGet("{organizationId}/repositories/{repositoryId}/resources/{resourceId}")]
+        [HttpGet("{organizationId}/repositories/{repositoryId}/resources/{resourceId}/GetResourceById")]
         [SwaggerOperation(Description = "Gets a resource by id from a specific repository. The result of this endpoint does not include the resource file. There needs to be " +
             "a collaboration agreement to retrieve this information.")]
         public async Task<ActionResult<Guid>> GetResourceById(Guid organizationId, Guid repositoryId, Guid resourceId)
@@ -32,7 +32,7 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse { RequestName = "GetResourceById", TicketId = id });
         }
 
-        [HttpGet("{organizationId}/repositories/{repositoryId}/resources/{resourceId}/file")]
+        [HttpGet("{organizationId}/repositories/{repositoryId}/resources/{resourceId}/file/GetResourceFileById")]
         [SwaggerOperation(Description = "Gets a resource file by id from a specific repository. There needs to be " +
             "a collaboration agreement to retrieve this information.")]
         public async Task<ActionResult<Guid>> GetResourceFileById(Guid organizationId, Guid repositoryId, Guid resourceId)

@@ -10,7 +10,7 @@ namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
     [EnableCors("AllowAll")]
-    [Route("status")]
+    [Route("platform/status")]
     public class StatusController : ControllerBase
     {
         private readonly ILogger<StatusController> _logger;

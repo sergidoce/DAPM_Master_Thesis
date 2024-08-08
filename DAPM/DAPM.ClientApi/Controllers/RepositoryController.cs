@@ -11,7 +11,7 @@ namespace DAPM.ClientApi.Controllers
 {
     [ApiController]
     [EnableCors("AllowAll")]
-    [Route("organizations/")]
+    [Route("platform/organizations/")]
     public class RepositoryController : ControllerBase
     {
 
@@ -49,7 +49,7 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse { RequestName = "GetPipelinesOfRepository", TicketId = id });
         }
 
-        [HttpPost("{organizationId}/repositories/{repositoryId}/resources")]
+        [HttpPost("{organizationId}/repositories/{repositoryId}/resources/PostResourceToRepository")]
         [SwaggerOperation(Description = "Posts a new resource into a repository by id.")]
         public async Task<ActionResult<Guid>> PostResourceToRepository(Guid organizationId, Guid repositoryId, [FromForm]ResourceForm resourceForm)
         {
@@ -60,7 +60,7 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse { RequestName = "PostResourceToRepository", TicketId = id });
         }
 
-        [HttpPost("{organizationId}/repositories/{repositoryId}/resources/operators")]
+        [HttpPost("{organizationId}/repositories/{repositoryId}/resources/operators/PostOperatorToRepository")]
         [SwaggerOperation(Description = "Posts a new operator resource into a repository by id. In this endpoint you have to provide the source code for the operator and a " +
             "Dockerfile to build it and execute it.")]
         public async Task<ActionResult<Guid>> PostOperatorToRepository(Guid organizationId, Guid repositoryId, [FromForm] OperatorForm resourceForm)
@@ -73,7 +73,7 @@ namespace DAPM.ClientApi.Controllers
             return Ok(new ApiResponse { RequestName = "PostOperatorToRepository", TicketId = id });
         }
 
-        [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines")]
+        [HttpPost("{organizationId}/repositories/{repositoryId}/pipelines/PostPipelineToRepository")]
         [SwaggerOperation(Description = "Posts a new pipeline into a repository by id. In this endpoint you have to provide the JSON model of the pipeline based on the model" +
             " we agreed on.")]
         public async Task<ActionResult<Guid>> PostPipelineToRepository(Guid organizationId, Guid repositoryId, [FromBody]PipelineApiDto pipelineApiDto)
