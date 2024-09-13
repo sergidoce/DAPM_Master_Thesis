@@ -14,4 +14,4 @@ jobs:
 
     steps:
     - name: Test
-      run: dotnet --version
+      run: doet --version
