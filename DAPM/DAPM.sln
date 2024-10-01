@@ -24,6 +24,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAPM.Orchestrator", "DAPM.O
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DAPM.PeerApi", "DAPM.PeerApi\DAPM.PeerApi.csproj", "{33DD6ED0-1FA6-48BF-87CB-84D9BBE7AEAA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DAPM.Authenticator", "DAPM.Authenticator\DAPM.Authenticator.csproj", "{1EC8D456-C8E0-44A4-B048-5AAD7A1F0240}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -74,6 +76,10 @@ Global
 		{33DD6ED0-1FA6-48BF-87CB-84D9BBE7AEAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33DD6ED0-1FA6-48BF-87CB-84D9BBE7AEAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33DD6ED0-1FA6-48BF-87CB-84D9BBE7AEAA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EC8D456-C8E0-44A4-B048-5AAD7A1F0240}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EC8D456-C8E0-44A4-B048-5AAD7A1F0240}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EC8D456-C8E0-44A4-B048-5AAD7A1F0240}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EC8D456-C8E0-44A4-B048-5AAD7A1F0240}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
