@@ -9,7 +9,8 @@
         "dapm.resourceregistryms.api": "StartDebugging",
         "dapm.pipelineorchestratorms.api": "StartDebugging",
         "dapm.orchestrator": "StartDebugging",
-        "dapm.peerapi": "StartDebugging"
+        "dapm.peerapi": "StartDebugging",
+        "dapm.authenticator.api" :  "StartDebugging",
       }
     }
   }

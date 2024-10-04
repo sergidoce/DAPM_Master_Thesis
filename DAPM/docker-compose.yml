@@ -108,6 +108,16 @@ services:
     networks:
     - DAPM
 
+  dapm.authenticator.api:
+    image: ${DOCKER_REGISTRY-}dapmauthenticator
+    build:
+        context: .
+        dockerfile: DAPM.Authenticator/Dockerfile
+    ports:
+      - 5002:8080
+    networks:
+    - DAPM
+
   rabbitmq: # login guest:guest
     image: rabbitmq:3-management
     hostname: "rabbitmq"
@@ -213,6 +223,20 @@ services:
       retries: 5
     networks:
     - DAPM
+  
+  mariadb-user-repository:
+    image: mariadb:lts
+    restart: always
+    environment: 
+      MARIADB_ROOT_PASSWORD: coolcats
+      MARIADB_USER: authuser
+      MARIADB_PASSWORD: coolcats2
+      MARIADB_DATABASE: authdb
+    ports: 
+      - "3306:3306"
+    networks:
+      - DAPM
+      
 
   adminer:
     image: adminer
