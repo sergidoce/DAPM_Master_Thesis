@@ -115,6 +115,8 @@ services:
         dockerfile: DAPM.Authenticator/Dockerfile
     ports:
       - 5002:8080
+    depends_on:
+      - mariadb-user-repository
     networks:
     - DAPM
 
@@ -233,7 +235,7 @@ services:
       MARIADB_PASSWORD: coolcats2
       MARIADB_DATABASE: authdb
     ports: 
-      - "3306:3306"
+      - "3309:3306"
     networks:
       - DAPM
       
