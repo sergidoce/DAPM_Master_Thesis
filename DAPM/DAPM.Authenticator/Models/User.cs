@@ -8,5 +8,7 @@ namespace DAPM.Authenticator.Models
     {
         public ICollection<UserRole> UserRoles { get; set; }
         public string FullName { get; set; }
+        public Guid OrganizationId { get; set; }
+        public string OrganizationName { get; set; } = "No affiliation";
     }
 }

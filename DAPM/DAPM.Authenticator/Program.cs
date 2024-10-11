@@ -2,6 +2,7 @@
 using AutoMapper;
 using DAPM.Authenticator.Data;
 using DAPM.Authenticator.Models;
+using DAPM.Authenticator.Services;
 using DAPM.Authenticator.Util;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -28,6 +29,8 @@ namespace DAPM.Authenticator
             .AddRoles<Role>()
             .AddRoleManager<RoleManager<Role>>()
             .AddEntityFrameworkStores<DataContext>();
+
+            builder.Services.AddScoped<TokenService>();
 
 
             var mapperConfig = new MapperConfiguration(mc =>
