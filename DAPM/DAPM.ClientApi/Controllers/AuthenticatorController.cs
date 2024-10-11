@@ -1,6 +1,7 @@
 ﻿using DAPM.ClientApi.Services.Interfaces;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using UtilLibrary;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -15,7 +16,7 @@ namespace DAPM.ClientApi.Controllers
         private readonly ILogger<AuthenticatorController> _logger;
         //private IAuthenticatorService _authenticationService;
 
-        public AuthenticatorController(ILogger<AuthenticatorController> logger/*, IAuthenticatorService authenticationService*/)
+        public AuthenticatorController(ILogger<AuthenticatorController> logger)
         {
             _logger = logger;
             //_authenticationService = authenticationService;
@@ -30,6 +31,9 @@ namespace DAPM.ClientApi.Controllers
         [HttpGet("log-in")]
         public async Task<ActionResult<Guid>> LogIn()
         {
+
+            UserDto user;
+
             return Ok();
         }
 

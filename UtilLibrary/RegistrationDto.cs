@@ -1,4 +1,4 @@
-﻿namespace DAPM.Authenticator.Models.Dto
+﻿namespace UtilLibrary
 {
     public class RegistrationDto
     {

@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using DAPM.Authenticator.Models;
-using DAPM.Authenticator.Models.Dto;
+using UtilLibrary;
 namespace DAPM.Authenticator.Util
 {
     public class MapperProfile : Profile
