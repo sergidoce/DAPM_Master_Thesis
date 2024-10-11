@@ -72,6 +72,7 @@ builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 builder.Services.AddScoped<IPipelineService, PipelineService>();
 builder.Services.AddSingleton<ITicketService, TicketService>();
 builder.Services.AddScoped<ISystemService, SystemService>();
+//builder.Services.AddScoped<IAuthenticatorService, AuthenticatorService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
