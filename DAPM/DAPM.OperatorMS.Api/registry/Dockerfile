@@ -1,9 +1,9 @@
 FROM python:3.9
 
-RUN apt-get update
+RUN pip install pandas pm4py
 
 WORKDIR /app
 
-COPY ea29029a-75eb-4075-b974-5780db43962d.py .
+COPY 6abb4048-26df-417c-a191-f62bf3410801.py .
 
-CMD ["python", "ea29029a-75eb-4075-b974-5780db43962d.py", "/app/shared/75fb41e5-46cd-4468-8321-3f4fae23ad09/InputFiles/bbfc9841-baa1-4c95-9d1a-0a678509aebe.txt", "/app/shared/75fb41e5-46cd-4468-8321-3f4fae23ad09/OutputFiles/9c7f703e-78ae-4a60-8309-7f895f978bed.*"]
+CMD ["python", "6abb4048-26df-417c-a191-f62bf3410801.py", "/app/shared/ec0dac50-db58-4707-acb2-7fb37b9f5c72/InputFiles/ff12e711-c39b-4289-86d0-b01914e0127f", "/app/shared/ec0dac50-db58-4707-acb2-7fb37b9f5c72/OutputFiles/9760fcef-0e97-4f68-8ab4-d2f007cd8e84.*"]

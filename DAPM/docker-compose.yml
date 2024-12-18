@@ -100,11 +100,26 @@ services:
        - "5100:8080"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
-      - operator-data:/app/shared 
+      - operator-data:/app/shared
     user: root
     depends_on:
       rabbitmq:
         condition: service_healthy
+    networks:
+    - DAPM
+
+  dapm.authenticator.api:
+    image: ${DOCKER_REGISTRY-}dapmauthenticator
+    build:
+        context: .
+        dockerfile: DAPM.Authenticator/Dockerfile
+    ports:
+      - 5002:8080
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      mariadb-user-repository:
+        condition: service_started
     networks:
     - DAPM
 
@@ -214,6 +229,23 @@ services:
     networks:
     - DAPM
 
+  mariadb-user-repository:
+    image: mariadb:lts
+    restart: always
+    environment:
+      MARIADB_ROOT_PASSWORD: coolcats
+      MARIADB_USER: authuser
+      MARIADB_PASSWORD: coolcats2
+      MARIADB_DATABASE: authdb
+    volumes:
+      #- "./data/mariadb:/var/lib/mysql:Z"
+      - authenticator-data:/var/lib/mysql:Z
+    ports:
+      - "3309:3306"
+    networks:
+      - DAPM
+
+
   adminer:
     image: adminer
     restart: always
@@ -230,8 +262,5 @@ networks:
 volumes:
   operator-data:
     name: operator-data
-   
-
-
-
-
+  authenticator-data:
+    name: authenticator-data

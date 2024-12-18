@@ -17,6 +17,7 @@ namespace DAPM.Orchestrator.Processes.PipelineCommands
         {
             _executionId = executionId;
             _ticketId = ticketId;
+            _processId = processId;
         }
 
         public override void StartProcess()
@@ -26,7 +27,8 @@ namespace DAPM.Orchestrator.Processes.PipelineCommands
             var commandMessage = new PipelineStartCommand()
             {
                 TimeToLive = TimeSpan.FromMinutes(1),
-                ProcessId = _ticketId,
+                TicketId = _ticketId,
+                ProcessId = _processId,
                 ExecutionId = _executionId,
             };
 
@@ -40,7 +42,7 @@ namespace DAPM.Orchestrator.Processes.PipelineCommands
 
             var postPipelineCommandProcessResultMessage = new PostPipelineCommandProcessResult()
             {
-                TicketId = _ticketId,
+                TicketId = message.TicketId,
                 TimeToLive = TimeSpan.FromMinutes(1),
                 Message = "The command was successfully enqueued",
                 Succeeded = true,

@@ -31,7 +31,7 @@ namespace DAPM.ClientApi.Controllers
 
             JToken resolutionJSON = _ticketService.GetTicketResolution(ticketId);
 
-            if(resolutionType == TicketResolutionType.Json || (int)resolutionJSON["status"] != 1)
+            if (resolutionType == TicketResolutionType.Json || (int)resolutionJSON["status"] != 1)
             {
                 var response = resolutionJSON.ToString();
                 return Ok(response);

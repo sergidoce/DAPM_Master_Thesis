@@ -1,0 +1,505 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\Unit_tests\\Unit_tests.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.Authenticator\\DAPM.Authenticator.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.Authenticator\\DAPM.Authenticator.csproj",
+        "projectName": "DAPM.Authenticator",
+        "projectPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.Authenticator\\DAPM.Authenticator.csproj",
+        "packagesPath": "C:\\Users\\SouarRamziMohammadAl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.Authenticator\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\SouarRamziMohammadAl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.ServiceDefaults\\DAPM.ServiceDefaults.csproj": {
+                "projectPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.ServiceDefaults\\DAPM.ServiceDefaults.csproj"
+              },
+              "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\RabbitMQLibrary\\RabbitMQLibrary.csproj": {
+                "projectPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\RabbitMQLibrary\\RabbitMQLibrary.csproj"
+              },
+              "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\UtilLibrary\\UtilLibrary.csproj": {
+                "projectPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\UtilLibrary\\UtilLibrary.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "AutoMapper": {
+              "target": "Package",
+              "version": "[13.0.1, )"
+            },
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.AspNetCore.Identity.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.Relational": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.Extensions.Identity.Stores": {
+              "target": "Package",
+              "version": "[8.0.8, )"
+            },
+            "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
+              "target": "Package",
+              "version": "[1.19.5, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "Pomelo.EntityFrameworkCore.MySql": {
+              "target": "Package",
+              "version": "[8.0.2, )"
+            },
+            "Serilog": {
+              "target": "Package",
+              "version": "[4.0.2, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.4.0, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.ServiceDefaults\\DAPM.ServiceDefaults.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.ServiceDefaults\\DAPM.ServiceDefaults.csproj",
+        "projectName": "DAPM.ServiceDefaults",
+        "projectPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.ServiceDefaults\\DAPM.ServiceDefaults.csproj",
+        "packagesPath": "C:\\Users\\SouarRamziMohammadAl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.ServiceDefaults\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\SouarRamziMohammadAl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Http.Resilience": {
+              "target": "Package",
+              "version": "[8.2.0, )"
+            },
+            "Microsoft.Extensions.ServiceDiscovery": {
+              "target": "Package",
+              "version": "[8.0.0-preview.4.24156.9, )"
+            },
+            "OpenTelemetry.Exporter.OpenTelemetryProtocol": {
+              "target": "Package",
+              "version": "[1.7.0, )"
+            },
+            "OpenTelemetry.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[1.7.0, )"
+            },
+            "OpenTelemetry.Instrumentation.AspNetCore": {
+              "target": "Package",
+              "version": "[1.7.1, )"
+            },
+            "OpenTelemetry.Instrumentation.GrpcNetClient": {
+              "target": "Package",
+              "version": "[1.7.0-beta.1, )"
+            },
+            "OpenTelemetry.Instrumentation.Http": {
+              "target": "Package",
+              "version": "[1.7.1, )"
+            },
+            "OpenTelemetry.Instrumentation.Process": {
+              "target": "Package",
+              "version": "[0.5.0-beta.4, )"
+            },
+            "OpenTelemetry.Instrumentation.Runtime": {
+              "target": "Package",
+              "version": "[1.7.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\RabbitMQLibrary\\RabbitMQLibrary.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\RabbitMQLibrary\\RabbitMQLibrary.csproj",
+        "projectName": "RabbitMQLibrary",
+        "projectPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\RabbitMQLibrary\\RabbitMQLibrary.csproj",
+        "packagesPath": "C:\\Users\\SouarRamziMohammadAl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\RabbitMQLibrary\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\SouarRamziMohammadAl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Hosting": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
+            },
+            "RabbitMQ.Client": {
+              "target": "Package",
+              "version": "[6.8.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\UtilLibrary\\UtilLibrary.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\UtilLibrary\\UtilLibrary.csproj",
+        "projectName": "UtilLibrary",
+        "projectPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\UtilLibrary\\UtilLibrary.csproj",
+        "packagesPath": "C:\\Users\\SouarRamziMohammadAl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\UtilLibrary\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\SouarRamziMohammadAl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Logging": {
+              "target": "Package",
+              "version": "[8.0.1, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[8.1.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\Unit_tests\\Unit_tests.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\Unit_tests\\Unit_tests.csproj",
+        "projectName": "Unit_tests",
+        "projectPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\Unit_tests\\Unit_tests.csproj",
+        "packagesPath": "C:\\Users\\SouarRamziMohammadAl\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\Unit_tests\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\SouarRamziMohammadAl\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.Authenticator\\DAPM.Authenticator.csproj": {
+                "projectPath": "C:\\Users\\SouarRamziMohammadAl\\Desktop\\DTU\\Software Engineering 2\\DAPM-Backend\\DAPM\\DAPM.Authenticator\\DAPM.Authenticator.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.NET.Test.Sdk": {
+              "target": "Package",
+              "version": "[17.6.0, )"
+            },
+            "Moq": {
+              "target": "Package",
+              "version": "[4.20.72, )"
+            },
+            "NUnit": {
+              "target": "Package",
+              "version": "[3.13.3, )"
+            },
+            "NUnit.Analyzers": {
+              "target": "Package",
+              "version": "[3.6.1, )"
+            },
+            "NUnit3TestAdapter": {
+              "target": "Package",
+              "version": "[4.2.1, )"
+            },
+            "coverlet.collector": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

@@ -25,7 +25,7 @@ namespace DAPM.ClientApi.Services
         private Dictionary<Guid, TicketStatus> _ticketStatus;
         private Dictionary<Guid, TicketResolutionType> _ticketResolutionType;
 
-        public TicketService(ILogger<ITicketService> logger) 
+        public TicketService(ILogger<ITicketService> logger)
         {
             _logger = logger;
             _ticketStatus = new Dictionary<Guid, TicketStatus>();
@@ -71,7 +71,7 @@ namespace DAPM.ClientApi.Services
 
         public void UpdateTicketStatus(Guid ticketId, TicketStatus ticketStatus)
         {
-            if(_ticketStatus.ContainsKey(ticketId))
+            if (_ticketStatus.ContainsKey(ticketId))
             {
                 _ticketStatus[ticketId] = ticketStatus;
             }
@@ -108,7 +108,7 @@ namespace DAPM.ClientApi.Services
 
         public void UpdateTicketResolution(Guid ticketId, JToken requestResult)
         {
-            if(_ticketStatus.ContainsKey(ticketId))
+            if (_ticketStatus.ContainsKey(ticketId))
             {
                 UpdateTicketStatus(ticketId, TicketStatus.Completed);
                 _ticketResolutions[ticketId] = requestResult;

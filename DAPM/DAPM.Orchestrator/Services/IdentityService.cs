@@ -4,7 +4,9 @@ using RabbitMQLibrary.Interfaces;
 using RabbitMQLibrary.Messages.Repository;
 using RabbitMQLibrary.Messages.ResourceRegistry;
 using RabbitMQLibrary.Models;
+using System.Reflection;
 using System.Text.Json;
+using UtilLibrary;
 
 namespace DAPM.Orchestrator.Services
 {
@@ -59,8 +61,20 @@ namespace DAPM.Orchestrator.Services
 
         private Identity ReadCurrentIdentity()
         {
-            string jsonString = File.ReadAllText(_identityConfigurationPath);
-            return JsonSerializer.Deserialize<Identity>(jsonString)!;
+            var resourceNames = typeof(CustomTokenTypeConstants).Assembly.GetManifestResourceNames();//to access the assembly of utillibarary
+            using (Stream stream = typeof(CustomTokenTypeConstants).Assembly.GetManifestResourceStream("UtilLibrary.Configuration.IdentityConfiguration.json")) { 
+                if(stream == null)
+                {
+                    throw new FileNotFoundException("Identity Resource not found");
+                }else {
+
+                    using (StreamReader reader = new StreamReader(stream))
+                    {
+                        string jsonString = reader.ReadToEnd();
+                        return JsonSerializer.Deserialize<Identity>(jsonString)!;
+                    }
+                }    
+            }    
         }
 
         private void PostIdentityToRegistry(Identity identity)

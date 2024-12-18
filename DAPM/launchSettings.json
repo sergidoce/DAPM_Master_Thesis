@@ -4,12 +4,21 @@
       "commandName": "DockerCompose",
       "commandVersion": "1.0",
       "serviceActions": {
-        "dapm.clientapi": "StartDebugging",
-        "dapm.repositoryms.api": "StartDebugging",
-        "dapm.resourceregistryms.api": "StartDebugging",
-        "dapm.pipelineorchestratorms.api": "StartDebugging",
-        "dapm.orchestrator": "StartDebugging",
-        "dapm.peerapi": "StartDebugging"
+        "dapm.clientapi": "StartWithoutDebugging",
+        "dapm.repositoryms.api": "StartWithoutDebugging",
+        "dapm.resourceregistryms.api": "StartWithoutDebugging",
+        "dapm.pipelineorchestratorms.api": "StartWithoutDebugging",
+        "dapm.orchestrator": "StartWithoutDebugging",
+        "dapm.peerapi": "StartWithoutDebugging",
+        "dapm.authenticator.api": "StartWithoutDebugging",
+        "adminer": "StartWithoutDebugging",
+        "dapm.operatorMS.api": "StartWithoutDebugging",
+        "mariadb-user-repository": "StartWithoutDebugging",
+        "mongo": "StartWithoutDebugging",
+        "mongo-express": "StartWithoutDebugging",
+        "postgres": "StartWithoutDebugging",
+        "postgres-repository": "StartWithoutDebugging",
+        "rabbitmq": "StartWithoutDebugging"
       }
     }
   }

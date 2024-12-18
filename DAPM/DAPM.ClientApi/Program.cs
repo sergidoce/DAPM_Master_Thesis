@@ -10,6 +10,17 @@ using RabbitMQLibrary.Messages.Orchestrator.ServiceResults;
 using Microsoft.OpenApi.Models;
 using RabbitMQLibrary.Messages.Orchestrator.ServiceResults.FromPipelineOrchestrator;
 
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using UtilLibrary.Services;
+using UtilLibrary.Interfaces;
+using RabbitMQLibrary.Messages.Authenticator.Base;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.AddServiceDefaults();
@@ -50,6 +61,18 @@ builder.Services.AddSwaggerGen(c =>
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "DAPM Client API", Version = "v1" });
 });
 
+//AUTHENTICATOR
+builder.Services.AddQueueMessageConsumer<RegisterUserResultConsumer, RegisterUserResultMessage>();
+builder.Services.AddQueueMessageConsumer<LoginResultConsumer, LoginResultMessage>();
+builder.Services.AddQueueMessageConsumer<AddRolesResultConsumer, AddRolesResultMessage>();
+builder.Services.AddQueueMessageConsumer<DeleteUserResultConsumer, DeleteUserResultMessage>();
+builder.Services.AddQueueMessageConsumer<EditAsAdminResultConsumer, EditAsAdminResultMessage>();
+builder.Services.AddQueueMessageConsumer<EditAsUserResultConsumer, EditAsUserResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetRolesResultConsumer, GetRolesResultMessage>();
+builder.Services.AddQueueMessageConsumer<GetUsersResultConsumer, GetUsersResultMessage>();
+builder.Services.AddQueueMessageConsumer<SetOrganizationResultConsumer, SetOrganizationResultMessage>();
+builder.Services.AddQueueMessageConsumer<SetRolesResultConsumer, SetRolesResultMessage>();
+builder.Services.AddScoped<IActivityLogService, ActivityLogService>();
 
 builder.Services.AddQueueMessageConsumer<GetOrganizationsProcessResultConsumer, GetOrganizationsProcessResult>();
 builder.Services.AddQueueMessageConsumer<PostItemResultConsumer, PostItemProcessResult>();
@@ -61,38 +84,93 @@ builder.Services.AddQueueMessageConsumer<CollabHandshakeProcessResultConsumer, C
 builder.Services.AddQueueMessageConsumer<PostPipelineCommandProcessResultConsumer, PostPipelineCommandProcessResult>();
 builder.Services.AddQueueMessageConsumer<GetPipelineExecutionStatusProcessResultConsumer, GetPipelineExecutionStatusRequestResult>();
 
-
-
-// Add services to the container.
-
-
 builder.Services.AddScoped<IResourceService, ResourceService>();
 builder.Services.AddScoped<IOrganizationService, OrganizationService>();
 builder.Services.AddScoped<IRepositoryService, RepositoryService>();
 builder.Services.AddScoped<IPipelineService, PipelineService>();
 builder.Services.AddSingleton<ITicketService, TicketService>();
 builder.Services.AddScoped<ISystemService, SystemService>();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<IIdentityService, IdentityService>();
+builder.Services.AddScoped<IAuthenticatorService, AuthenticatorService>();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddSingleton(new FileLogService(Path.Combine(AppContext.BaseDirectory, "Logs", "ActivityLog.txt")));
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        var key = builder.Configuration.GetSection("JWTTokenKey").Value;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding
+                .UTF8.GetBytes(builder.Configuration.GetSection("JWTTokenKey").Value)),
+            ValidateIssuer = false,
+            ValidateAudience = false
+        };
+    });
+
+builder.Services.AddSwaggerGen(c =>
+{
+    // Add the security definition for Bearer token (JWT)
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer"
+    });
+
+    // Add the security requirement to include Bearer token globally
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement()
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer"
+                    },
+                    Scheme = "oauth2",
+                    Name = "Bearer",
+                    In = ParameterLocation.Header
+                },
+                new List<string>()
+            }
+        });
+});
+
 var app = builder.Build();
 
 app.MapDefaultEndpoints();
 
 
+
 app.UseSwagger();
-app.UseSwaggerUI();
+app.UseSwaggerUI(c =>
+{
+    c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
 
-
-app.UseHttpsRedirection();
+    // Optionally: Automatically add "Bearer" prefix in the input field
+    c.RoutePrefix = "swagger"; // Set Swagger UI at the root
+});
 
 app.UseCors("AllowAll");
 
-
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<ActivityLogMiddleware>();
+
+app.UseHttpsRedirection();
 
 app.MapControllers();
 
